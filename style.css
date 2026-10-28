@@ -774,11 +774,11 @@ body.ac-theme {
   z-index: 12;
 }
 
-/* Torres laterales (Izquierda y Derecha de 5 repisas cada una) */
+/* Torres laterales (Izquierda y Derecha de 6 repisas cada una) */
 .shelf-tower {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 /* Cubículos/Repisas individuales de madera real tallada */
@@ -801,7 +801,7 @@ body.ac-theme {
     linear-gradient(135deg, #e3b784 0%, #d4a36e 40%, #c49058 100%);
 
   border-radius: 12px;
-  min-height: 116px;
+  min-height: 102px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -954,7 +954,7 @@ body.ac-theme {
   align-items: flex-end;
   gap: 3.5px;
   padding: 0 10px 2px 10px;
-  height: 76px;
+  height: 68px;
   overflow: hidden;
   z-index: 3;
 }
@@ -963,7 +963,7 @@ body.ac-theme {
   width: 14px;
   min-width: 11px;
   max-width: 22px;
-  height: 62px;
+  height: 56px;
   border-radius: 3px 3px 0 0;
   box-shadow: 2px 0 5px rgba(0,0,0,0.35), inset 1px 0 2px rgba(255,255,255,0.4);
   position: relative;

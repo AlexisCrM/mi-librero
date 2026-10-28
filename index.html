@@ -167,7 +167,7 @@
     <!-- Estructura del Mueble basada en la foto real y la visión de Photo 1 -->
     <div class="bookshelf-furniture" id="bookshelfFurniture">
       
-      <!-- COLUMNA IZQUIERDA (5 repisas) -->
+      <!-- COLUMNA IZQUIERDA (6 repisas reales) -->
       <aside class="shelf-tower tower-left">
         <div class="shelf-compartment" data-shelf-id="col-izq-1">
           <div class="compartment-tag-pill">
@@ -202,20 +202,30 @@
         <div class="shelf-compartment" data-shelf-id="col-izq-4">
           <div class="compartment-tag-pill">
             <span class="tag-title">Izquierda 4</span>
-            <span class="tag-category">Pendientes</span>
+            <span class="tag-category">Novelas</span>
           </div>
-          <div class="shelf-note-card">Grandes historias te esperan 💕</div>
+          <div class="shelf-decor-prop prop-coffee" title="Taza de café humeante">☕</div>
           <div class="books-preview-strip" id="preview-col-izq-4"></div>
           <div class="shelf-board"></div>
         </div>
 
         <div class="shelf-compartment" data-shelf-id="col-izq-5">
           <div class="compartment-tag-pill">
-            <span class="tag-title">Izquierda 5 (Inferior)</span>
+            <span class="tag-title">Izquierda 5</span>
+            <span class="tag-category">Pendientes</span>
+          </div>
+          <div class="shelf-note-card">Grandes historias te esperan 💕</div>
+          <div class="books-preview-strip" id="preview-col-izq-5"></div>
+          <div class="shelf-board"></div>
+        </div>
+
+        <div class="shelf-compartment" data-shelf-id="col-izq-6">
+          <div class="compartment-tag-pill">
+            <span class="tag-title">Izquierda 6 (Inferior)</span>
             <span class="tag-category">Favoritos</span>
           </div>
           <div class="shelf-decor-prop prop-crystal" title="Frasco con luces de hadas">✨</div>
-          <div class="books-preview-strip" id="preview-col-izq-5"></div>
+          <div class="books-preview-strip" id="preview-col-izq-6"></div>
           <div class="shelf-board"></div>
         </div>
       </aside>
@@ -366,7 +376,7 @@
 
       </section>
 
-      <!-- COLUMNA DERECHA (5 repisas) -->
+      <!-- COLUMNA DERECHA (6 repisas reales) -->
       <aside class="shelf-tower tower-right">
         <div class="shelf-compartment" data-shelf-id="col-der-1">
           <div class="compartment-tag-pill">
@@ -401,20 +411,30 @@
         <div class="shelf-compartment" data-shelf-id="col-der-4">
           <div class="compartment-tag-pill">
             <span class="tag-title">Derecha 4</span>
-            <span class="tag-category">Libros en Inglés</span>
+            <span class="tag-category">Poesía & Arte</span>
           </div>
-          <div class="shelf-decor-prop prop-eiffel" title="Torre Eiffel miniatura">🗼</div>
+          <div class="shelf-decor-prop prop-palette" title="Paleta de arte">🎨</div>
           <div class="books-preview-strip" id="preview-col-der-4"></div>
           <div class="shelf-board"></div>
         </div>
 
         <div class="shelf-compartment" data-shelf-id="col-der-5">
           <div class="compartment-tag-pill">
-            <span class="tag-title">Derecha 5 (Inferior)</span>
+            <span class="tag-title">Derecha 5</span>
+            <span class="tag-category">Libros en Inglés</span>
+          </div>
+          <div class="shelf-decor-prop prop-eiffel" title="Torre Eiffel miniatura">🗼</div>
+          <div class="books-preview-strip" id="preview-col-der-5"></div>
+          <div class="shelf-board"></div>
+        </div>
+
+        <div class="shelf-compartment" data-shelf-id="col-der-6">
+          <div class="compartment-tag-pill">
+            <span class="tag-title">Derecha 6 (Inferior)</span>
             <span class="tag-category">Por leer</span>
           </div>
           <div class="shelf-decor-prop prop-fox" title="Figurita de zorrito durmiendo">🦊</div>
-          <div class="books-preview-strip" id="preview-col-der-5"></div>
+          <div class="books-preview-strip" id="preview-col-der-6"></div>
           <div class="shelf-board"></div>
         </div>
       </aside>
@@ -559,24 +579,26 @@
           <div class="form-group flex-1">
             <label for="bookShelfInput">Repisa del Mueble *</label>
             <select id="bookShelfInput" required>
-              <optgroup label="Columna Izquierda">
-                <option value="col-izq-1">Izquierda 1 (Superior)</option>
-                <option value="col-izq-2">Izquierda 2</option>
-                <option value="col-izq-3">Izquierda 3</option>
-                <option value="col-izq-4">Izquierda 4</option>
-                <option value="col-izq-5">Izquierda 5 (Inferior)</option>
+              <optgroup label="Columna Izquierda (6 Repisas)">
+                <option value="col-izq-1">Izquierda 1 (Superior) - Romance</option>
+                <option value="col-izq-2">Izquierda 2 - Ciencia Ficción</option>
+                <option value="col-izq-3">Izquierda 3 - Manga</option>
+                <option value="col-izq-4">Izquierda 4 - Novelas</option>
+                <option value="col-izq-5">Izquierda 5 - Pendientes</option>
+                <option value="col-izq-6">Izquierda 6 (Inferior) - Favoritos</option>
               </optgroup>
               <optgroup label="Puente Superior (Sobre Ventana)">
-                <option value="puente-1">Puente 1 (Izquierdo)</option>
-                <option value="puente-2">Puente 2 (Centro)</option>
-                <option value="puente-3">Puente 3 (Derecho)</option>
+                <option value="puente-1">Puente 1 (Izquierdo) - Fantasía</option>
+                <option value="puente-2">Puente 2 (Centro) - Clásicos</option>
+                <option value="puente-3">Puente 3 (Derecho) - Desarrollo Personal</option>
               </optgroup>
-              <optgroup label="Columna Derecha">
-                <option value="col-der-1">Derecha 1 (Superior)</option>
-                <option value="col-der-2">Derecha 2 (Colección)</option>
-                <option value="col-der-3">Derecha 3</option>
-                <option value="col-der-4">Derecha 4</option>
-                <option value="col-der-5">Derecha 5 (Inferior)</option>
+              <optgroup label="Columna Derecha (6 Repisas)">
+                <option value="col-der-1">Derecha 1 (Superior) - Misterio</option>
+                <option value="col-der-2">Derecha 2 (Colección) - Crecimiento</option>
+                <option value="col-der-3">Derecha 3 - Recetas</option>
+                <option value="col-der-4">Derecha 4 - Poesía & Arte</option>
+                <option value="col-der-5">Derecha 5 - Libros en Inglés</option>
+                <option value="col-der-6">Derecha 6 (Inferior) - Por leer</option>
               </optgroup>
             </select>
           </div>

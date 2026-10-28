@@ -8,19 +8,23 @@
 // DEFINICIÓN DE REPISAS (Solo para libros)
 // ===================================================================
 const SHELF_DEFINITIONS = {
-  'col-izq-1': { name: 'Repisa 1 (Superior)', category: 'Columna Izquierda' },
-  'col-izq-2': { name: 'Repisa 2', category: 'Columna Izquierda' },
-  'col-izq-3': { name: 'Repisa 3', category: 'Columna Izquierda' },
-  'col-izq-4': { name: 'Repisa 4', category: 'Columna Izquierda' },
-  'col-izq-5': { name: 'Repisa 5 (Inferior)', category: 'Columna Izquierda' },
-  'puente-1':  { name: 'Puente 1 (Izquierdo)', category: 'Puente Superior (Sobre Ventana)' },
-  'puente-2':  { name: 'Puente 2 (Centro)', category: 'Puente Superior (Sobre Ventana)' },
-  'puente-3':  { name: 'Puente 3 (Derecho)', category: 'Puente Superior (Sobre Ventana)' },
-  'col-der-1': { name: 'Repisa 1 (Superior)', category: 'Columna Derecha' },
-  'col-der-2': { name: 'Repisa 2 (Colección)', category: 'Columna Derecha' },
-  'col-der-3': { name: 'Repisa 3', category: 'Columna Derecha' },
-  'col-der-4': { name: 'Repisa 4', category: 'Columna Derecha' },
-  'col-der-5': { name: 'Repisa 5 (Inferior)', category: 'Columna Derecha' }
+  'col-izq-1': { name: 'Repisa 1 (Superior)', category: 'Romance' },
+  'col-izq-2': { name: 'Repisa 2', category: 'Ciencia Ficción' },
+  'col-izq-3': { name: 'Repisa 3', category: 'Manga' },
+  'col-izq-4': { name: 'Repisa 4', category: 'Novelas' },
+  'col-izq-5': { name: 'Repisa 5', category: 'Pendientes' },
+  'col-izq-6': { name: 'Repisa 6 (Inferior)', category: 'Favoritos' },
+
+  'puente-1':  { name: 'Puente 1 (Izquierdo)', category: 'Fantasía' },
+  'puente-2':  { name: 'Puente 2 (Centro)', category: 'Clásicos' },
+  'puente-3':  { name: 'Puente 3 (Derecho)', category: 'Desarrollo Personal' },
+
+  'col-der-1': { name: 'Repisa 1 (Superior)', category: 'Misterio' },
+  'col-der-2': { name: 'Repisa 2 (Colección)', category: 'Crecimiento' },
+  'col-der-3': { name: 'Repisa 3', category: 'Recetas' },
+  'col-der-4': { name: 'Repisa 4', category: 'Poesía & Arte' },
+  'col-der-5': { name: 'Repisa 5', category: 'Libros en Inglés' },
+  'col-der-6': { name: 'Repisa 6 (Inferior)', category: 'Por leer' }
 };
 
 // ===================================================================
@@ -190,7 +194,7 @@ const PHOTO_1_STARTER_BOOKS = [
     title: 'The Midnight Library',
     author: 'Matt Haig',
     reader: 'Ella',
-    shelfId: 'col-der-4',
+    shelfId: 'col-der-5',
     totalPages: 304,
     currentPage: 0,
     status: 'to_read',
@@ -203,16 +207,20 @@ const SHELF_DECORATIVE_PALETTES = {
   'col-izq-1': ['#f472b6', '#ec4899', '#fbcfe8', '#d946ef', '#e879f9', '#f43f5e', '#fda4af'], // Romance
   'col-izq-2': ['#2563eb', '#1d4ed8', '#38bdf8', '#0284c7', '#1e40af', '#60a5fa'], // Ciencia Ficción
   'col-izq-3': ['#a855f7', '#c084fc', '#38bdf8', '#f472b6', '#e879f9', '#818cf8', '#cbd5e1'], // Manga
-  'col-izq-4': ['#d97706', '#b45309', '#f59e0b', '#78350f', '#fcd34d'], // Pendientes
-  'col-izq-5': ['#ec4899', '#db2777', '#f472b6', '#c084fc', '#e879f9'], // Favoritos
+  'col-izq-4': ['#f59e0b', '#d97706', '#fbbf24', '#fcd34d', '#b45309', '#fed7aa'], // Novelas
+  'col-izq-5': ['#d97706', '#b45309', '#f59e0b', '#78350f', '#fcd34d'], // Pendientes
+  'col-izq-6': ['#ec4899', '#db2777', '#f472b6', '#c084fc', '#e879f9'], // Favoritos
+
   'puente-1':  ['#7c3aed', '#6d28d9', '#8b5cf6', '#a78bfa', '#5b21b6', '#c4b5fd'], // Fantasía
   'puente-2':  ['#b45309', '#92400e', '#d97706', '#78350f', '#e2d4c0', '#451a03'], // Clásicos
   'puente-3':  ['#059669', '#10b981', '#34d399', '#047857', '#d97706', '#84cc16'], // Desarrollo Personal
+
   'col-der-1': ['#1e293b', '#0f172a', '#334155', '#475569', '#1e1b4b', '#090e17'], // Misterio
   'col-der-2': ['#f472b6', '#fbcfe8', '#ec4899', '#fda4af', '#f43f5e', '#fb7185'], // Crecimiento
   'col-der-3': ['#fb7185', '#f43f5e', '#fda4af', '#f97316', '#ea580c', '#facc15'], // Recetas
-  'col-der-4': ['#0284c7', '#0369a1', '#38bdf8', '#0ea5e9', '#075985', '#bae6fd'], // Inglés
-  'col-der-5': ['#f59e0b', '#d97706', '#fbbf24', '#fcd34d', '#b45309', '#fed7aa']  // Por leer
+  'col-der-4': ['#8b5cf6', '#a855f7', '#ec4899', '#f472b6', '#c084fc'], // Poesía & Arte
+  'col-der-5': ['#0284c7', '#0369a1', '#38bdf8', '#0ea5e9', '#075985', '#bae6fd'], // Inglés
+  'col-der-6': ['#f59e0b', '#d97706', '#fbbf24', '#fcd34d', '#b45309', '#fed7aa']  // Por leer
 };
 
 // ===================================================================
