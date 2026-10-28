@@ -246,6 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupEventListeners();
   initBlindController();
   initZakiaTimeEngine();
+  initBookshelfLightingEngine();
   renderApp();
 });
 
@@ -710,6 +711,31 @@ function updateZakiaSky() {
   // Actualizar clases de momento del día en la ventana
   nook.classList.remove('time-morning', 'time-afternoon', 'time-sunset', 'time-night');
   nook.classList.add(`time-${activePhase}`);
+}
+
+// ===================================================================
+// MOTOR DE ILUMINACIÓN Y REFLEJO DINÁMICO EN MADERA DE ROBLE
+// Las esquinas y cantos del mueble responden interactivamente a la luz
+// ===================================================================
+function initBookshelfLightingEngine() {
+  const furniture = document.getElementById('bookshelfFurniture');
+  if (!furniture) return;
+
+  // Seguimiento suave del cursor sobre la madera
+  furniture.addEventListener('mousemove', (e) => {
+    const rect = furniture.getBoundingClientRect();
+    const x = Math.min(100, Math.max(0, Math.round(((e.clientX - rect.left) / rect.width) * 100)));
+    const y = Math.min(100, Math.max(0, Math.round(((e.clientY - rect.top) / rect.height) * 100)));
+
+    furniture.style.setProperty('--light-x', `${x}%`);
+    furniture.style.setProperty('--light-y', `${y}%`);
+  });
+
+  furniture.addEventListener('mouseleave', () => {
+    // Vuelve suavemente al ángulo de luz cenital natural desde la esquina superior izquierda
+    furniture.style.setProperty('--light-x', '35%');
+    furniture.style.setProperty('--light-y', '18%');
+  });
 }
 
 // ===================================================================

@@ -676,24 +676,103 @@ body.ac-theme {
   border: 1.5px solid #ebd9c4;
 }
 
-/* El Mueble Real de Madera con Acabado Premium */
+/* ===================================================================
+   LIBRERO REAL DE MADERA DE ROBLE MACIZO CON LUZ DINÁMICA
+   =================================================================== */
 .bookshelf-furniture {
+  --light-x: 35%;
+  --light-y: 18%;
   display: grid;
   grid-template-columns: 240px minmax(460px, 1fr) 240px;
-  gap: 14px;
-  background: linear-gradient(180deg, #c79865 0%, #b2824e 50%, #9a6d3c 100%);
-  padding: 20px;
-  border-radius: 28px;
-  box-shadow: 
-    0 30px 70px -10px rgba(60, 35, 15, 0.45),
-    inset 0 3px 8px rgba(255, 255, 255, 0.4),
-    inset 0 -6px 14px rgba(0, 0, 0, 0.45);
-  width: 100%;
-  border: 10px solid #7c4f24;
+  gap: 16px;
+  padding: 22px;
+  border-radius: 32px;
   position: relative;
+  width: 100%;
+
+  /* Veteado multicapa de madera de roble barnizada con acabado satinado */
+  background: 
+    /* Brillo de barniz satinado reflectante */
+    linear-gradient(135deg, rgba(255, 252, 242, 0.3) 0%, rgba(255, 240, 215, 0.08) 30%, transparent 60%),
+    /* Veta fina natural de madera de roble */
+    repeating-linear-gradient(90deg, 
+      transparent 0px, 
+      rgba(60, 30, 8, 0.035) 1px, 
+      transparent 2px, 
+      transparent 7px,
+      rgba(255, 248, 225, 0.05) 8px,
+      transparent 9px
+    ),
+    /* Vetas horizontales suaves de corte de madera */
+    repeating-linear-gradient(0deg,
+      transparent 0px,
+      rgba(90, 45, 12, 0.02) 1px,
+      transparent 2px,
+      transparent 24px,
+      rgba(255, 240, 210, 0.03) 25px,
+      transparent 26px
+    ),
+    /* Gradiente volumétrico de madera de roble dorado */
+    linear-gradient(180deg, #d8a36b 0%, #c48e54 25%, #ad763e 65%, #885523 100%);
+
+  /* Moldura de carpintería biselada: las esquinas y cantos reaccionan a la luz cenital */
+  border: 12px solid #734318;
+  border-top-color: #a36832;
+  border-left-color: #915724;
+  border-right-color: #693a12;
+  border-bottom-color: #482309;
+
+  box-shadow: 
+    /* Sombra profunda proyectada en la habitación */
+    0 35px 80px -10px rgba(35, 18, 6, 0.65),
+    0 15px 35px rgba(60, 30, 10, 0.35),
+    /* Bisel superior que atrapa la luz dorada */
+    inset 0 3px 6px rgba(255, 250, 235, 0.8),
+    inset 0 1px 2px #ffffff,
+    /* Luz reflejada en el lateral izquierdo */
+    inset 3px 0 8px rgba(255, 242, 215, 0.45),
+    /* Sombra tallada profunda en la base */
+    inset 0 -12px 24px rgba(28, 14, 4, 0.85),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.6);
+
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Brillo especular dinámico que sigue la luz sobre la madera */
+.bookshelf-furniture::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 36px;
+  background: radial-gradient(
+    circle 600px at var(--light-x, 35%) var(--light-y, 18%),
+    rgba(255, 248, 230, 0.28) 0%,
+    rgba(255, 235, 195, 0.1) 40%,
+    transparent 75%
+  );
+  pointer-events: none;
+  z-index: 25;
+  mix-blend-mode: overlay;
+  transition: opacity 0.3s ease;
+}
 
+/* Moldura curva con reflejo satinado en el borde superior del mueble */
+.bookshelf-furniture::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 2px;
+  right: 2px;
+  height: 24px;
+  border-radius: 20px 20px 0 0;
+  background: linear-gradient(180deg, 
+    rgba(255, 255, 255, 0.48) 0%, 
+    rgba(255, 245, 220, 0.2) 50%, 
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 12;
+}
 
 /* Torres laterales (Izquierda y Derecha de 5 repisas cada una) */
 .shelf-tower {
@@ -702,31 +781,64 @@ body.ac-theme {
   gap: 12px;
 }
 
-/* Cubículos/Repisas individuales con bordes redondeados y relieve */
+/* Cubículos/Repisas individuales de madera real tallada */
 .shelf-compartment {
-  background: linear-gradient(135deg, #f3e5d3 0%, #e6d0b5 100%);
+  /* Fondo de madera de cedro / roble claro con veteado de tablones verticales */
+  background: 
+    /* Brillo de luz superior interior */
+    linear-gradient(180deg, rgba(255, 248, 230, 0.26) 0%, transparent 40%),
+    /* Veteado vertical de las tablas del fondo del librero */
+    repeating-linear-gradient(90deg, 
+      transparent 0px, 
+      rgba(70, 36, 10, 0.04) 1px, 
+      transparent 2px, 
+      transparent 22px,
+      rgba(255, 245, 220, 0.08) 23px,
+      rgba(55, 25, 8, 0.14) 24px,
+      transparent 25px
+    ),
+    /* Color de madera cálida de roble dorado */
+    linear-gradient(135deg, #e3b784 0%, #d4a36e 40%, #c49058 100%);
+
   border-radius: 12px;
-  min-height: 114px;
+  min-height: 116px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   position: relative;
   cursor: pointer;
   overflow: hidden;
+
+  /* Ensamble de carpintería con biseles que responden a la luz */
+  border: 3.5px solid #824f21;
+  border-top-color: #bd8449;
+  border-left-color: #9e6630;
+  border-bottom-color: #552d0e;
+  border-right-color: #6c3a13;
+
   box-shadow: 
-    inset 0 14px 22px var(--wood-shelf-shadow),
-    inset 0 -3px 5px rgba(0, 0, 0, 0.28);
-  transition: transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.24s ease, filter 0.24s ease;
-  border-top: 2px solid rgba(255,255,255,0.5);
+    /* Sombra profunda proyectada desde arriba (profundidad 3D real de la repisa) */
+    inset 0 16px 22px rgba(36, 17, 5, 0.52),
+    inset 0 3px 6px rgba(45, 20, 6, 0.38),
+    /* Resplandor cálido en laterales interiores */
+    inset 3px 0 6px rgba(255, 240, 215, 0.22),
+    inset -3px 0 7px rgba(35, 16, 5, 0.32),
+    /* Sombra de relieve exterior */
+    0 3px 8px rgba(0, 0, 0, 0.28);
+
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, filter 0.25s ease, border-color 0.25s ease;
 }
 
 .shelf-compartment:hover {
-  transform: scale(1.03);
+  transform: translateY(-3px) scale(1.025);
   z-index: 10;
-  filter: brightness(1.05);
+  filter: brightness(1.07);
+  border-top-color: #ffe0a3;
+  border-left-color: #d89955;
   box-shadow: 
-    0 12px 28px rgba(90, 50, 18, 0.35),
-    inset 0 8px 16px var(--wood-shelf-shadow);
+    0 16px 35px rgba(50, 24, 8, 0.45),
+    inset 0 12px 18px rgba(36, 17, 5, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.65);
 }
 
 /* Etiqueta flotante de la repisa estilo Photo 1 */
@@ -799,12 +911,41 @@ body.ac-theme {
   line-height: 1.2;
 }
 
+/* Tablón de madera maciza donde descansan los libros */
 .shelf-board {
-  height: 13px;
-  background: linear-gradient(180deg, #d8b285, #a3794d);
-  border-top: 1.5px solid #f6dfc5;
-  box-shadow: 0 -2px 6px rgba(0,0,0,0.18);
+  height: 16px;
+  background: 
+    /* Bisel iluminado en el canto frontal */
+    linear-gradient(180deg, 
+      rgba(255, 250, 235, 0.95) 0%, 
+      #e8c192 12%, 
+      #c48f55 50%, 
+      #99642e 85%, 
+      #6a3f18 100%
+    );
+  border-top: 2px solid #fff4de;
+  box-shadow: 
+    0 -3px 8px rgba(0, 0, 0, 0.28),
+    0 5px 12px rgba(22, 10, 3, 0.5);
   width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+/* Arista de luz brillante en el borde frontal de la madera */
+.shelf-board::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: linear-gradient(90deg, 
+    transparent 5%, 
+    rgba(255, 255, 255, 0.95) 25%, 
+    rgba(255, 245, 205, 0.85) 75%, 
+    transparent 95%
+  );
 }
 
 /* Vista previa de mini-lomos de libros dentro del mueble (Photo 1) */
@@ -893,15 +1034,27 @@ body.ac-theme {
 /* ===================================================================
    VENTANA CENTRAL CON ESCENARIO COTTAGE ILUSTRADO (PHOTO 1)
    =================================================================== */
+/* Marco arquitectónico de madera alrededor de la ventana con biseles que responden a la luz */
 .window-nook {
   flex: 1;
   min-height: 295px;
   display: flex;
   flex-direction: column;
   position: relative;
-  border-radius: 16px;
+  border-radius: 18px;
   overflow: hidden;
-  box-shadow: inset 0 8px 26px rgba(0,0,0,0.4);
+
+  /* Biseles de madera con respuesta a la luz */
+  border: 7px solid #78451b;
+  border-top-color: #a86c35;
+  border-left-color: #925828;
+  border-right-color: #663612;
+  border-bottom-color: #472309;
+
+  box-shadow: 
+    inset 0 16px 32px rgba(18, 9, 3, 0.75),
+    inset 0 2px 4px rgba(255, 245, 220, 0.55),
+    0 8px 18px rgba(0, 0, 0, 0.35);
   background: #1e293b;
 }
 
@@ -1161,10 +1314,12 @@ body.ac-theme {
    BANCA CON COLCHONETA GRIS REALISTA (SIN EMOJIS, Photo 1 y foto real)
    =================================================================== */
 .reading-bench {
-  background: #7a4c1f;
-  padding: 4px 10px 0 10px;
+  background: linear-gradient(180deg, #996431 0%, #7a4a1f 100%);
+  padding: 5px 12px 0 12px;
   position: relative;
   z-index: 20;
+  border-top: 2.5px solid #c9935a;
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.3);
 }
 
 /* Colchoneta Gris Acolchada estilo Photo 1 */
@@ -1207,64 +1362,105 @@ body.ac-theme {
 
 .bench-base {
   height: 8px;
-  background: #6a441e;
+  background: #502e11;
+  border-top: 1px solid #7e4b20;
 }
 
 /* ===================================================================
-   4 CAJONES INFERIORES: CUADRÍCULA 2x2 (Estilo Photo 1)
+   4 CAJONES INFERIORES: CARPINTERÍA REAL DE ROBLE BISELADA (Photo 1)
    =================================================================== */
 .drawers-grid-4 {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 14px;
 }
 
 .drawers-column {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .drawer-box {
-  background: linear-gradient(180deg, #c79865, #b07e4a);
-  border-radius: 8px;
-  height: 64px;
-  padding: 4px;
+  background: linear-gradient(180deg, #b8834d 0%, #9c6734 50%, #7d4d20 100%);
+  border-radius: 10px;
+  height: 68px;
+  padding: 5px;
   cursor: pointer;
+  border: 2px solid #5a3211;
+  border-top-color: #d19f6a;
+  border-left-color: #b07c48;
+  border-bottom-color: #3e2008;
   box-shadow: 
-    inset 0 1px 3px rgba(255,255,255,0.45),
-    0 4px 10px rgba(0,0,0,0.24);
-  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.22s ease;
-  border: 2px solid #78481e;
+    0 6px 14px rgba(35, 18, 6, 0.35),
+    inset 0 2px 4px rgba(255, 255, 255, 0.35),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.4);
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
   position: relative;
 }
 
 .drawer-box:hover {
   transform: translateY(-3px) scale(1.015);
-  filter: brightness(1.06);
+  filter: brightness(1.07);
+  border-top-color: #fed7aa;
+  box-shadow: 
+    0 12px 24px rgba(45, 22, 8, 0.45),
+    inset 0 3px 6px rgba(255, 255, 255, 0.55);
   z-index: 5;
 }
 
+/* Frente de madera acanalada con acabado Shaker */
 .drawer-face {
   height: 100%;
-  background: linear-gradient(180deg, #d3a777, #ba8c5a);
-  border-radius: 5px;
+  background: 
+    /* Brillo superior donde pega la luz */
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28) 0%, transparent 40%),
+    /* Veteado fino de la madera */
+    repeating-linear-gradient(90deg, 
+      transparent 0px, 
+      rgba(60, 30, 10, 0.04) 1px, 
+      transparent 2px, 
+      transparent 18px
+    ),
+    /* Color de roble cálido */
+    linear-gradient(180deg, #d8a571 0%, #c49059 55%, #ad7b45 100%);
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 14px;
+  padding: 0 16px;
   position: relative;
-  box-shadow: inset 0 -2px 6px rgba(0,0,0,0.2);
+  border: 1.5px solid #a4703c;
+  border-top-color: #fce1bf;
+  border-bottom-color: #683e16;
+  box-shadow: 
+    inset 0 2px 4px rgba(255, 255, 255, 0.42),
+    inset 0 -3px 7px rgba(30, 15, 5, 0.38);
 }
 
+/* Jaladera horizontal de acero negro cepillado con reflejo metálico */
 .drawer-handle {
-  width: 54px;
-  height: 8px;
-  background: #1c1c1c;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.45);
-  border: 1px solid #383838;
+  width: 58px;
+  height: 9px;
+  background: linear-gradient(180deg, #444444 0%, #1f1f1f 45%, #0f0f0f 85%, #2a2a2a 100%);
+  border-radius: 5px;
+  box-shadow: 
+    0 3px 6px rgba(0, 0, 0, 0.6),
+    inset 0 1px 1px rgba(255, 255, 255, 0.4);
+  border: 1px solid #111111;
   flex-shrink: 0;
+  position: relative;
+}
+
+.drawer-handle::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 6px;
+  right: 6px;
+  height: 1.5px;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 2px;
 }
 
 .drawer-content-pill {
