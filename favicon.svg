@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <!-- Gradiente de fondo en squircle suave -->
+    <linearGradient id="favBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fdf2f8"/>
+      <stop offset="100%" stop-color="#f3e8ff"/>
+    </linearGradient>
+
+    <!-- Gradiente de pelaje de la ardilla -->
+    <linearGradient id="favFurGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+
+    <!-- Sombra suave moderna -->
+    <filter id="favShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="1.5" flood-color="#701a75" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <!-- Base / Ícono de App redondeado -->
+  <rect width="64" height="64" rx="18" fill="url(#favBgGrad)"/>
+  <rect width="64" height="64" rx="18" fill="none" stroke="#f472b6" stroke-width="2" opacity="0.7"/>
+
+  <!-- Orejitas de la ardilla -->
+  <circle cx="18" cy="18" r="9.5" fill="url(#favFurGrad)" filter="url(#favShadow)"/>
+  <circle cx="18" cy="18" r="5.5" fill="#fef3c7"/>
+
+  <circle cx="46" cy="18" r="9.5" fill="url(#favFurGrad)" filter="url(#favShadow)"/>
+  <circle cx="46" cy="18" r="5.5" fill="#fef3c7"/>
+
+  <!-- Cola esponjosa moderna asomándose -->
+  <path d="M50,48 C64,38 62,16 48,22 C44,24 45,28 48,28 C55,27 55,39 44,45 Z" fill="#b45309" opacity="0.9" filter="url(#favShadow)"/>
+  <path d="M50,44 C60,36 58,22 49,25 C53,28 52,38 44,43 Z" fill="#fef3c7" opacity="0.75"/>
+
+  <!-- Cabeza y mejillas esponjosas -->
+  <path d="M15,35 C11,37 10,43 16,47 C22,51 42,51 48,47 C54,43 53,37 49,35 C51,26 44,17 32,17 C20,17 13,26 15,35 Z" fill="url(#favFurGrad)" filter="url(#favShadow)"/>
+
+  <!-- Hocico color crema -->
+  <ellipse cx="32" cy="38" rx="14" ry="10" fill="#fef3c7"/>
+
+  <!-- Chapitas sonrojadas rosas estilo Animal Crossing -->
+  <circle cx="18" cy="38.5" r="3.8" fill="#f472b6" opacity="0.6"/>
+  <circle cx="46" cy="38.5" r="3.8" fill="#f472b6" opacity="0.6"/>
+
+  <!-- Ojos modernos con brillo -->
+  <ellipse cx="24" cy="31.5" rx="3.6" ry="4.6" fill="#382c2a"/>
+  <circle cx="25.5" cy="29.8" r="1.6" fill="#ffffff"/>
+  <circle cx="23" cy="33.5" r="0.8" fill="#ffffff" opacity="0.8"/>
+
+  <ellipse cx="40" cy="31.5" rx="3.6" ry="4.6" fill="#382c2a"/>
+  <circle cx="41.5" cy="29.8" r="1.6" fill="#ffffff"/>
+  <circle cx="39" cy="33.5" r="0.8" fill="#ffffff" opacity="0.8"/>
+
+  <!-- Naricita y tierna sonrisa -->
+  <ellipse cx="32" cy="35.5" rx="2.2" ry="1.5" fill="#78350f"/>
+  <path d="M29.5,37.5 Q32,39.5 32,37.5 Q32,39.5 34.5,37.5" fill="none" stroke="#78350f" stroke-width="1.3" stroke-linecap="round"/>
+
+  <!-- Florecita rosa en la oreja -->
+  <g transform="translate(44, 13)">
+    <circle cx="0" cy="0" r="2.6" fill="#ec4899"/>
+    <circle cx="-3" cy="-1.5" r="2.2" fill="#fbcfe8"/>
+    <circle cx="3" cy="-1.5" r="2.2" fill="#fbcfe8"/>
+    <circle cx="-2" cy="3" r="2.2" fill="#fbcfe8"/>
+    <circle cx="2" cy="3" r="2.2" fill="#fbcfe8"/>
+    <circle cx="0" cy="-3.5" r="2.2" fill="#fbcfe8"/>
+    <circle cx="0" cy="0" r="1.4" fill="#fef08a"/>
+  </g>
+</svg>

@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Librero Isleño 🌸📚</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Quicksand:wght@500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="ac-theme">
+
+  <!-- Fondo decorativo y enredaderas de lavanda / wisteria estilo Photo 1 -->
+  <div class="room-floral-frame" aria-hidden="true">
+    <div class="wisteria-corner top-left"></div>
+    <div class="wisteria-corner top-right"></div>
+  </div>
+
+  <!-- Fondo animado con pétalos suaves flotando -->
+  <div class="floating-petals-bg" aria-hidden="true">
+    <span class="petal p1">🌸</span>
+    <span class="petal p2">🪻</span>
+    <span class="petal p3">🍃</span>
+    <span class="petal p4">🌸</span>
+    <span class="petal p5">🪻</span>
+  </div>
+
+  <!-- Barra de Navegación Superior Estilo Cozy / Animal Crossing -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="ac-mascot-avatar" title="¡Bienvenida a tu rincón de lectura!">
+        <div class="mascot-img-circle">
+          <img src="assets/mascot_nuez.jpg" alt="Nuez la ardillita" class="mascot-avatar-img">
+        </div>
+        <span class="flower-badge">🌸</span>
+      </div>
+      <div>
+        <div class="app-title-row">
+          <h1 class="app-title" id="shelfTitle">El Rincón de Lectura & Lavanda</h1>
+          <button id="editTitleBtn" class="btn-bubble-mini" title="Personalizar el nombre del librero">✏️</button>
+        </div>
+        <p class="app-subtitle">Tu librero interactivo & organizador personal 💕</p>
+      </div>
+    </div>
+
+    <!-- Filtros rápidos y selector de lector -->
+    <div class="header-center">
+      <div class="reader-selector-wrapper">
+        <span class="reader-prefix-icon">🪻</span>
+        <label for="readerSelect" class="reader-label">Lector:</label>
+        <select id="readerSelect" class="reader-select">
+          <option value="all">👥 Todos los lectores</option>
+          <option value="Ella">🌸 Ella</option>
+          <option value="Él">☕ Él</option>
+        </select>
+        <button id="manageReadersBtn" class="btn-bubble-pill" title="Cambiar nombres de los lectores">🌸 Nombres</button>
+      </div>
+
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Buscar libro, autor o saga...">
+      </div>
+    </div>
+
+    <!-- Acciones principales -->
+    <div class="header-actions">
+      <button id="quickAddBookBtn" class="btn btn-ac-primary">
+        <span>📖 +</span> Añadir Libro
+      </button>
+      <button id="backupBtn" class="btn btn-ac-secondary" title="Respaldos y copias de seguridad">
+        💾 Datos
+      </button>
+    </div>
+  </header>
+
+  <!-- Saludo de Ardillita Guía + Tarjeta de Inspiración (Photo 1) -->
+  <section class="ac-dialogue-section">
+    <div class="ac-speech-bubble">
+      <div class="bubble-mascot-wrap">
+        <img src="assets/mascot_nuez.jpg" alt="Nuez" class="bubble-mascot-img">
+      </div>
+      <div class="bubble-content">
+        <strong class="bubble-sender" id="mascotGreetingSender">¡Hola! Soy Nuez 🌸</strong>
+        <p class="bubble-text" id="mascotDialogueText">
+          Tu librero está listo para llenarse con tus libros favoritos. Selecciona cualquier repisa para entrar o empieza por añadir tu primer libro. ¡Estoy aquí para acompañarte en cada historia! 💜🪻
+        </p>
+      </div>
+    </div>
+
+    <!-- Tarjetita de frase inspiradora al estilo Photo 1 -->
+    <div class="cozy-sticky-card">
+      <span class="sticky-pin">📌</span>
+      <p class="sticky-quote">Pequeños libros, grandes aventuras 💕</p>
+    </div>
+  </section>
+
+  <!-- Métricas y Estadísticas 100% Reales y Dinámicas -->
+  <section class="stats-banner">
+    <div class="stat-card stat-total">
+      <div class="stat-icon-badge">📚</div>
+      <div class="stat-info">
+        <span class="stat-number" id="statTotalBooks">0</span>
+        <span class="stat-label">Libros en total</span>
+      </div>
+    </div>
+    
+    <div class="stat-card stat-reading">
+      <div class="stat-icon-badge">📖</div>
+      <div class="stat-info">
+        <span class="stat-number" id="statReading">0</span>
+        <span class="stat-label">En lectura activa</span>
+      </div>
+    </div>
+
+    <div class="stat-card stat-completed">
+      <div class="stat-icon-badge">🏆</div>
+      <div class="stat-info">
+        <span class="stat-number" id="statCompleted">0</span>
+        <span class="stat-label">Libros completados</span>
+      </div>
+    </div>
+
+    <div class="stat-card stat-pages">
+      <div class="stat-icon-badge">📄</div>
+      <div class="stat-info">
+        <span class="stat-number" id="statTotalPages">0</span>
+        <span class="stat-label">Páginas leídas</span>
+      </div>
+    </div>
+
+    <div class="stat-card stat-progress highlight">
+      <div class="stat-icon-badge">🪻</div>
+      <div class="stat-info">
+        <div class="stat-progress-top">
+          <span class="stat-number" id="statAvgProgress">0%</span>
+          <span class="stat-label">Progreso general</span>
+        </div>
+        <div class="stat-mini-bar">
+          <div class="stat-mini-bar-fill" id="statMiniBarFill" style="width: 0%;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Banner de Bienvenida si no hay libros aún -->
+  <section class="empty-library-hint" id="emptyLibraryHint">
+    <div class="hint-card">
+      <span class="hint-squirrel">🐿️🌸</span>
+      <div class="hint-text">
+        <h4>¡Tu librero aún no tiene libros registrados!</h4>
+        <p>Haz clic en el botón <strong>+ Añadir Libro</strong> arriba o presiona directamente cualquier repisa de madera para colocar tu primer libro.</p>
+      </div>
+      <button class="btn btn-ac-primary" onclick="openBookModal()">🌸 + Añadir Mi Primer Libro</button>
+    </div>
+  </section>
+
+  <!-- Contenedor Principal del Librero -->
+  <main class="bookshelf-scene">
+    <div class="furniture-title-banner">
+      <span class="room-hint">
+        🪵 Toca una repisa para entrar a ver los libros • 🗄️ Toca los cajones para ver u organizar lo que guardas
+      </span>
+    </div>
+
+    <!-- Estructura del Mueble basada en la foto real y la visión de Photo 1 -->
+    <div class="bookshelf-furniture" id="bookshelfFurniture">
+      
+      <!-- COLUMNA IZQUIERDA (5 repisas) -->
+      <aside class="shelf-tower tower-left">
+        <div class="shelf-compartment" data-shelf-id="col-izq-1">
+          <div class="compartment-tag-pill">
+            <span class="tag-title">Izquierda 1 (Superior)</span>
+            <span class="tag-category">Romance</span>
+          </div>
+          <div class="shelf-decor-prop prop-succulent" title="Maceta de suculenta">🪴</div>
+          <div class="books-preview-strip" id="preview-col-izq-1"></div>
+          <div class="shelf-board"></div>
+        </div>
+
+        <div class="shelf-compartment" data-shelf-id="col-izq-2">
+          <div class="compartment-tag-pill">
+            <span class="tag-title">Izquierda 2</span>
+            <span class="tag-category">Ciencia Ficción</span>
+          </div>
+          <div class="shelf-decor-prop prop-rocket" title="Cohete espacial">🚀</div>
+          <div class="books-preview-strip" id="preview-col-izq-2"></div>
+          <div class="shelf-board"></div>
+        </div>
+
+        <div class="shelf-compartment" data-shelf-id="col-izq-3">
+          <div class="compartment-tag-pill">
+            <span class="tag-title">Izquierda 3</span>
+            <span class="tag-category">Manga</span>
+          </div>
+          <div class="shelf-decor-prop prop-totoro" title="Figura coleccionable">🧸</div>
+          <div class="books-preview-strip" id="preview-col-izq-3"></div>
+          <div class="shelf-board"></div>
+        </div>
+
+        <div class="shelf-compartment" data-shelf-id="col-izq-4">
+          <div class="compartment-tag-pill">
+            <span class="tag-title">Izquierda 4</span>
+            <span class="tag-category">Pendientes</span>
+          </div>
+          <div class="shelf-note-card">Grandes historias te esperan 💕</div>
+          <div class="books-preview-strip" id="preview-col-izq-4"></div>
+          <div class="shelf-board"></div>
+        </div>
+
+        <div class="shelf-compartment" data-shelf-id="col-izq-5">
+          <div class="compartment-tag-pill">
+            <span class="tag-title">Izquierda 5 (Inferior)</span>
+            <span class="tag-category">Favoritos</span>
+          </div>
+          <div class="shelf-decor-prop prop-crystal" title="Frasco con luces de hadas">✨</div>
+          <div class="books-preview-strip" id="preview-col-izq-5"></div>
+          <div class="shelf-board"></div>
+        </div>
+      </aside>
+
+      <!-- SECCIÓN CENTRAL (Puente 3 cubículos + Ventana con colchoneta gris + 4 Cajones en cuadrícula 2x2) -->
+      <section class="shelf-center">
+        <!-- Puente Superior: 3 Cubículos horizontales -->
+        <div class="shelf-bridge">
+          <div class="shelf-compartment bridge-compartment" data-shelf-id="puente-1">
+            <div class="compartment-tag-pill">
+              <span class="tag-title">Puente 1 (Izq)</span>
+              <span class="tag-category">Fantasía</span>
+            </div>
+            <div class="shelf-decor-prop prop-lantern" title="Farolito cálido">🏮</div>
+            <div class="books-preview-strip" id="preview-puente-1"></div>
+            <div class="shelf-board"></div>
+          </div>
+
+          <div class="shelf-compartment bridge-compartment" data-shelf-id="puente-2">
+            <div class="compartment-tag-pill">
+              <span class="tag-title">Puente 2 (Centro)</span>
+              <span class="tag-category">Clásicos</span>
+            </div>
+            <div class="shelf-decor-prop prop-bust" title="Mini escultura clásica">🏛️</div>
+            <div class="books-preview-strip" id="preview-puente-2"></div>
+            <div class="shelf-board"></div>
+          </div>
+
+          <div class="shelf-compartment bridge-compartment" data-shelf-id="puente-3">
+            <div class="compartment-tag-pill">
+              <span class="tag-title">Puente 3 (Der)</span>
+              <span class="tag-category">Desarrollo Personal</span>
+            </div>
+            <div class="shelf-decor-prop prop-globe" title="Globo terráqueo">🌍</div>
+            <div class="books-preview-strip" id="preview-puente-3"></div>
+            <div class="shelf-board"></div>
+          </div>
+        </div>
+
+        <!-- Ventana central con rincón de lectura, paisaje de Zakia y persiana interactiva -->
+        <div class="window-nook" id="windowNook">
+          <!-- Píldora de ubicación, reloj y momento del día en Zakia -->
+          <div class="window-time-badge" id="windowTimeBadge" title="Haz clic para alternar: Mañana 🌅, Tarde ☀️, Atardecer 🌇, Noche 🌙 o Automático 🔄">
+            <span class="location-pin">📍 Nuez, Qro</span>
+            <span class="time-sep">•</span>
+            <span class="time-clock" id="windowClockTime">14:43</span>
+            <span class="time-phase-tag" id="windowPhaseLabel">☀️ Tarde</span>
+          </div>
+
+          <div class="window-frame" id="windowFrame">
+            <!-- Persiana enrollable interactiva limpia (SIN EMOJIS, tela de lino premium) -->
+            <div class="window-blind" id="windowBlind" style="height: 25%;">
+              <div class="blind-fabric">
+                <div class="blind-texture-weave"></div>
+                <div class="blind-hem-stitch"></div>
+              </div>
+              <div class="blind-bottom-bar" id="blindHandle" title="↔️ Arrastra hacia arriba o abajo para regular la persiana">
+                <div class="blind-handle-grip"></div>
+                <div class="blind-pull-ring"></div>
+              </div>
+            </div>
+
+            <!-- Botones rápidos flotantes para ajustar la persiana -->
+            <div class="blind-quick-bar">
+              <button type="button" class="btn-blind-action" id="btnBlindUp" title="Subir persiana por completo">▲ Subir</button>
+              <button type="button" class="btn-blind-action" id="btnBlindMid" title="A la mitad">◼ Mitad</button>
+              <button type="button" class="btn-blind-action" id="btnBlindDown" title="Bajar persiana">▼ Bajar</button>
+            </div>
+
+            <!-- Cristal de la ventana con vista exterior: Escenario Ilustrado en Alta Definición (Photo 1) -->
+            <div class="window-glass" id="windowGlass">
+              <div class="window-scene-image-container">
+                <img src="assets/window_scene.jpg" alt="Rincón de lectura en el jardín de Zakia" class="window-scene-hd-img" id="windowSceneImg">
+                <div class="window-time-atmosphere" id="windowTimeAtmosphere"></div>
+                <!-- Frase en el jardín como en Photo 1 -->
+                <div class="garden-signpost-badge">
+                  <span>Un buen libro también es un hogar 🌸</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- BANCA CON COLCHONETA GRIS REALISTA (SIN EMOJIS, como lo pidió el usuario y la foto real) -->
+          <div class="reading-bench">
+            <div class="bench-cushion gray-mattress">
+              <div class="cushion-tuft t1"></div>
+              <div class="cushion-tuft t2"></div>
+              <div class="cushion-tuft t3"></div>
+              <div class="cushion-tuft t4"></div>
+              <div class="cushion-tuft t5"></div>
+              <div class="cushion-tuft t6"></div>
+              <div class="cushion-piping"></div>
+            </div>
+            <div class="bench-base"></div>
+          </div>
+        </div>
+
+        <!-- 4 CAJONES INFERIORES: 2 de un lado y 2 del otro (No para libros, para organizar cosas) -->
+        <div class="drawers-grid-4">
+          <!-- Columna Izquierda de Cajones -->
+          <div class="drawers-column">
+            <!-- Cajón Izquierdo Superior -->
+            <div class="drawer-box" data-drawer-id="cajon-izq-1">
+              <div class="drawer-face">
+                <div class="drawer-handle"></div>
+                <div class="drawer-content-pill" id="label-cajon-izq-1">
+                  <span class="drawer-icon">✏️</span>
+                  <span class="drawer-name">Papelería & Stickers</span>
+                </div>
+              </div>
+            </div>
+            <!-- Cajón Izquierdo Inferior -->
+            <div class="drawer-box" data-drawer-id="cajon-izq-2">
+              <div class="drawer-face">
+                <div class="drawer-handle"></div>
+                <div class="drawer-content-pill" id="label-cajon-izq-2">
+                  <span class="drawer-icon">📁</span>
+                  <span class="drawer-name">Archivos & Documentos</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Columna Derecha de Cajones -->
+          <div class="drawers-column">
+            <!-- Cajón Derecho Superior -->
+            <div class="drawer-box" data-drawer-id="cajon-der-1">
+              <div class="drawer-face">
+                <div class="drawer-handle"></div>
+                <div class="drawer-content-pill" id="label-cajon-der-1">
+                  <span class="drawer-icon">📓</span>
+                  <span class="drawer-name">Cuadernos & Libretas</span>
+                </div>
+              </div>
+            </div>
+            <!-- Cajón Derecho Inferior -->
+            <div class="drawer-box" data-drawer-id="cajon-der-2">
+              <div class="drawer-face">
+                <div class="drawer-handle"></div>
+                <div class="drawer-content-pill" id="label-cajon-der-2">
+                  <span class="drawer-icon">🌸</span>
+                  <span class="drawer-name">Recuerdos & Varios</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- COLUMNA DERECHA (5 repisas) -->
+      <aside class="shelf-tower tower-right">
+        <div class="shelf-compartment" data-shelf-id="col-der-1">
+          <div class="compartment-tag-pill">
+            <span class="tag-title">Derecha 1 (Superior)</span>
+            <span class="tag-category">Misterio</span>
+          </div>
+          <div class="shelf-decor-prop prop-lantern" title="Farolito cálido">🏮</div>
+          <div class="books-preview-strip" id="preview-col-der-1"></div>
+          <div class="shelf-board"></div>
+        </div>
+
+        <div class="shelf-compartment" data-shelf-id="col-der-2">
+          <div class="compartment-tag-pill">
+            <span class="tag-title">Derecha 2 (Colección)</span>
+            <span class="tag-category">Crecimiento</span>
+          </div>
+          <div class="shelf-decor-prop prop-plant" title="Planta de interior">🌿</div>
+          <div class="books-preview-strip" id="preview-col-der-2"></div>
+          <div class="shelf-board"></div>
+        </div>
+
+        <div class="shelf-compartment" data-shelf-id="col-der-3">
+          <div class="compartment-tag-pill">
+            <span class="tag-title">Derecha 3</span>
+            <span class="tag-category">Recetas</span>
+          </div>
+          <div class="shelf-decor-prop prop-teacup" title="Taza de té">🍵</div>
+          <div class="books-preview-strip" id="preview-col-der-3"></div>
+          <div class="shelf-board"></div>
+        </div>
+
+        <div class="shelf-compartment" data-shelf-id="col-der-4">
+          <div class="compartment-tag-pill">
+            <span class="tag-title">Derecha 4</span>
+            <span class="tag-category">Libros en Inglés</span>
+          </div>
+          <div class="shelf-decor-prop prop-eiffel" title="Torre Eiffel miniatura">🗼</div>
+          <div class="books-preview-strip" id="preview-col-der-4"></div>
+          <div class="shelf-board"></div>
+        </div>
+
+        <div class="shelf-compartment" data-shelf-id="col-der-5">
+          <div class="compartment-tag-pill">
+            <span class="tag-title">Derecha 5 (Inferior)</span>
+            <span class="tag-category">Por leer</span>
+          </div>
+          <div class="shelf-decor-prop prop-fox" title="Figurita de zorrito durmiendo">🦊</div>
+          <div class="books-preview-strip" id="preview-col-der-5"></div>
+          <div class="shelf-board"></div>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- ================================================================= -->
+  <!-- MODAL DE ZOOM / ENTRAR A UNA REPISA DE LIBROS                     -->
+  <!-- ================================================================= -->
+  <div class="section-modal-backdrop" id="sectionModalBackdrop">
+    <div class="section-modal" id="sectionModal">
+      
+      <!-- Cabecera de la sección -->
+      <div class="section-modal-header">
+        <div class="section-meta">
+          <span class="section-tag" id="activeSectionCategory">Columna Derecha</span>
+          <h2 class="section-title" id="activeSectionTitle">Repisa Nivel 2</h2>
+          <p class="section-stats" id="activeSectionStats">0 libros en esta repisa</p>
+        </div>
+        <div class="section-modal-actions">
+          <button id="addBookInThisShelfBtn" class="btn btn-ac-primary">
+            <span>🌸 +</span> Agregar Libro Aquí
+          </button>
+          <button id="closeSectionModalBtn" class="btn-close" title="Volver al librero (Esc)">✕</button>
+        </div>
+      </div>
+
+      <!-- Vitrina interactiva de libros en repisa 3D -->
+      <div class="shelf-stage">
+        <div class="shelf-stage-board"></div>
+        <div class="books-shelf-display" id="booksShelfDisplay">
+          <!-- Renderizado dinámico de libros -->
+        </div>
+      </div>
+
+      <!-- Pie con tips amigables -->
+      <div class="section-modal-footer">
+        <span>🐿️ <strong>Tip de la ardillita:</strong> Haz clic en cualquier libro para actualizar la página donde vas o editar notas.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- MODAL DE CAJÓN: ORGANIZADOR DE ARCHIVOS, PAPELERÍA, RECUERDOS    -->
+  <!-- ================================================================= -->
+  <div class="drawer-modal-backdrop" id="drawerModalBackdrop">
+    <div class="drawer-modal">
+      <div class="drawer-modal-header">
+        <div class="drawer-header-info">
+          <span class="drawer-ac-tag">🗄️ Organizador del Mueble</span>
+          <h3 id="drawerModalTitle">Cajón Izquierdo Superior</h3>
+          <p class="drawer-subtitle">Personaliza qué guardas en este cajón para mantener tu espacio organizado</p>
+        </div>
+        <button id="closeDrawerModalBtn" class="btn-close">✕</button>
+      </div>
+
+      <div class="drawer-modal-body">
+        <!-- Selector de categorías rápidas estilo Animal Crossing -->
+        <label class="form-label-ac">Selecciona la categoría principal:</label>
+        <div class="drawer-presets-grid" id="drawerPresetsGrid">
+          <button type="button" class="btn-preset" data-name="Papelería & Stickers" data-icon="✏️">
+            <span>✏️</span> Papelería & Plumas
+          </button>
+          <button type="button" class="btn-preset" data-name="Archivos & Documentos" data-icon="📁">
+            <span>📁</span> Archivos & Documentos
+          </button>
+          <button type="button" class="btn-preset" data-name="Cuadernos & Libretas" data-icon="📓">
+            <span>📓</span> Cuadernos & Agendas
+          </button>
+          <button type="button" class="btn-preset" data-name="Manualidades & Washi Tapes" data-icon="🎨">
+            <span>🎨</span> Manualidades & Washi
+          </button>
+          <button type="button" class="btn-preset" data-name="Recuerdos & Fotos" data-icon="🌸">
+            <span>🌸</span> Recuerdos & Fotos
+          </button>
+          <button type="button" class="btn-preset" data-name="Cables & Accesorios" data-icon="🔌">
+            <span>🔌</span> Cables & Gadgets
+          </button>
+        </div>
+
+        <!-- Campos de personalización -->
+        <div class="form-row-ac">
+          <div class="form-group-ac flex-1">
+            <label for="drawerIconInput">Ícono:</label>
+            <input type="text" id="drawerIconInput" maxlength="3" value="✏️">
+          </div>
+          <div class="form-group-ac flex-3">
+            <label for="drawerNameInput">Nombre de lo que guardas aquí:</label>
+            <input type="text" id="drawerNameInput" placeholder="Ej: Papelería, Post-its, etc.">
+          </div>
+        </div>
+
+        <div class="form-group-ac">
+          <label for="drawerNotesInput">Detalles / Lista de objetos guardados:</label>
+          <textarea id="drawerNotesInput" rows="3" placeholder="Ej: Plumas pastel, stickers de Animal Crossing, clips dorados, libreta de notas..."></textarea>
+        </div>
+      </div>
+
+      <div class="drawer-modal-footer">
+        <button type="button" id="cancelDrawerBtn" class="btn btn-ac-ghost">Cancelar</button>
+        <button type="button" id="saveDrawerBtn" class="btn btn-ac-primary">🌸 Guardar Cajón</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- MODAL PARA AGREGAR / EDITAR / ACTUALIZAR LECTURA DE UN LIBRO       -->
+  <!-- ================================================================= -->
+  <div class="book-modal-backdrop" id="bookModalBackdrop">
+    <div class="book-modal">
+      <div class="book-modal-header">
+        <div class="book-modal-title-wrap">
+          <span class="book-mascot-chip">🐿️📖</span>
+          <h3 id="bookModalTitle">Añadir Nuevo Libro</h3>
+        </div>
+        <button id="closeBookModalBtn" class="btn-close">✕</button>
+      </div>
+
+      <form id="bookForm" class="book-form">
+        <input type="hidden" id="bookIdInput">
+
+        <div class="form-row">
+          <div class="form-group flex-2">
+            <label for="bookTitleInput">Título del Libro *</label>
+            <input type="text" id="bookTitleInput" required placeholder="Ej: Cien años de soledad, Harry Potter...">
+          </div>
+          <div class="form-group flex-1">
+            <label for="bookReaderInput">Lector(a) *</label>
+            <select id="bookReaderInput" required>
+              <option value="Ella">🌸 Ella</option>
+              <option value="Él">☕ Él</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-2">
+            <label for="bookAuthorInput">Autor(a) / Saga</label>
+            <input type="text" id="bookAuthorInput" placeholder="Ej: Gabriel García Márquez">
+          </div>
+          <div class="form-group flex-1">
+            <label for="bookShelfInput">Repisa del Mueble *</label>
+            <select id="bookShelfInput" required>
+              <optgroup label="Columna Izquierda">
+                <option value="col-izq-1">Izquierda 1 (Superior)</option>
+                <option value="col-izq-2">Izquierda 2</option>
+                <option value="col-izq-3">Izquierda 3</option>
+                <option value="col-izq-4">Izquierda 4</option>
+                <option value="col-izq-5">Izquierda 5 (Inferior)</option>
+              </optgroup>
+              <optgroup label="Puente Superior (Sobre Ventana)">
+                <option value="puente-1">Puente 1 (Izquierdo)</option>
+                <option value="puente-2">Puente 2 (Centro)</option>
+                <option value="puente-3">Puente 3 (Derecho)</option>
+              </optgroup>
+              <optgroup label="Columna Derecha">
+                <option value="col-der-1">Derecha 1 (Superior)</option>
+                <option value="col-der-2">Derecha 2 (Colección)</option>
+                <option value="col-der-3">Derecha 3</option>
+                <option value="col-der-4">Derecha 4</option>
+                <option value="col-der-5">Derecha 5 (Inferior)</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+
+        <!-- Barra interactiva de Páginas y Porcentaje Dinámico -->
+        <div class="reading-progress-card">
+          <div class="progress-card-title">
+            <span>📊 Progreso de lectura</span>
+            <span class="squirrel-cheer">🐿️ ¡Cada página cuenta!</span>
+          </div>
+
+          <div class="progress-inputs-row">
+            <div class="form-group">
+              <label for="bookCurrentPage">Página Actual</label>
+              <input type="number" id="bookCurrentPage" min="0" value="0">
+            </div>
+            <div class="progress-slash">/</div>
+            <div class="form-group">
+              <label for="bookTotalPages">Total Páginas *</label>
+              <input type="number" id="bookTotalPages" min="1" value="300" required>
+            </div>
+            <div class="progress-preview-badge">
+              <span id="calculatedPercent">0%</span>
+              <small id="calculatedStatus">Por empezar</small>
+            </div>
+          </div>
+
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progressBarFill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- Paleta de colores linda: Lavandas, Rosas, Menta y Clásicos -->
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label>Color del Lomo:</label>
+            <div class="color-picker-palette" id="colorPalette">
+              <!-- Tonos Lavanda y Rosas favoritos -->
+              <span class="color-swatch selected" data-color="#9575cd" style="background:#9575cd;" title="Lavanda"></span>
+              <span class="color-swatch" data-color="#f48fb1" style="background:#f48fb1;" title="Rosa Pastel"></span>
+              <span class="color-swatch" data-color="#ec407a" style="background:#ec407a;" title="Rosa Fresa"></span>
+              <span class="color-swatch" data-color="#ba68c8" style="background:#ba68c8;" title="Orquídea"></span>
+              <span class="color-swatch" data-color="#4db6ac" style="background:#4db6ac;" title="Menta Animal Crossing"></span>
+              <span class="color-swatch" data-color="#ffd54f" style="background:#ffd54f;" title="Miel Cálida"></span>
+              <span class="color-swatch" data-color="#ff8a65" style="background:#ff8a65;" title="Melocotón"></span>
+              <span class="color-swatch" data-color="#5c6bc0" style="background:#5c6bc0;" title="Azul Noche"></span>
+              <input type="color" id="customColorPicker" value="#9575cd" title="Color personalizado">
+            </div>
+          </div>
+
+          <div class="form-group flex-1">
+            <label for="bookRating">Calificación:</label>
+            <select id="bookRating">
+              <option value="0">Sin calificar aún</option>
+              <option value="5">⭐⭐⭐⭐⭐ (¡Amado completamente!)</option>
+              <option value="4">⭐⭐⭐⭐ (Muy bonito / Recomendado)</option>
+              <option value="3">⭐⭐⭐ (Bueno)</option>
+              <option value="2">⭐⭐ (Regular)</option>
+              <option value="1">⭐ (No me atrapó)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="bookNotes">Notas / Frases favoritas / Citas:</label>
+          <textarea id="bookNotes" rows="2" placeholder="Citas memorables, recordatorios o impresiones de lectura..."></textarea>
+        </div>
+
+        <div class="book-modal-footer">
+          <button type="button" id="deleteBookBtn" class="btn btn-danger hidden">🗑️ Eliminar Libro</button>
+          <div class="spacer"></div>
+          <button type="button" id="cancelBookBtn" class="btn btn-ac-ghost">Cancelar</button>
+          <button type="submit" class="btn btn-ac-primary">🌸 Guardar Libro</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- MODAL DE BACKUP / IMPORT / EXPORT                                -->
+  <!-- ================================================================= -->
+  <div class="backup-modal-backdrop" id="backupModalBackdrop">
+    <div class="backup-modal">
+      <div class="backup-modal-header">
+        <div class="book-modal-title-wrap">
+          <span class="book-mascot-chip">💾🌸</span>
+          <h3>Copias de Seguridad & Datos</h3>
+        </div>
+        <button id="closeBackupModalBtn" class="btn-close">✕</button>
+      </div>
+      <div class="backup-modal-body">
+        <p>Todos los libros y cajones se guardan automáticamente en tu navegador. Puedes descargar un archivo de respaldo para no perder nada o restaurarlo en otra computadora.</p>
+        
+        <div class="backup-actions-grid">
+          <div class="backup-card">
+            <h4>💾 Exportar Copia</h4>
+            <p>Descarga un archivo <code>.json</code> con todos tus libros, avances y cajones.</p>
+            <button id="exportDataBtn" class="btn btn-ac-secondary">Descargar Respaldo</button>
+          </div>
+
+          <div class="backup-card">
+            <h4>📥 Restaurar Copia</h4>
+            <p>Carga un archivo de respaldo guardado previamente.</p>
+            <input type="file" id="importFileInput" accept=".json" style="display:none">
+            <button id="importDataBtn" class="btn btn-ac-secondary">Subir Archivo JSON</button>
+          </div>
+        </div>
+
+        <div class="reset-area">
+          <button id="clearAllBooksBtn" class="btn btn-danger-soft">Limpiar todos los libros (Empezar desde cero)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
