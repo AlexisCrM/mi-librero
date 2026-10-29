@@ -16,8 +16,7 @@ const SHELF_DEFINITIONS = {
   'col-izq-6': { name: 'Repisa 6 (Inferior)', category: 'Favoritos' },
 
   'puente-1':  { name: 'Puente 1 (Izquierdo)', category: 'Fantasía' },
-  'puente-2':  { name: 'Puente 2 (Centro)', category: 'Clásicos' },
-  'puente-3':  { name: 'Puente 3 (Derecho)', category: 'Desarrollo Personal' },
+  'puente-2':  { name: 'Puente 2 (Derecho)', category: 'Clásicos' },
 
   'col-der-1': { name: 'Repisa 1 (Superior)', category: 'Misterio' },
   'col-der-2': { name: 'Repisa 2 (Colección)', category: 'Crecimiento' },
@@ -162,7 +161,7 @@ const PHOTO_1_STARTER_BOOKS = [
     title: 'Hábitos Atómicos',
     author: 'James Clear',
     reader: 'Carolina Ornelas',
-    shelfId: 'puente-3',
+    shelfId: 'col-der-2',
     totalPages: 320,
     currentPage: 0,
     status: 'to_read',
@@ -217,7 +216,6 @@ const SHELF_DECORATIVE_PALETTES = {
 
   'puente-1':  ['#7c3aed', '#6d28d9', '#8b5cf6', '#a78bfa', '#5b21b6', '#c4b5fd'], // Fantasía
   'puente-2':  ['#b45309', '#92400e', '#d97706', '#78350f', '#e2d4c0', '#451a03'], // Clásicos
-  'puente-3':  ['#059669', '#10b981', '#34d399', '#047857', '#d97706', '#84cc16'], // Desarrollo Personal
 
   'col-der-1': ['#1e293b', '#0f172a', '#334155', '#475569', '#1e1b4b', '#090e17'], // Misterio
   'col-der-2': ['#f472b6', '#fbcfe8', '#ec4899', '#fda4af', '#f43f5e', '#fb7185'], // Crecimiento
@@ -337,11 +335,15 @@ function loadData() {
     appState.readers = ['Carolina Ornelas'];
   }
 
-  // Migrar libros con 'Ella' o 'Él' hacia 'Carolina Ornelas'
+  // Migrar libros con 'Ella' o 'Él' hacia 'Carolina Ornelas', y reasignar antiguo puente-3 a col-der-2
   let booksMigrated = false;
   appState.books.forEach(b => {
     if (b.reader === 'Ella' || b.reader === 'Él' || !b.reader) {
       b.reader = 'Carolina Ornelas';
+      booksMigrated = true;
+    }
+    if (b.shelfId === 'puente-3') {
+      b.shelfId = 'col-der-2';
       booksMigrated = true;
     }
   });

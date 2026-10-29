@@ -166,15 +166,18 @@
 
     <!-- Estructura del Mueble basada en la foto real y la visión de Photo 1 -->
     <div class="bookshelf-furniture" id="bookshelfFurniture">
+      <!-- Tarjetas indicadoras de orientación Izquierda / Derecha montadas en el marco superior sin desfasar las repisas -->
+      <div class="tower-side-badge badge-left" title="Columna Izquierda del librero">
+        <span class="badge-icon">🌿</span>
+        <span class="badge-text">Izquierda</span>
+      </div>
+      <div class="tower-side-badge badge-right" title="Columna Derecha del librero">
+        <span class="badge-text">Derecha</span>
+        <span class="badge-icon">🌿</span>
+      </div>
       
       <!-- COLUMNA IZQUIERDA (6 repisas reales) -->
       <aside class="shelf-tower tower-left">
-        <!-- Tarjeta novedosa y pequeña que indica el lado izquierdo del librero -->
-        <div class="tower-side-badge badge-left">
-          <span class="badge-icon">🌿</span>
-          <span class="badge-text">Izquierda</span>
-        </div>
-
         <div class="shelf-compartment" data-shelf-id="col-izq-1">
           <div class="compartment-tag-pill">
             <span class="tag-category">Romance</span>
@@ -230,9 +233,9 @@
         </div>
       </aside>
 
-      <!-- SECCIÓN CENTRAL (Puente 3 cubículos + Ventana con colchoneta gris + 4 Cajones en cuadrícula 2x2) -->
+      <!-- SECCIÓN CENTRAL (Puente 2 cubículos anchos + Ventana con colchoneta gris + 4 Cajones en cuadrícula 2x2) -->
       <section class="shelf-center">
-        <!-- Puente Superior: 3 Cubículos horizontales -->
+        <!-- Puente Superior: 2 Cubículos anchos alineados exactamente a la altura de Romance y Misterio -->
         <div class="shelf-bridge">
           <div class="shelf-compartment bridge-compartment" data-shelf-id="puente-1">
             <div class="compartment-tag-pill">
@@ -249,15 +252,6 @@
             </div>
             <div class="shelf-decor-prop prop-bust" title="Mini escultura clásica">🏛️</div>
             <div class="books-preview-strip" id="preview-puente-2"></div>
-            <div class="shelf-board"></div>
-          </div>
-
-          <div class="shelf-compartment bridge-compartment" data-shelf-id="puente-3">
-            <div class="compartment-tag-pill">
-              <span class="tag-category">Desarrollo Personal</span>
-            </div>
-            <div class="shelf-decor-prop prop-globe" title="Globo terráqueo">🌍</div>
-            <div class="books-preview-strip" id="preview-puente-3"></div>
             <div class="shelf-board"></div>
           </div>
         </div>
@@ -386,12 +380,6 @@
 
       <!-- COLUMNA DERECHA (6 repisas reales) -->
       <aside class="shelf-tower tower-right">
-        <!-- Tarjeta que indica el lado derecho del librero -->
-        <div class="tower-side-badge badge-right">
-          <span class="badge-text">Derecha</span>
-          <span class="badge-icon">🌿</span>
-        </div>
-
         <div class="shelf-compartment" data-shelf-id="col-der-1">
           <div class="compartment-tag-pill">
             <span class="tag-category">Misterio</span>
