@@ -467,11 +467,11 @@ function setupEventListeners() {
     });
   });
 
-  // Clic en los 4 cajones (para organizar contenido de cada cajón)
+  // Clic en los 4 cajones (con apertura física en 3D y tarjeta que emerge del cajón)
   document.querySelectorAll('[data-drawer-id]').forEach(elem => {
     elem.addEventListener('click', () => {
       const drawerId = elem.getAttribute('data-drawer-id');
-      openDrawerModal(drawerId);
+      triggerDrawerOpening(elem, drawerId);
     });
   });
 
@@ -1442,6 +1442,36 @@ function renderSectionStage(shelfId) {
 // ===================================================================
 let currentDrawerItems = [];
 
+function triggerDrawerOpening(drawerElem, drawerId) {
+  // 1. Quitar animación activa de cualquier otro cajón
+  document.querySelectorAll('.drawer-box').forEach(d => d.classList.remove('drawer-open-active'));
+
+  // 2. Activar apertura física en 3D del cajón
+  drawerElem.classList.add('drawer-open-active');
+
+  // 3. Calcular la posición exacta de este cajón para que la tarjeta emerja desde su interior
+  const rect = drawerElem.getBoundingClientRect();
+  const drawerCenterX = rect.left + rect.width / 2;
+  const drawerCenterY = rect.top + rect.height / 2;
+
+  const viewportCenterX = window.innerWidth / 2;
+  const viewportCenterY = window.innerHeight / 2;
+
+  const deltaX = Math.round(drawerCenterX - viewportCenterX);
+  const deltaY = Math.round(drawerCenterY - viewportCenterY);
+
+  const modal = document.querySelector('.drawer-modal');
+  if (modal) {
+    modal.style.setProperty('--drawer-origin-x', `${deltaX}px`);
+    modal.style.setProperty('--drawer-origin-y', `${deltaY}px`);
+  }
+
+  // 4. Tras una pequeña fracción donde el cajón se desliza hacia afuera, hacer emerger la tarjeta
+  setTimeout(() => {
+    openDrawerModal(drawerId);
+  }, 120);
+}
+
 function openDrawerModal(drawerId) {
   appState.activeDrawerId = drawerId;
   const drawer = appState.drawers[drawerId] || { name: 'Cajón', icon: '📦', items: [], notes: '' };
@@ -1478,6 +1508,11 @@ function closeDrawerModal() {
   const popover = document.getElementById('drawerIconPopover');
   if (popover) popover.classList.remove('open');
   appState.activeDrawerId = null;
+
+  // Cerrar suavemente el cajón de madera en el mueble
+  setTimeout(() => {
+    document.querySelectorAll('.drawer-box').forEach(d => d.classList.remove('drawer-open-active'));
+  }, 160);
 }
 
 function renderDrawerItemsList() {

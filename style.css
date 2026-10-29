@@ -1431,6 +1431,33 @@ body.ac-theme {
     inset 0 -3px 6px rgba(0, 0, 0, 0.4);
   transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
   position: relative;
+  perspective: 900px;
+}
+
+/* Cavidad interior del mueble que se revela cuando el cajón se abre */
+.drawer-box::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  background: radial-gradient(ellipse at center, #2e1707 0%, #150902 100%);
+  border-radius: 6px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: 1;
+  pointer-events: none;
+  box-shadow: inset 0 8px 16px rgba(0, 0, 0, 0.85);
+}
+
+.drawer-box.drawer-open-active::before {
+  opacity: 1;
+}
+
+.drawer-box.drawer-open-active {
+  z-index: 30;
+  border-color: #f59e0b;
+  box-shadow: 
+    0 18px 32px rgba(25, 12, 4, 0.65),
+    inset 0 4px 8px rgba(0, 0, 0, 0.6);
 }
 
 .drawer-box:hover {
@@ -1464,12 +1491,47 @@ body.ac-theme {
   justify-content: space-between;
   padding: 0 16px;
   position: relative;
+  z-index: 2;
   border: 1.5px solid #a4703c;
   border-top-color: #fce1bf;
   border-bottom-color: #683e16;
   box-shadow: 
     inset 0 2px 4px rgba(255, 255, 255, 0.42),
     inset 0 -3px 7px rgba(30, 15, 5, 0.38);
+  transition: transform 0.35s cubic-bezier(0.2, 0.85, 0.3, 1.2), box-shadow 0.35s ease, border-color 0.3s ease;
+  transform-origin: center top;
+}
+
+/* Deslizamiento 3D hacia afuera cuando el cajón se abre */
+.drawer-box.drawer-open-active .drawer-face {
+  transform: translate3d(0, 16px, 42px) scale(1.025);
+  box-shadow: 
+    0 24px 34px rgba(18, 8, 2, 0.7),
+    inset 0 2px 4px rgba(255, 255, 255, 0.55),
+    inset 0 -3px 8px rgba(30, 15, 5, 0.45);
+  border-top-color: #fff1dc;
+  border-color: #c2884a;
+}
+
+/* Paredes interiores de madera del cajón que se asoman al deslizar */
+.drawer-box.drawer-open-active .drawer-face::before {
+  content: '';
+  position: absolute;
+  top: -14px;
+  left: 6px;
+  right: 6px;
+  height: 16px;
+  background: linear-gradient(180deg, #6c3f15 0%, #8c5520 100%);
+  border-radius: 4px 4px 0 0;
+  border: 1px solid #4a270a;
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.25), inset 0 -3px 6px rgba(0,0,0,0.5);
+  z-index: -1;
+  animation: drawerRimSlide 0.35s cubic-bezier(0.2, 0.85, 0.3, 1.2) forwards;
+}
+
+@keyframes drawerRimSlide {
+  0% { transform: scaleY(0); opacity: 0; }
+  100% { transform: scaleY(1); opacity: 1; }
 }
 
 /* Jaladera horizontal de acero negro cepillado con reflejo metálico */
@@ -1923,7 +1985,6 @@ body.ac-theme {
   pointer-events: auto;
 }
 
-.drawer-modal,
 .book-modal,
 .backup-modal {
   background: #ffffff;
@@ -1934,6 +1995,46 @@ body.ac-theme {
   overflow: hidden;
   animation: acPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   border: 2px solid #e1bee7;
+}
+
+/* La tarjeta del cajón emerge mágicamente desde el interior del cajón abierto */
+.drawer-modal {
+  background: #ffffff;
+  width: 100%;
+  max-width: 580px;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-deep);
+  overflow: hidden;
+  border: 2px solid #e1bee7;
+  transform-origin: center center;
+}
+
+.drawer-modal-backdrop.open .drawer-modal {
+  animation: drawerCardEmerge 0.5s cubic-bezier(0.18, 0.9, 0.28, 1.15) forwards;
+}
+
+@keyframes drawerCardEmerge {
+  0% {
+    transform: translate(var(--drawer-origin-x, 0), var(--drawer-origin-y, 0)) scale(0.15) rotate(-3.5deg);
+    opacity: 0.15;
+    filter: blur(5px) brightness(1.15);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  }
+  50% {
+    transform: translate(calc(var(--drawer-origin-x, 0) * 0.42), calc(var(--drawer-origin-y, 0) * 0.42 - 28px)) scale(0.68) rotate(-1deg);
+    opacity: 0.92;
+    filter: blur(0px);
+    box-shadow: 0 16px 36px rgba(118, 48, 142, 0.28);
+  }
+  80% {
+    transform: translate(0, -10px) scale(1.025) rotate(0.4deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+    box-shadow: var(--shadow-deep);
+  }
 }
 
 @keyframes acPop {
