@@ -498,11 +498,11 @@ function updateReadersDropdowns() {
 // EVENT LISTENERS
 // ===================================================================
 function setupEventListeners() {
-  // Clic en cualquier repisa del mueble (para adentrarse en la repisa)
+  // Clic en cualquier repisa del mueble (con animación de zoom y apertura estilo Animal Crossing)
   document.querySelectorAll('[data-shelf-id]').forEach(elem => {
     elem.addEventListener('click', () => {
       const shelfId = elem.getAttribute('data-shelf-id');
-      openSectionModal(shelfId);
+      triggerShelfZoom(elem, shelfId);
     });
   });
 
@@ -1594,7 +1594,8 @@ function renderFurniturePreviews() {
 
       miniSpine.addEventListener('click', (e) => {
         e.stopPropagation();
-        openSectionModal(shelfId);
+        const shelfElem = document.querySelector(`[data-shelf-id="${shelfId}"]`);
+        triggerShelfZoom(shelfElem, shelfId);
       });
 
       container.appendChild(miniSpine);
@@ -1621,12 +1622,129 @@ function renderFurniturePreviews() {
 
       decoSpine.addEventListener('click', (e) => {
         e.stopPropagation();
-        openSectionModal(shelfId);
+        const shelfElem = document.querySelector(`[data-shelf-id="${shelfId}"]`);
+        triggerShelfZoom(shelfElem, shelfId);
       });
 
       container.appendChild(decoSpine);
     }
   });
+}
+
+// ===================================================================
+// EFECTOS Y SONIDOS COTTAGE & ANIMAL CROSSING
+// ===================================================================
+
+function playAnimalCrossingChime() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    if (ctx.state === 'suspended') {
+      ctx.resume();
+    }
+    const now = ctx.currentTime;
+
+    // Tono 1: Campana aguda alegre (Nota E5 -> G#5)
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(659.25, now);
+    osc1.frequency.exponentialRampToValueAtTime(830.61, now + 0.08);
+    gain1.gain.setValueAtTime(0.18, now);
+    gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
+    osc1.start(now);
+    osc1.stop(now + 0.22);
+
+    // Tono 2: Resonancia cálida estilo marimba Nintendo (B5 -> E6)
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = 'triangle';
+    osc2.frequency.setValueAtTime(987.77, now + 0.07);
+    osc2.frequency.exponentialRampToValueAtTime(1318.51, now + 0.18);
+    gain2.gain.setValueAtTime(0.14, now + 0.07);
+    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc2.start(now + 0.07);
+    osc2.stop(now + 0.3);
+  } catch(e) {
+    // Si el navegador bloquea audio antes de interacción, continúa sin errores
+  }
+}
+
+function createAnimalCrossingLeafBurst(shelfElem) {
+  if (!shelfElem) return;
+  const rect = shelfElem.getBoundingClientRect();
+  const emojis = ['🍃', '🌸', '✨', '🌿', '🌸'];
+
+  for (let i = 0; i < 6; i++) {
+    const p = document.createElement('div');
+    p.className = 'ac-shelf-particle';
+    p.textContent = emojis[i % emojis.length];
+
+    const startX = rect.left + rect.width * (0.25 + Math.random() * 0.5);
+    const startY = rect.top + rect.height * (0.2 + Math.random() * 0.5);
+
+    const tx = (Math.random() - 0.5) * 80;
+    const ty = -35 - Math.random() * 35;
+    const txEnd = tx * 1.5;
+    const tyEnd = ty - 45 - Math.random() * 30;
+    const rot = (Math.random() - 0.5) * 70;
+    const rotEnd = (Math.random() - 0.5) * 140;
+
+    p.style.left = `${startX}px`;
+    p.style.top = `${startY}px`;
+    p.style.setProperty('--tx', `${tx}px`);
+    p.style.setProperty('--ty', `${ty}px`);
+    p.style.setProperty('--tx-end', `${txEnd}px`);
+    p.style.setProperty('--ty-end', `${tyEnd}px`);
+    p.style.setProperty('--rot', `${rot}deg`);
+    p.style.setProperty('--rot-end', `${rotEnd}deg`);
+
+    document.body.appendChild(p);
+
+    setTimeout(() => {
+      p.remove();
+    }, 780);
+  }
+}
+
+function triggerShelfZoom(shelfElem, shelfId) {
+  if (!shelfElem) {
+    openSectionModal(shelfId);
+    return;
+  }
+
+  // 1. Sonido tierno de bienvenida estilo Animal Crossing
+  playAnimalCrossingChime();
+
+  // 2. Ráfaga de hojitas y flores flotantes que brotan de la repisa
+  createAnimalCrossingLeafBurst(shelfElem);
+
+  // 3. Resaltar la repisa presionada con borde brillante
+  document.querySelectorAll('.shelf-compartment').forEach(s => s.classList.remove('shelf-focus-pulse'));
+  shelfElem.classList.add('shelf-focus-pulse');
+
+  // 4. Calcular el centro de la repisa dentro del mueble para que la cámara haga zoom 3D hacia ella
+  const furniture = document.getElementById('bookshelfFurniture');
+  if (furniture) {
+    const furnRect = furniture.getBoundingClientRect();
+    const shelfRect = shelfElem.getBoundingClientRect();
+
+    const originX = Math.min(95, Math.max(5, Math.round(((shelfRect.left + shelfRect.width / 2 - furnRect.left) / furnRect.width) * 100)));
+    const originY = Math.min(95, Math.max(5, Math.round(((shelfRect.top + shelfRect.height / 2 - furnRect.top) / furnRect.height) * 100)));
+
+    furniture.style.transformOrigin = `${originX}% ${originY}%`;
+    furniture.classList.add('shelf-zoom-active');
+  }
+
+  // 5. Tras la animación de aproximación rápida (~270ms), desplegar la vitrina de la repisa (Foto 2)
+  setTimeout(() => {
+    openSectionModal(shelfId);
+  }, 270);
 }
 
 // ===================================================================
@@ -1678,8 +1796,16 @@ function openSectionModal(shelfId) {
 }
 
 function closeSectionModal() {
-  document.getElementById('sectionModalBackdrop').classList.remove('open');
+  const backdrop = document.getElementById('sectionModalBackdrop');
+  if (backdrop) backdrop.classList.remove('open');
   appState.activeShelfId = null;
+
+  // Restaurar el zoom del mueble suavemente
+  const furniture = document.getElementById('bookshelfFurniture');
+  if (furniture) {
+    furniture.classList.remove('shelf-zoom-active');
+  }
+  document.querySelectorAll('.shelf-compartment').forEach(s => s.classList.remove('shelf-focus-pulse'));
 }
 
 function setShelfCategory(shelfId, newCategory) {
@@ -1782,7 +1908,7 @@ function renderSectionStage(shelfId) {
     return;
   }
 
-  books.forEach(book => {
+  books.forEach((book, index) => {
     const totalP = Number(book.totalPages) || 1;
     const curP = Math.min(Number(book.currentPage) || 0, totalP);
     const pct = Math.round((curP / totalP) * 100);
@@ -1792,7 +1918,8 @@ function renderSectionStage(shelfId) {
     const width = Math.min(75, Math.max(50, Math.round((book.totalPages || 200) / 6)));
 
     const bookElem = document.createElement('div');
-    bookElem.className = 'book-3d-item';
+    bookElem.className = 'book-3d-item ac-book-entrance';
+    bookElem.style.animationDelay = `${index * 85 + 60}ms`;
     bookElem.style.backgroundColor = book.spineColor || '#9575cd';
     bookElem.style.height = `${height}px`;
     bookElem.style.width = `${width}px`;
