@@ -966,6 +966,7 @@ body.ac-theme {
     opacity: 0;
     transform: translate(var(--tx-end, 25px), var(--ty-end, -65px)) scale(0.7) rotate(var(--rot-end, 60deg));
   }
+}
 
 /* Brillo especular dinámico que sigue la luz sobre la madera */
 .bookshelf-furniture::before {
