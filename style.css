@@ -1190,6 +1190,39 @@ body.ac-theme {
   text-shadow: 0 0.5px 0 rgba(255, 255, 255, 0.85);
 }
 
+/* Placa con 2 categorías: menor tamaño de letra para que no se vea tan grande en el librero */
+.compartment-tag-pill.dual-category {
+  padding: 3px 10px;
+  max-width: 195px;
+}
+
+.tag-category.dual-category {
+  font-size: 0.58rem; /* Menor tamaño para mantener la estética cozy y limpia */
+  letter-spacing: 0.1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3.5px;
+  line-height: 1.15;
+}
+
+.tag-category.dual-category .cat-part {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 47%;
+  display: inline-block;
+}
+
+.tag-category.dual-category .cat-bullet {
+  font-size: 0.62rem;
+  color: #9333ea;
+  font-weight: 800;
+  flex-shrink: 0;
+  line-height: 1;
+  opacity: 0.85;
+}
+
 /* Objetos decorativos cozy en repisas (Photo 1) */
 .shelf-decor-prop {
   position: absolute;
@@ -1919,13 +1952,37 @@ body.ac-theme {
 .gandhi-category-picker-box {
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.75rem;
   background: #ffffff;
-  padding: 0.35rem 0.85rem 0.35rem 0.55rem;
+  padding: 0.4rem 0.95rem 0.4rem 0.65rem;
   border-radius: 999px;
   border: 1.5px solid #dcbfe5;
   box-shadow: 0 3px 10px rgba(118, 48, 142, 0.08);
   transition: border-color 0.2s, box-shadow 0.2s;
+  flex-wrap: wrap;
+}
+
+.gandhi-picker-col {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.gandhi-badge.optional {
+  background: #f5f3ff;
+  color: #7e22ce;
+  border-color: #ddd6fe;
+}
+
+.section-category-title.dual-title {
+  font-size: 1.65rem;
+}
+
+.category-title-sep {
+  color: #9333ea;
+  margin: 0 0.35rem;
+  font-weight: 800;
+  opacity: 0.75;
 }
 
 .gandhi-category-picker-box:hover,

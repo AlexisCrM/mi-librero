@@ -453,60 +453,122 @@
               <h2 class="section-category-title" id="activeSectionCategory">Romance</h2>
             </div>
 
-            <div class="gandhi-category-picker-box">
-              <label for="shelfCategorySelect" class="gandhi-select-label">
-                <span class="gandhi-badge">GANDHI</span> Categoría:
-              </label>
-              <div class="gandhi-select-wrapper">
-                <select id="shelfCategorySelect" class="gandhi-category-select" title="Elige una categoría de Librerías Gandhi para esta repisa">
-                  <optgroup label="📚 Literatura & Ficción (Gandhi)">
-                    <option value="Romance">Romance</option>
-                    <option value="Novelas">Novelas</option>
-                    <option value="Ficción & Novela">Ficción & Novela</option>
-                    <option value="Ciencia Ficción">Ciencia Ficción</option>
-                    <option value="Fantasía">Fantasía</option>
-                    <option value="Misterio">Misterio</option>
-                    <option value="Terror & Thriller">Terror & Thriller</option>
-                    <option value="Novela Histórica">Novela Histórica</option>
-                    <option value="Clásicos">Clásicos</option>
-                    <option value="Poesía & Arte">Poesía & Arte</option>
-                    <option value="Cuentos & Relatos">Cuentos & Relatos</option>
-                  </optgroup>
-                  <optgroup label="🎨 Manga, Cómics & Cultura (Gandhi)">
-                    <option value="Manga">Manga</option>
-                    <option value="Cómics & Novela Gráfica">Cómics & Novela Gráfica</option>
-                    <option value="Arte & Fotografía">Arte & Fotografía</option>
-                    <option value="Música & Cine">Música & Cine</option>
-                  </optgroup>
-                  <optgroup label="🌱 Superación & Bienestar (Gandhi)">
-                    <option value="Desarrollo Personal">Desarrollo Personal</option>
-                    <option value="Crecimiento">Crecimiento</option>
-                    <option value="Psicología & Relaciones">Psicología & Relaciones</option>
-                    <option value="Salud & Bienestar">Salud & Bienestar</option>
-                    <option value="Espiritualidad & Meditación">Espiritualidad & Meditación</option>
-                  </optgroup>
-                  <optgroup label="💼 No Ficción & Ciencias (Gandhi)">
-                    <option value="Negocios & Finanzas">Negocios & Finanzas</option>
-                    <option value="Historia & Biografías">Historia & Biografías</option>
-                    <option value="Filosofía & Ensayo">Filosofía & Ensayo</option>
-                    <option value="Ciencia & Divulgación">Ciencia & Divulgación</option>
-                    <option value="Tecnología & IA">Tecnología & IA</option>
-                  </optgroup>
-                  <optgroup label="🧸 Juvenil, Infantil & Vida (Gandhi)">
-                    <option value="Juvenil (Young Adult)">Juvenil (Young Adult)</option>
-                    <option value="Infantil">Infantil</option>
-                    <option value="Recetas">Recetas</option>
-                    <option value="Viajes & Aventuras">Viajes & Aventuras</option>
-                    <option value="Libros en Inglés">Libros en Inglés</option>
-                  </optgroup>
-                  <optgroup label="🏷️ Mi Organización">
-                    <option value="Favoritos">⭐ Favoritos</option>
-                    <option value="Pendientes">⏳ Pendientes</option>
-                    <option value="Por leer">📖 Por leer</option>
-                    <option value="__custom__">✏️ Otra categoría personalizada...</option>
-                  </optgroup>
-                </select>
-                <span class="select-chevron">▾</span>
+            <div class="gandhi-category-picker-box dual-picker-box">
+              <!-- Categoría 1 -->
+              <div class="gandhi-picker-col">
+                <label for="shelfCategorySelect" class="gandhi-select-label">
+                  <span class="gandhi-badge">GANDHI</span> Categoría 1:
+                </label>
+                <div class="gandhi-select-wrapper">
+                  <select id="shelfCategorySelect" class="gandhi-category-select" title="Categoría Principal">
+                    <optgroup label="📚 Literatura & Ficción (Gandhi)">
+                      <option value="Romance">Romance</option>
+                      <option value="Novelas">Novelas</option>
+                      <option value="Ficción & Novela">Ficción & Novela</option>
+                      <option value="Ciencia Ficción">Ciencia Ficción</option>
+                      <option value="Fantasía">Fantasía</option>
+                      <option value="Misterio">Misterio</option>
+                      <option value="Terror & Thriller">Terror & Thriller</option>
+                      <option value="Novela Histórica">Novela Histórica</option>
+                      <option value="Clásicos">Clásicos</option>
+                      <option value="Poesía & Arte">Poesía & Arte</option>
+                      <option value="Cuentos & Relatos">Cuentos & Relatos</option>
+                    </optgroup>
+                    <optgroup label="🎨 Manga, Cómics & Cultura (Gandhi)">
+                      <option value="Manga">Manga</option>
+                      <option value="Cómics & Novela Gráfica">Cómics & Novela Gráfica</option>
+                      <option value="Arte & Fotografía">Arte & Fotografía</option>
+                      <option value="Música & Cine">Música & Cine</option>
+                    </optgroup>
+                    <optgroup label="🌱 Superación & Bienestar (Gandhi)">
+                      <option value="Desarrollo Personal">Desarrollo Personal</option>
+                      <option value="Crecimiento">Crecimiento</option>
+                      <option value="Psicología & Relaciones">Psicología & Relaciones</option>
+                      <option value="Salud & Bienestar">Salud & Bienestar</option>
+                      <option value="Espiritualidad & Meditación">Espiritualidad & Meditación</option>
+                    </optgroup>
+                    <optgroup label="💼 No Ficción & Ciencias (Gandhi)">
+                      <option value="Negocios & Finanzas">Negocios & Finanzas</option>
+                      <option value="Historia & Biografías">Historia & Biografías</option>
+                      <option value="Filosofía & Ensayo">Filosofía & Ensayo</option>
+                      <option value="Ciencia & Divulgación">Ciencia & Divulgación</option>
+                      <option value="Tecnología & IA">Tecnología & IA</option>
+                    </optgroup>
+                    <optgroup label="🧸 Juvenil, Infantil & Vida (Gandhi)">
+                      <option value="Juvenil (Young Adult)">Juvenil (Young Adult)</option>
+                      <option value="Infantil">Infantil</option>
+                      <option value="Recetas">Recetas</option>
+                      <option value="Viajes & Aventuras">Viajes & Aventuras</option>
+                      <option value="Libros en Inglés">Libros en Inglés</option>
+                    </optgroup>
+                    <optgroup label="🏷️ Mi Organización">
+                      <option value="Favoritos">⭐ Favoritos</option>
+                      <option value="Pendientes">⏳ Pendientes</option>
+                      <option value="Por leer">📖 Por leer</option>
+                      <option value="__custom__">✏️ Otra categoría personalizada...</option>
+                    </optgroup>
+                  </select>
+                  <span class="select-chevron">▾</span>
+                </div>
+              </div>
+
+              <!-- Categoría 2 (Opcional) -->
+              <div class="gandhi-picker-col">
+                <label for="shelfCategory2Select" class="gandhi-select-label">
+                  <span class="gandhi-badge optional">OPCIONAL</span> Categoría 2:
+                </label>
+                <div class="gandhi-select-wrapper">
+                  <select id="shelfCategory2Select" class="gandhi-category-select" title="Segunda categoría si este estante combina 2 géneros">
+                    <option value="">(Ninguna - Solo 1 categoría)</option>
+                    <optgroup label="📚 Literatura & Ficción (Gandhi)">
+                      <option value="Romance">Romance</option>
+                      <option value="Novelas">Novelas</option>
+                      <option value="Ficción & Novela">Ficción & Novela</option>
+                      <option value="Ciencia Ficción">Ciencia Ficción</option>
+                      <option value="Fantasía">Fantasía</option>
+                      <option value="Misterio">Misterio</option>
+                      <option value="Terror & Thriller">Terror & Thriller</option>
+                      <option value="Novela Histórica">Novela Histórica</option>
+                      <option value="Clásicos">Clásicos</option>
+                      <option value="Poesía & Arte">Poesía & Arte</option>
+                      <option value="Cuentos & Relatos">Cuentos & Relatos</option>
+                    </optgroup>
+                    <optgroup label="🎨 Manga, Cómics & Cultura (Gandhi)">
+                      <option value="Manga">Manga</option>
+                      <option value="Cómics & Novela Gráfica">Cómics & Novela Gráfica</option>
+                      <option value="Arte & Fotografía">Arte & Fotografía</option>
+                      <option value="Música & Cine">Música & Cine</option>
+                    </optgroup>
+                    <optgroup label="🌱 Superación & Bienestar (Gandhi)">
+                      <option value="Desarrollo Personal">Desarrollo Personal</option>
+                      <option value="Crecimiento">Crecimiento</option>
+                      <option value="Psicología & Relaciones">Psicología & Relaciones</option>
+                      <option value="Salud & Bienestar">Salud & Bienestar</option>
+                      <option value="Espiritualidad & Meditación">Espiritualidad & Meditación</option>
+                    </optgroup>
+                    <optgroup label="💼 No Ficción & Ciencias (Gandhi)">
+                      <option value="Negocios & Finanzas">Negocios & Finanzas</option>
+                      <option value="Historia & Biografías">Historia & Biografías</option>
+                      <option value="Filosofía & Ensayo">Filosofía & Ensayo</option>
+                      <option value="Ciencia & Divulgación">Ciencia & Divulgación</option>
+                      <option value="Tecnología & IA">Tecnología & IA</option>
+                    </optgroup>
+                    <optgroup label="🧸 Juvenil, Infantil & Vida (Gandhi)">
+                      <option value="Juvenil (Young Adult)">Juvenil (Young Adult)</option>
+                      <option value="Infantil">Infantil</option>
+                      <option value="Recetas">Recetas</option>
+                      <option value="Viajes & Aventuras">Viajes & Aventuras</option>
+                      <option value="Libros en Inglés">Libros en Inglés</option>
+                    </optgroup>
+                    <optgroup label="🏷️ Mi Organización">
+                      <option value="Favoritos">⭐ Favoritos</option>
+                      <option value="Pendientes">⏳ Pendientes</option>
+                      <option value="Por leer">📖 Por leer</option>
+                      <option value="__custom__">✏️ Otra categoría personalizada...</option>
+                    </optgroup>
+                  </select>
+                  <span class="select-chevron">▾</span>
+                </div>
               </div>
             </div>
           </div>

@@ -8,22 +8,22 @@
 // DEFINICIÓN DE REPISAS (Solo para libros)
 // ===================================================================
 const SHELF_DEFINITIONS = {
-  'col-izq-1': { name: 'Repisa 1 (Superior)', category: 'Romance' },
-  'col-izq-2': { name: 'Repisa 2', category: 'Ciencia Ficción' },
-  'col-izq-3': { name: 'Repisa 3', category: 'Manga' },
-  'col-izq-4': { name: 'Repisa 4', category: 'Novelas' },
-  'col-izq-5': { name: 'Repisa 5', category: 'Pendientes' },
-  'col-izq-6': { name: 'Repisa 6 (Inferior)', category: 'Favoritos' },
+  'col-izq-1': { name: 'Repisa 1 (Superior)', category: 'Romance', category2: '' },
+  'col-izq-2': { name: 'Repisa 2', category: 'Ciencia Ficción', category2: '' },
+  'col-izq-3': { name: 'Repisa 3', category: 'Manga', category2: '' },
+  'col-izq-4': { name: 'Repisa 4', category: 'Novelas', category2: '' },
+  'col-izq-5': { name: 'Repisa 5', category: 'Pendientes', category2: '' },
+  'col-izq-6': { name: 'Repisa 6 (Inferior)', category: 'Favoritos', category2: '' },
 
-  'puente-1':  { name: 'Puente 1 (Izquierdo)', category: 'Fantasía' },
-  'puente-2':  { name: 'Puente 2 (Derecho)', category: 'Clásicos' },
+  'puente-1':  { name: 'Puente 1 (Izquierdo)', category: 'Fantasía', category2: '' },
+  'puente-2':  { name: 'Puente 2 (Derecho)', category: 'Clásicos', category2: '' },
 
-  'col-der-1': { name: 'Repisa 1 (Superior)', category: 'Misterio' },
-  'col-der-2': { name: 'Repisa 2 (Colección)', category: 'Crecimiento' },
-  'col-der-3': { name: 'Repisa 3', category: 'Recetas' },
-  'col-der-4': { name: 'Repisa 4', category: 'Poesía & Arte' },
-  'col-der-5': { name: 'Repisa 5', category: 'Libros en Inglés' },
-  'col-der-6': { name: 'Repisa 6 (Inferior)', category: 'Por leer' }
+  'col-der-1': { name: 'Repisa 1 (Superior)', category: 'Misterio', category2: '' },
+  'col-der-2': { name: 'Repisa 2 (Colección)', category: 'Crecimiento', category2: '' },
+  'col-der-3': { name: 'Repisa 3', category: 'Recetas', category2: '' },
+  'col-der-4': { name: 'Repisa 4', category: 'Poesía & Arte', category2: '' },
+  'col-der-5': { name: 'Repisa 5', category: 'Libros en Inglés', category2: '' },
+  'col-der-6': { name: 'Repisa 6 (Inferior)', category: 'Por leer', category2: '' }
 };
 
 // ===================================================================
@@ -520,38 +520,43 @@ function setupEventListeners() {
     if (e.target.id === 'sectionModalBackdrop') closeSectionModal();
   });
 
-  // Selector desplegable de categorías estilo Gandhi en repisa
-  const shelfCategorySelect = document.getElementById('shelfCategorySelect');
-  if (shelfCategorySelect) {
-    shelfCategorySelect.addEventListener('change', (e) => {
+  // Selectores desplegables de categorías (Categoría 1 y Categoría 2) estilo Gandhi en repisa
+  ['shelfCategorySelect', 'shelfCategory2Select'].forEach((selId, index) => {
+    const sel = document.getElementById(selId);
+    if (!sel) return;
+
+    sel.addEventListener('change', (e) => {
       const selectedVal = e.target.value;
       if (!appState.activeShelfId) return;
 
       const shelfId = appState.activeShelfId;
+      const isSecond = index === 1;
 
       if (selectedVal === '__custom__') {
-        const currentCat = SHELF_DEFINITIONS[shelfId]?.category || '';
-        const customName = prompt('Escribe el nombre de la nueva categoría para esta repisa:', currentCat);
+        const currentVal = isSecond ? (SHELF_DEFINITIONS[shelfId]?.category2 || '') : (SHELF_DEFINITIONS[shelfId]?.category || '');
+        const customName = prompt(`Escribe el nombre de la ${isSecond ? 'segunda' : 'primera'} categoría personalizada:`, currentVal);
         if (customName && customName.trim()) {
-          const finalCategory = customName.trim();
-          // Añadir opción personalizada al selector
+          const finalCat = customName.trim();
           const customOpt = document.createElement('option');
-          customOpt.value = finalCategory;
-          customOpt.textContent = `🏷️ ${finalCategory}`;
-          const group = shelfCategorySelect.querySelector('optgroup[label*="Organización"]') || shelfCategorySelect;
+          customOpt.value = finalCat;
+          customOpt.textContent = `🏷️ ${finalCat}`;
+          const group = sel.querySelector('optgroup[label*="Organización"]') || sel;
           group.insertBefore(customOpt, group.lastElementChild);
-          shelfCategorySelect.value = finalCategory;
-          setShelfCategory(shelfId, finalCategory);
+          sel.value = finalCat;
         } else {
-          // Revertir a la categoría previa
-          shelfCategorySelect.value = SHELF_DEFINITIONS[shelfId]?.category || 'Romance';
+          sel.value = currentVal;
+          return;
         }
-        return;
       }
 
-      setShelfCategory(shelfId, selectedVal);
+      const sel1 = document.getElementById('shelfCategorySelect');
+      const sel2 = document.getElementById('shelfCategory2Select');
+      const cat1 = sel1 ? sel1.value : (SHELF_DEFINITIONS[shelfId]?.category || 'Romance');
+      const cat2 = sel2 ? sel2.value : '';
+
+      setShelfCategories(shelfId, cat1, cat2);
     });
-  }
+  });
 
   // Botón "Agregar Libro Aquí" dentro de la repisa
   document.getElementById('addBookInThisShelfBtn').addEventListener('click', () => {
@@ -1752,44 +1757,85 @@ function triggerShelfZoom(shelfElem, shelfId) {
 // ===================================================================
 const STORAGE_KEY_SHELF_CATEGORIES = 'mi_librero_shelf_categories_v1';
 
+function getShelfCategoryDisplay(shelfId) {
+  const info = SHELF_DEFINITIONS[shelfId];
+  if (!info) return { text: 'Romance', isDual: false, cat1: 'Romance', cat2: '' };
+
+  const cat1 = (info.category || '').trim();
+  const cat2 = (info.category2 || '').trim();
+
+  if (cat1 && cat2) {
+    return {
+      text: `${cat1} • ${cat2}`,
+      isDual: true,
+      cat1,
+      cat2
+    };
+  }
+
+  return {
+    text: cat1 || cat2 || 'General',
+    isDual: false,
+    cat1: cat1 || cat2 || 'General',
+    cat2: ''
+  };
+}
+
+function syncShelfCategorySelect(selectId, targetVal) {
+  const select = document.getElementById(selectId);
+  if (!select) return;
+
+  const valClean = (targetVal || '').trim();
+  if (!valClean) {
+    select.value = '';
+    return;
+  }
+
+  let matched = false;
+  for (let i = 0; i < select.options.length; i++) {
+    const opt = select.options[i];
+    if (opt.value && opt.value.toLowerCase() === valClean.toLowerCase()) {
+      select.value = opt.value;
+      matched = true;
+      break;
+    }
+  }
+
+  if (!matched && valClean) {
+    const customOpt = document.createElement('option');
+    customOpt.value = valClean;
+    customOpt.textContent = `🏷️ ${valClean}`;
+    const group = select.querySelector('optgroup[label*="Organización"]') || select;
+    group.insertBefore(customOpt, group.lastElementChild);
+    select.value = valClean;
+  }
+}
+
 function openSectionModal(shelfId) {
   appState.activeShelfId = shelfId;
-  const shelfInfo = SHELF_DEFINITIONS[shelfId] || { name: 'Repisa', category: 'Romance' };
+  const catInfo = getShelfCategoryDisplay(shelfId);
 
-  // 1. Título principal en grande con el nombre de la categoría
+  // 1. Título principal en grande con el nombre de la categoría (o ambas separadas con punto)
   const categoryElem = document.getElementById('activeSectionCategory');
   if (categoryElem) {
-    categoryElem.textContent = shelfInfo.category;
+    if (catInfo.isDual) {
+      categoryElem.classList.add('dual-title');
+      categoryElem.innerHTML = `<span>${escapeHTML(catInfo.cat1)}</span><span class="category-title-sep">•</span><span>${escapeHTML(catInfo.cat2)}</span>`;
+    } else {
+      categoryElem.classList.remove('dual-title');
+      categoryElem.textContent = catInfo.cat1;
+    }
   }
 
-  // 2. Título secundario si existiera en DOM (oculto / opcional)
+  // 2. Título secundario si existiera en DOM
   const titleElem = document.getElementById('activeSectionTitle');
   if (titleElem) {
-    titleElem.textContent = shelfInfo.name;
+    titleElem.textContent = SHELF_DEFINITIONS[shelfId]?.name || 'Repisa';
   }
 
-  // 3. Sincronizar el selector desplegable con catálogo Gandhi
-  const categorySelect = document.getElementById('shelfCategorySelect');
-  if (categorySelect) {
-    let matched = false;
-    for (let i = 0; i < categorySelect.options.length; i++) {
-      const opt = categorySelect.options[i];
-      if (opt.value.toLowerCase() === shelfInfo.category.toLowerCase()) {
-        categorySelect.value = opt.value;
-        matched = true;
-        break;
-      }
-    }
-    if (!matched && shelfInfo.category) {
-      // Si la categoría no está predefinida, agregarla dinámicamente y seleccionarla
-      const customOpt = document.createElement('option');
-      customOpt.value = shelfInfo.category;
-      customOpt.textContent = `🏷️ ${shelfInfo.category}`;
-      const group = categorySelect.querySelector('optgroup[label*="Organización"]') || categorySelect;
-      group.insertBefore(customOpt, group.lastElementChild);
-      categorySelect.value = shelfInfo.category;
-    }
-  }
+  // 3. Sincronizar los 2 selectores desplegables con catálogo Gandhi
+  syncShelfCategorySelect('shelfCategorySelect', catInfo.cat1);
+  syncShelfCategorySelect('shelfCategory2Select', catInfo.cat2);
 
   renderSectionStage(shelfId);
   document.getElementById('sectionModalBackdrop').classList.add('open');
@@ -1808,40 +1854,47 @@ function closeSectionModal() {
   document.querySelectorAll('.shelf-compartment').forEach(s => s.classList.remove('shelf-focus-pulse'));
 }
 
-function setShelfCategory(shelfId, newCategory) {
+function setShelfCategories(shelfId, newCat1, newCat2 = '') {
   if (!SHELF_DEFINITIONS[shelfId]) return;
 
-  SHELF_DEFINITIONS[shelfId].category = newCategory;
+  SHELF_DEFINITIONS[shelfId].category = (newCat1 || '').trim();
+  SHELF_DEFINITIONS[shelfId].category2 = (newCat2 || '').trim();
+
+  const catInfo = getShelfCategoryDisplay(shelfId);
 
   // Actualizar el título principal en grande del modal
   const catTitleEl = document.getElementById('activeSectionCategory');
   if (catTitleEl) {
-    catTitleEl.textContent = newCategory;
+    if (catInfo.isDual) {
+      catTitleEl.classList.add('dual-title');
+      catTitleEl.innerHTML = `<span>${escapeHTML(catInfo.cat1)}</span><span class="category-title-sep">•</span><span>${escapeHTML(catInfo.cat2)}</span>`;
+    } else {
+      catTitleEl.classList.remove('dual-title');
+      catTitleEl.textContent = catInfo.cat1;
+    }
     catTitleEl.classList.remove('category-pop-anim');
     void catTitleEl.offsetWidth; // reiniciar animación
     catTitleEl.classList.add('category-pop-anim');
   }
 
-  // Actualizar la placa de madera del mueble en la vista principal
-  const shelfEl = document.querySelector(`[data-shelf-id="${shelfId}"]`);
-  if (shelfEl) {
-    const plaqueTag = shelfEl.querySelector('.tag-category');
-    if (plaqueTag) {
-      plaqueTag.textContent = newCategory;
-    }
-  }
-
-  // Guardar en almacenamiento local
+  // Actualizar placas del mueble y guardar
+  updateShelfPlaquesUI();
   saveShelfCategories();
+}
 
-  // Actualizar el selector del modal de agregar libro
-  updateBookShelfDropdownOptions();
+function setShelfCategory(shelfId, newCategory) {
+  // Alias retrocompatible
+  const currentCat2 = SHELF_DEFINITIONS[shelfId]?.category2 || '';
+  setShelfCategories(shelfId, newCategory, currentCat2);
 }
 
 function saveShelfCategories() {
   const categoriesMap = {};
   Object.keys(SHELF_DEFINITIONS).forEach(id => {
-    categoriesMap[id] = SHELF_DEFINITIONS[id].category;
+    categoriesMap[id] = {
+      category: SHELF_DEFINITIONS[id].category || '',
+      category2: SHELF_DEFINITIONS[id].category2 || ''
+    };
   });
   localStorage.setItem(STORAGE_KEY_SHELF_CATEGORIES, JSON.stringify(categoriesMap));
 }
@@ -1853,10 +1906,19 @@ function loadSavedShelfCategories() {
       const parsed = JSON.parse(saved);
       Object.keys(parsed).forEach(id => {
         if (SHELF_DEFINITIONS[id] && parsed[id]) {
-          SHELF_DEFINITIONS[id].category = parsed[id];
+          const item = parsed[id];
+          if (typeof item === 'string') {
+            SHELF_DEFINITIONS[id].category = item;
+            SHELF_DEFINITIONS[id].category2 = '';
+          } else if (item && typeof item === 'object') {
+            SHELF_DEFINITIONS[id].category = item.category || '';
+            SHELF_DEFINITIONS[id].category2 = item.category2 || '';
+          }
         }
       });
-    } catch (e) {}
+    } catch (e) {
+      console.error('Error al cargar categorías de repisas:', e);
+    }
   }
 }
 
@@ -1864,9 +1926,24 @@ function updateShelfPlaquesUI() {
   Object.keys(SHELF_DEFINITIONS).forEach(id => {
     const shelfEl = document.querySelector(`[data-shelf-id="${id}"]`);
     if (shelfEl) {
-      const plaqueTag = shelfEl.querySelector('.tag-category');
-      if (plaqueTag && SHELF_DEFINITIONS[id]?.category) {
-        plaqueTag.textContent = SHELF_DEFINITIONS[id].category;
+      const pill = shelfEl.querySelector('.compartment-tag-pill');
+      if (pill) {
+        const catInfo = getShelfCategoryDisplay(id);
+        if (catInfo.isDual) {
+          pill.classList.add('dual-category');
+          pill.title = `Categorías: ${catInfo.cat1} • ${catInfo.cat2}`;
+          pill.innerHTML = `
+            <span class="tag-category dual-category">
+              <span class="cat-part" title="${escapeHTML(catInfo.cat1)}">${escapeHTML(catInfo.cat1)}</span>
+              <span class="cat-bullet">•</span>
+              <span class="cat-part" title="${escapeHTML(catInfo.cat2)}">${escapeHTML(catInfo.cat2)}</span>
+            </span>
+          `;
+        } else {
+          pill.classList.remove('dual-category');
+          pill.title = `Categoría: ${catInfo.cat1}`;
+          pill.innerHTML = `<span class="tag-category" title="${escapeHTML(catInfo.cat1)}">${escapeHTML(catInfo.cat1)}</span>`;
+        }
       }
     }
   });
@@ -1880,9 +1957,9 @@ function updateBookShelfDropdownOptions() {
   select.querySelectorAll('option').forEach(opt => {
     const shelfId = opt.value;
     if (SHELF_DEFINITIONS[shelfId]) {
-      const info = SHELF_DEFINITIONS[shelfId];
+      const catInfo = getShelfCategoryDisplay(shelfId);
       const baseLabel = opt.textContent.split(' - ')[0];
-      opt.textContent = `${baseLabel} - ${info.category}`;
+      opt.textContent = `${baseLabel} - ${catInfo.text}`;
     }
   });
 }
@@ -2463,7 +2540,10 @@ function handleDeleteCurrentBook() {
 function exportBackupJSON() {
   const categoriesMap = {};
   Object.keys(SHELF_DEFINITIONS).forEach(id => {
-    categoriesMap[id] = SHELF_DEFINITIONS[id].category;
+    categoriesMap[id] = {
+      category: SHELF_DEFINITIONS[id].category || '',
+      category2: SHELF_DEFINITIONS[id].category2 || ''
+    };
   });
 
   const payload = {
@@ -2518,7 +2598,14 @@ function importBackupJSON(e) {
         if (importedData.shelfCategories && typeof importedData.shelfCategories === 'object') {
           Object.keys(importedData.shelfCategories).forEach(id => {
             if (SHELF_DEFINITIONS[id]) {
-              SHELF_DEFINITIONS[id].category = importedData.shelfCategories[id];
+              const item = importedData.shelfCategories[id];
+              if (typeof item === 'string') {
+                SHELF_DEFINITIONS[id].category = item;
+                SHELF_DEFINITIONS[id].category2 = '';
+              } else if (item && typeof item === 'object') {
+                SHELF_DEFINITIONS[id].category = item.category || '';
+                SHELF_DEFINITIONS[id].category2 = item.category2 || '';
+              }
             }
           });
           saveShelfCategories();
