@@ -3188,3 +3188,877 @@ body.ac-theme {
     text-align: center;
   }
 }
+
+
+/* ===================================================================
+   TAMAGOTCHI DE NUEZ LA ARDILLITA (Marco Central del Librero)
+   =================================================================== */
+
+/* Selector de Modo: Postal vs Tamagotchi */
+.nook-mode-pills {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 250, 242, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 3px;
+  border-radius: 24px;
+  box-shadow: 0 3px 12px rgba(85, 55, 30, 0.16), 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1.5px solid rgba(225, 195, 160, 0.6);
+  z-index: 30;
+}
+
+.btn-nook-mode {
+  border: none;
+  background: transparent;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #7b5836;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn-nook-mode:hover {
+  background: rgba(230, 190, 150, 0.22);
+  color: #4a301a;
+  transform: translateY(-1px);
+}
+
+.btn-nook-mode.active {
+  background: linear-gradient(135deg, #ff7eb3, #d946ef);
+  color: #ffffff;
+  box-shadow: 0 3px 8px rgba(217, 70, 239, 0.38);
+}
+
+.tama-bubble-ping {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff4757;
+  box-shadow: 0 0 6px #ff4757;
+  animation: pingPulse 1.4s infinite ease-in-out;
+}
+
+@keyframes pingPulse {
+  0%, 100% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.35); opacity: 1; }
+}
+
+/* Contenedor del Tamagotchi dentro del Marco */
+.tamagotchi-glass {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  z-index: 12;
+  user-select: none;
+}
+
+.tamagotchi-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  background-color: #3b2818;
+}
+
+/* Escenarios / Habitaciones de Fondo */
+.stage-room-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  transition: opacity 0.5s ease-in-out, filter 0.5s ease;
+}
+
+/* Escenario 1: Casita de Madera Cálida con Chimenea */
+.tamagotchi-stage[data-room="cottage_room"] .stage-room-bg {
+  background: 
+    radial-gradient(circle at 80% 65%, rgba(255, 140, 40, 0.35) 0%, transparent 50%),
+    linear-gradient(180deg, #442a17 0%, #301d10 65%, #24140b 100%);
+}
+
+.tamagotchi-stage[data-room="cottage_room"] .stage-room-bg::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40%;
+  background: 
+    radial-gradient(ellipse at 50% 100%, rgba(255, 230, 180, 0.18) 0%, transparent 60%),
+    repeating-linear-gradient(90deg, #4a2e19 0px, #4a2e19 60px, #361f0e 61px, #361f0e 63px);
+  border-top: 3px solid #6b4324;
+}
+
+/* Chimenea animada en la pared derecha de la casita */
+.tamagotchi-stage[data-room="cottage_room"] .stage-room-bg::after {
+  content: '🪵🔥';
+  position: absolute;
+  right: 25px;
+  bottom: 45px;
+  font-size: 2.2rem;
+  filter: drop-shadow(0 0 12px rgba(255, 120, 20, 0.85));
+  animation: fireplaceGlow 1.8s infinite alternate ease-in-out;
+}
+
+@keyframes fireplaceGlow {
+  0% { transform: scale(0.97); filter: drop-shadow(0 0 8px rgba(255, 100, 20, 0.7)); }
+  100% { transform: scale(1.05); filter: drop-shadow(0 0 16px rgba(255, 160, 40, 0.95)); }
+}
+
+/* Escenario 2: Jardín Floral del Arroyo */
+.tamagotchi-stage[data-room="garden_bridge"] .stage-room-bg {
+  background: url('assets/window_scene.jpg') center center / cover no-repeat;
+  filter: brightness(1.02) saturate(1.08);
+}
+
+/* Escenario 3: Rincón del Té & Lluvia */
+.tamagotchi-stage[data-room="tea_nook"] .stage-room-bg {
+  background: 
+    radial-gradient(circle at 25% 75%, rgba(255, 215, 150, 0.3) 0%, transparent 45%),
+    linear-gradient(180deg, #2b3a4a 0%, #1f2c38 60%, #18212b 100%);
+}
+
+.tamagotchi-stage[data-room="tea_nook"] .stage-room-bg::before {
+  content: '🪟🌧️';
+  position: absolute;
+  left: 20px;
+  top: 40px;
+  font-size: 2.8rem;
+  opacity: 0.75;
+}
+
+.tamagotchi-stage[data-room="tea_nook"] .stage-room-bg::after {
+  content: '🫖✨';
+  position: absolute;
+  left: 35px;
+  bottom: 45px;
+  font-size: 1.8rem;
+  filter: drop-shadow(0 0 8px rgba(255, 220, 140, 0.8));
+}
+
+/* Escenario 4: Ático Estrellado con Luciérnagas */
+.tamagotchi-stage[data-room="starlit_roof"] .stage-room-bg {
+  background: 
+    radial-gradient(circle at 50% 20%, rgba(130, 110, 220, 0.28) 0%, transparent 60%),
+    linear-gradient(180deg, #0e1326 0%, #161c36 50%, #101426 100%);
+}
+
+.tamagotchi-stage[data-room="starlit_roof"] .stage-room-bg::before {
+  content: '🌙';
+  position: absolute;
+  right: 40px;
+  top: 35px;
+  font-size: 2.4rem;
+  filter: drop-shadow(0 0 15px rgba(255, 245, 180, 0.85));
+}
+
+/* Capa de partículas ambientales flotantes */
+.stage-particles-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+/* HUD Superior de Nuez */
+.tamagotchi-hud {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px 6px;
+}
+
+.hud-profile-card {
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  padding: 4px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(220, 195, 165, 0.6);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.hud-name {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #5c3a21;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hud-title-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #c026d3;
+}
+
+.hud-tools-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud-acorn-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  padding: 4px 10px;
+  border-radius: 16px;
+  border: 1px solid rgba(220, 195, 165, 0.6);
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #854d0e;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.btn-hud-tool {
+  border: none;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  padding: 5px 10px;
+  border-radius: 16px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #5c3a21;
+  cursor: pointer;
+  border: 1px solid rgba(220, 195, 165, 0.6);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: all 0.2s ease;
+}
+
+.btn-hud-tool:hover {
+  background: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
+}
+
+/* Tira de Necesidades / Barras de Estado */
+.tamagotchi-status-strip {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 14px;
+}
+
+.status-metric {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(6px);
+  padding: 3px 8px;
+  border-radius: 14px;
+  border: 1px solid rgba(220, 195, 165, 0.5);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.metric-icon {
+  font-size: 0.85rem;
+}
+
+.metric-track {
+  width: 50px;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.metric-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s ease-out;
+}
+
+.fill-hunger { background: linear-gradient(90deg, #f59e0b, #eab308); }
+.fill-affection { background: linear-gradient(90deg, #ec4899, #f43f5e); }
+.fill-energy { background: linear-gradient(90deg, #06b6d4, #3b82f6); }
+
+/* Área Central del Personaje */
+.tamagotchi-character-area {
+  position: relative;
+  z-index: 8;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+}
+
+/* Bocadillo de diálogo estilo Animal Crossing */
+.tamagotchi-bubble {
+  position: relative;
+  background: #ffffff;
+  color: #5c3a21;
+  padding: 6px 14px;
+  border-radius: 18px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: center;
+  max-width: 82%;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+  border: 2px solid #ecd5b8;
+  margin-bottom: 8px;
+  animation: bubbleFloat 2.6s infinite alternate ease-in-out;
+}
+
+.tamagotchi-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 7px 6px 0;
+  border-style: solid;
+  border-color: #ffffff transparent;
+  display: block;
+  width: 0;
+}
+
+@keyframes bubbleFloat {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-4px); }
+}
+
+/* Mascota Interactiva Nuez */
+.tamagotchi-mascot-wrapper {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.tamagotchi-mascot-wrapper:hover {
+  transform: scale(1.05);
+}
+
+.tamagotchi-mascot-wrapper:active {
+  transform: scale(0.96);
+}
+
+.mascot-interactive-figure {
+  position: relative;
+  width: 135px;
+  height: 135px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.figure-base-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));
+  animation: nuezIdleBreath 3.2s infinite ease-in-out;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+@keyframes nuezIdleBreath {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-4px) scale(1.02, 0.98); }
+}
+
+/* Capas de Accesorios y Ropa sobre la Ardilla */
+.mascot-accessory-hat,
+.mascot-accessory-clothes,
+.mascot-accessory-glasses {
+  position: absolute;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* Sombreros */
+.mascot-accessory-hat.hat-none { display: none; }
+.mascot-accessory-hat.hat-lavender::before {
+  content: '🌸🪻';
+  position: absolute;
+  top: 6px;
+  left: 28px;
+  font-size: 1.25rem;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+.mascot-accessory-hat.hat-beret::before {
+  content: '🎨👒';
+  position: absolute;
+  top: 4px;
+  left: 30px;
+  font-size: 1.3rem;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+.mascot-accessory-hat.hat-beanie::before {
+  content: '🧶';
+  position: absolute;
+  top: 2px;
+  left: 35px;
+  font-size: 1.4rem;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+.mascot-accessory-hat.hat-nightcap::before {
+  content: '⭐🌙';
+  position: absolute;
+  top: 4px;
+  left: 32px;
+  font-size: 1.2rem;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+/* Ropa */
+.mascot-accessory-clothes.clothes-none { display: none; }
+.mascot-accessory-clothes.clothes-cardigan::before {
+  content: '🧣✨';
+  position: absolute;
+  top: 55px;
+  left: 38px;
+  font-size: 1.2rem;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+.mascot-accessory-clothes.clothes-pajamas::before {
+  content: '✨🧸';
+  position: absolute;
+  top: 62px;
+  left: 45px;
+  font-size: 1.1rem;
+}
+
+/* Lentes */
+.mascot-accessory-glasses.glasses-none { display: none; }
+.mascot-accessory-glasses.glasses-round::before {
+  content: '👓';
+  position: absolute;
+  top: 36px;
+  left: 42px;
+  font-size: 1.25rem;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
+}
+
+/* Estado de Dormir / Noche */
+.mascot-interactive-figure.sleeping .figure-base-img {
+  filter: brightness(0.85) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+  transform: rotate(-6deg) translateY(4px);
+}
+
+.mascot-sleep-zzz {
+  position: absolute;
+  top: -12px;
+  right: 15px;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #a78bfa;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mascot-interactive-figure.sleeping .mascot-sleep-zzz {
+  opacity: 1;
+  animation: zzzDrift 2.2s infinite ease-out;
+}
+
+@keyframes zzzDrift {
+  0% { transform: translate(0, 0) scale(0.6); opacity: 0; }
+  50% { opacity: 0.95; }
+  100% { transform: translate(18px, -24px) scale(1.3); opacity: 0; }
+}
+
+/* Barra de Herramientas Inferior */
+.tamagotchi-toolbar {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 10px 10px;
+}
+
+.btn-tama-action {
+  border: none;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(8px);
+  padding: 6px 10px;
+  border-radius: 18px;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border: 1.5px solid rgba(220, 195, 165, 0.7);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn-tama-action:hover {
+  background: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  border-color: #d946ef;
+}
+
+.btn-tama-action:active {
+  transform: scale(0.95);
+}
+
+.tama-btn-icon {
+  font-size: 1rem;
+}
+
+.tama-btn-label {
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: #5c3a21;
+}
+
+/* Menús Emergentes Flotantes (Snacks, Ambientes, Armario) */
+.tama-popup-menu {
+  position: absolute;
+  inset: 12px;
+  background: rgba(255, 253, 248, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 18px;
+  border: 2px solid #ecd5b8;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: popupZoomIn 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popupZoomIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.popup-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  border-bottom: 1.5px solid #ecd5b8;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #5c3a21;
+  background: #faf3ea;
+}
+
+.btn-close-popup {
+  border: none;
+  background: transparent;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #9c714d;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.btn-close-popup:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: #2b1709;
+}
+
+/* Grilla de Snacks */
+.snack-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.snack-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  padding: 8px;
+  border-radius: 12px;
+  border: 1.5px solid #ecd5b8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.snack-item:hover {
+  border-color: #f59e0b;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(245, 158, 11, 0.22);
+}
+
+.snack-emoji {
+  font-size: 1.4rem;
+}
+
+.snack-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.snack-name {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #5c3a21;
+}
+
+.snack-benefit {
+  font-size: 0.65rem;
+  color: #c026d3;
+  font-weight: 600;
+}
+
+.snack-price {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #854d0e;
+  background: #fef3c7;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.snack-price.free {
+  background: #dcfce7;
+  color: #166534;
+}
+
+/* Grilla de Escenarios */
+.room-options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.room-option-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  padding: 8px;
+  border-radius: 12px;
+  border: 2px solid #ecd5b8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.room-option-card:hover {
+  border-color: #d946ef;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(217, 70, 239, 0.22);
+}
+
+.room-option-card.active {
+  border-color: #d946ef;
+  background: #fdf4ff;
+}
+
+.room-card-icon {
+  font-size: 1.5rem;
+}
+
+.room-card-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.room-card-title {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #5c3a21;
+}
+
+.room-card-desc {
+  font-size: 0.65rem;
+  color: #7b5836;
+}
+
+/* Guardarropa / Armario */
+.wardrobe-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 6px 10px;
+  background: #faf3ea;
+  border-bottom: 1.5px solid #ecd5b8;
+}
+
+.wardrobe-tab {
+  border: none;
+  background: transparent;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #7b5836;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.wardrobe-tab.active {
+  background: #d946ef;
+  color: #ffffff;
+}
+
+.wardrobe-items-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.wardrobe-item-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: #ffffff;
+  padding: 8px;
+  border-radius: 12px;
+  border: 1.5px solid #ecd5b8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.wardrobe-item-card:hover {
+  border-color: #d946ef;
+  transform: translateY(-2px);
+}
+
+.wardrobe-item-card.equipped {
+  border-color: #10b981;
+  background: #ecfdf5;
+}
+
+.wardrobe-item-icon {
+  font-size: 1.4rem;
+  margin-bottom: 4px;
+}
+
+.wardrobe-item-name {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #5c3a21;
+}
+
+.wardrobe-item-status {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #059669;
+}
+
+/* Pantalla del Minijuego: Lluvia de Bellotas */
+.minigame-screen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  z-index: 35;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+}
+
+.minigame-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.minigame-score { color: #facc15; }
+.minigame-timer { color: #38bdf8; }
+
+.btn-close-minigame {
+  border: none;
+  background: rgba(239, 68, 68, 0.85);
+  color: #ffffff;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.minigame-canvas-area {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  cursor: crosshair;
+}
+
+.minigame-catcher {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  pointer-events: none;
+  transition: transform 0.05s ease-out;
+}
+
+.catcher-basket { font-size: 1.6rem; }
+.catcher-mascot { font-size: 1.4rem; }
+
+.minigame-falling-item {
+  position: absolute;
+  font-size: 1.4rem;
+  pointer-events: none;
+  animation: itemFall linear forwards;
+}
+
+@keyframes itemFall {
+  0% { transform: translateY(-30px); opacity: 1; }
+  100% { transform: translateY(220px); opacity: 1; }
+}
+
+.minigame-controls-hint {
+  padding: 4px 10px;
+  background: rgba(0, 0, 0, 0.4);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.68rem;
+  text-align: center;
+}

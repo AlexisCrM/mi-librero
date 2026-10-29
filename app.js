@@ -1235,6 +1235,11 @@ function renderApp() {
   updateMascotDialogue();
   updateStickyQuote();
 
+  // Sincronizar la ardilla correspondiente al lector activo
+  if (typeof refreshSquirrelForActiveReader === 'function') {
+    refreshSquirrelForActiveReader();
+  }
+
   // Si la vitrina de una repisa está abierta, sincronizarla
   if (appState.activeShelfId) {
     renderSectionStage(appState.activeShelfId);
@@ -2483,6 +2488,10 @@ function handleAddBookFormSubmit(e) {
   saveData();
   closeBookModals();
 
+  if (typeof rewardSquirrelForReading === 'function') {
+    rewardSquirrelForReading('progress', title);
+  }
+
   if (appState.activeShelfId) {
     renderSectionStage(appState.activeShelfId);
   }
@@ -2503,6 +2512,11 @@ function handleProgressFormSubmit(e) {
   const rating = document.getElementById('progressRating').value;
   const notes = document.getElementById('progressNotes').value.trim();
 
+  const prevPages = appState.books[index].currentPage || 0;
+  const prevTotal = appState.books[index].totalPages || 1;
+  const wasCompleted = prevPages >= prevTotal;
+  const isNowCompleted = currentPage >= totalPages;
+
   appState.books[index] = {
     ...appState.books[index],
     totalPages,
@@ -2513,6 +2527,14 @@ function handleProgressFormSubmit(e) {
 
   saveData();
   closeBookModals();
+
+  if (typeof rewardSquirrelForReading === 'function') {
+    if (!wasCompleted && isNowCompleted) {
+      rewardSquirrelForReading('completed', appState.books[index].title);
+    } else if (currentPage > prevPages) {
+      rewardSquirrelForReading('progress', appState.books[index].title);
+    }
+  }
 
   if (appState.activeShelfId) {
     renderSectionStage(appState.activeShelfId);
@@ -2677,3 +2699,683 @@ function escapeHTML(str) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
+
+
+// ===================================================================
+// TAMAGOTCHI DE NUEZ LA ARDILLITA (Marco Central del Librero)
+// ===================================================================
+
+let currentSquirrel = null;
+let currentNookMode = 'postal'; // 'postal' | 'tamagotchi'
+let miniGameInterval = null;
+let miniGameTimer = null;
+let miniGameScore = 0;
+let miniGameTimeLeft = 30;
+let activeWardrobeTab = 'hats';
+
+// Frases tiernas de Nuez al interactuar (Estilo Animal Crossing / Cozy)
+const NUEZ_PET_PHRASES = [
+  "¡Qué calientito se siente tu cariño! 🌸✨",
+  "¡Jejeje! ¡Me hacen cosquillitas tus caricias! 💕",
+  "¿Qué libro leeremos después? ¡Tengo muchas ganas! 📖",
+  "Me preparé un té de lavanda delicioso para acompañarte. 🫖",
+  "Eres mi persona favorita en todo el librero. 🐿️❤️",
+  "¡Mira cómo brilla el librero hoy! Huele a páginas nuevas. ✨",
+  "¿Sabías que las ardillitas guardamos nuestras historias favoritas en el corazón? 🌰",
+  "¡Esa repisa de libros está quedando preciosa! 📚",
+  "Un ratito más de lectura y luego una siesta acogedora... 🌙",
+  "¡Baila conmigo! La música de Taylor está sonando hermosa. 🎵💃",
+  "¡Gracias por cuidarme tan bonito siempre! 🌸",
+  "Guardé una bellota dorada entre las páginas de mi libro favorito. 🌰",
+  "El sonido de las hojas de otoño me recuerda a pasar páginas. 🍂",
+  "¡Te quiero un montón, amiga lectora! 💕"
+];
+
+// Catálogo del Guardarropa de Nuez
+const WARDROBE_CATALOG = {
+  hats: [
+    { id: 'hat-none', name: 'Sin Sombrerito', icon: '🐿️', desc: 'Estilo natural de Nuez' },
+    { id: 'hat-lavender', name: 'Corona de Lavanda', icon: '🌸', desc: 'Flores aromáticas de Zakia' },
+    { id: 'hat-beret', name: 'Boina de Lectora', icon: '🎨', desc: 'Elegante y artística' },
+    { id: 'hat-beanie', name: 'Gorro de Lana', icon: '🧶', desc: 'Tejido a mano para días frescos' },
+    { id: 'hat-nightcap', name: 'Gorro Estrellado', icon: '🌙', desc: 'Para soñar con bellotas' }
+  ],
+  clothes: [
+    { id: 'clothes-none', name: 'Pelaje Natural', icon: '✨', desc: 'Suave y esponjoso' },
+    { id: 'clothes-cardigan', name: 'Cardigan Tejido', icon: '🧣', desc: 'Inspirado en Taylor Swift' },
+    { id: 'clothes-pajamas', name: 'Pijama de Estrellas', icon: '🧸', desc: 'Calientito para dormir' }
+  ],
+  glasses: [
+    { id: 'glasses-none', name: 'Sin Lentes', icon: '👀', desc: 'Mirada brillante' },
+    { id: 'glasses-round', name: 'Lentes Dorados', icon: '👓', desc: 'Redondos de ratoncita de biblioteca' }
+  ]
+};
+
+// Generador de Sonidos Sintetizados Animal Crossing (Web Audio API)
+function playTamaSound(type) {
+  try {
+    const ctx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if (ctx.state === 'suspended') ctx.resume();
+    const now = ctx.currentTime;
+
+    if (type === 'pet') {
+      // Arpegio dulce de marimba ascendente
+      [523.25, 659.25, 783.99].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + i * 0.08);
+        gain.gain.setValueAtTime(0.18, now + i * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.22);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + i * 0.08);
+        osc.stop(now + i * 0.08 + 0.25);
+      });
+    } else if (type === 'eat') {
+      // Masticación crujiente (nom-nom)
+      [0, 0.11, 0.22].forEach((delay) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(320, now + delay);
+        osc.frequency.exponentialRampToValueAtTime(140, now + delay + 0.08);
+        gain.gain.setValueAtTime(0.24, now + delay);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.08);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + delay);
+        osc.stop(now + delay + 0.1);
+      });
+    } else if (type === 'chirp') {
+      // Voz balbuceada estilo Animalese
+      const tones = [587.33, 698.46, 523.25, 783.99];
+      tones.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq + (Math.random() * 50 - 25), now + i * 0.06);
+        gain.gain.setValueAtTime(0.14, now + i * 0.06);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.09);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + i * 0.06);
+        osc.stop(now + i * 0.06 + 0.11);
+      });
+    } else if (type === 'levelUp') {
+      // Fanfarria festiva Do-Mi-Sol-Do
+      [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, now + i * 0.1);
+        gain.gain.setValueAtTime(0.22, now + i * 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.35);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + i * 0.1);
+        osc.stop(now + i * 0.1 + 0.4);
+      });
+    } else if (type === 'snore') {
+      // Respiración relajante de noche
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(220, now);
+      osc.frequency.exponentialRampToValueAtTime(180, now + 0.45);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.55);
+    } else if (type === 'catch') {
+      // Moneda de bellota en el minijuego
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, now);
+      osc.frequency.setValueAtTime(1320, now + 0.07);
+      gain.gain.setValueAtTime(0.18, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.25);
+    }
+  } catch (err) {
+    // Audio Context no desbloqueado aún
+  }
+}
+
+// Obtener el lector activo para aislar su propia ardilla
+function getActiveSquirrelReader() {
+  if (appState.activeReaderFilter && appState.activeReaderFilter !== 'all') {
+    return appState.activeReaderFilter;
+  }
+  return (appState.readers && appState.readers[0]) || 'Carolina Ornelas';
+}
+
+function getSquirrelStorageKey(readerName) {
+  return 'cozy_squirrel_data_' + encodeURIComponent(readerName || 'default');
+}
+
+// Cargar o crear el perfil de ardilla para el lector activo
+function loadActiveSquirrel() {
+  const reader = getActiveSquirrelReader();
+  const raw = localStorage.getItem(getSquirrelStorageKey(reader));
+  let data = null;
+  if (raw) {
+    try { data = JSON.parse(raw); } catch (e) {}
+  }
+
+  if (!data || typeof data !== 'object') {
+    data = {
+      reader: reader,
+      name: 'Nuez',
+      level: 1,
+      title: 'Amiga Fiel',
+      hunger: 85,
+      affection: 90,
+      energy: 80,
+      acorns: 20,
+      room: 'cottage_room',
+      equipped: {
+        hat: 'hat-none',
+        clothes: 'clothes-none',
+        glasses: 'glasses-none'
+      },
+      isSleeping: false,
+      lastUpdated: Date.now()
+    };
+  }
+
+  // Comprobar decaimiento suave según tiempo
+  const now = Date.now();
+  const minutesPassed = Math.floor((now - (data.lastUpdated || now)) / 60000);
+  if (minutesPassed > 5 && !data.isSleeping) {
+    const decay = Math.min(25, Math.floor(minutesPassed / 12));
+    data.hunger = Math.max(15, (data.hunger || 85) - decay);
+    data.affection = Math.max(20, (data.affection || 90) - Math.floor(decay / 2));
+  }
+  data.lastUpdated = now;
+
+  // Rutina nocturna automática: si son más de las 8:00 PM (20:00) y no se ha tocado, sugerir descanso
+  const hour = new Date().getHours();
+  if (hour >= 20 || hour < 7) {
+    if (!data.hasSeenNightRoutine) {
+      data.isSleeping = true;
+      data.hasSeenNightRoutine = true;
+    }
+  } else {
+    data.hasSeenNightRoutine = false;
+  }
+
+  currentSquirrel = data;
+  saveActiveSquirrel();
+  return currentSquirrel;
+}
+
+// Guardar la ardilla del lector activo
+function saveActiveSquirrel() {
+  if (!currentSquirrel) return;
+  const reader = currentSquirrel.reader || getActiveSquirrelReader();
+  currentSquirrel.lastUpdated = Date.now();
+  localStorage.setItem(getSquirrelStorageKey(reader), JSON.stringify(currentSquirrel));
+}
+
+// Sincronizar el Tamagotchi cuando cambia el lector
+function refreshSquirrelForActiveReader() {
+  loadActiveSquirrel();
+  renderSquirrelUI();
+}
+
+// Alternar entre Vista Postal y Tamagotchi de Nuez
+function switchNookMode(mode) {
+  currentNookMode = mode;
+  const btnPostal = document.getElementById('btnModePostal');
+  const btnTama = document.getElementById('btnModeTamagotchi');
+  const viewPostal = document.getElementById('windowGlass');
+  const viewTama = document.getElementById('tamagotchiGlass');
+
+  if (mode === 'tamagotchi') {
+    btnTama?.classList.add('active');
+    btnPostal?.classList.remove('active');
+    if (viewPostal) viewPostal.style.display = 'none';
+    if (viewTama) viewTama.style.display = 'flex';
+    playTamaSound('chirp');
+    refreshSquirrelForActiveReader();
+  } else {
+    btnPostal?.classList.add('active');
+    btnTama?.classList.remove('active');
+    if (viewPostal) viewPostal.style.display = 'block';
+    if (viewTama) viewTama.style.display = 'none';
+  }
+}
+
+// Renderizar la interfaz visual del Tamagotchi
+function renderSquirrelUI() {
+  if (!currentSquirrel) loadActiveSquirrel();
+  const s = currentSquirrel;
+
+  // Actualizar HUD
+  const nameEl = document.getElementById('tamagotchiName');
+  if (nameEl) nameEl.textContent = s.name || 'Nuez';
+
+  const titleEl = document.getElementById('tamagotchiTitleBadge');
+  if (titleEl) titleEl.textContent = `Nivel ${s.level || 1} • ${s.title || 'Amiga Fiel'}`;
+
+  const acornEl = document.getElementById('tamagotchiAcornCount');
+  if (acornEl) acornEl.textContent = s.acorns ?? 20;
+
+  // Actualizar Barras de Estado
+  const barHunger = document.getElementById('barHunger');
+  if (barHunger) barHunger.style.width = `${Math.min(100, Math.max(5, s.hunger || 0))}%`;
+
+  const barAffection = document.getElementById('barAffection');
+  if (barAffection) barAffection.style.width = `${Math.min(100, Math.max(5, s.affection || 0))}%`;
+
+  const barEnergy = document.getElementById('barEnergy');
+  if (barEnergy) barEnergy.style.width = `${Math.min(100, Math.max(5, s.energy || 0))}%`;
+
+  // Actualizar Escenario
+  const stage = document.getElementById('tamagotchiStage');
+  if (stage) stage.setAttribute('data-room', s.room || 'cottage_room');
+
+  // Actualizar Ropita y Sombrero
+  const hatLayer = document.getElementById('mascotHatLayer');
+  if (hatLayer) {
+    hatLayer.className = `mascot-accessory-hat ${s.equipped?.hat || 'hat-none'}`;
+  }
+
+  const clothesLayer = document.getElementById('mascotClothesLayer');
+  if (clothesLayer) {
+    clothesLayer.className = `mascot-accessory-clothes ${s.equipped?.clothes || 'clothes-none'}`;
+  }
+
+  const glassesLayer = document.getElementById('mascotGlassesLayer');
+  if (glassesLayer) {
+    glassesLayer.className = `mascot-accessory-glasses ${s.equipped?.glasses || 'glasses-none'}`;
+  }
+
+  // Estado de Sueño
+  const figure = document.getElementById('tamagotchiFigure');
+  const sleepIcon = document.getElementById('sleepBtnIcon');
+  const sleepLabel = document.getElementById('sleepBtnLabel');
+
+  if (s.isSleeping) {
+    figure?.classList.add('sleeping');
+    if (sleepIcon) sleepIcon.textContent = '☀️';
+    if (sleepLabel) sleepLabel.textContent = 'Despertar';
+  } else {
+    figure?.classList.remove('sleeping');
+    if (sleepIcon) sleepIcon.textContent = '🌙';
+    if (sleepLabel) sleepLabel.textContent = 'Dormir';
+  }
+}
+
+// Acariciar a Nuez
+function handlePetSquirrel(e) {
+  if (!currentSquirrel) loadActiveSquirrel();
+  const s = currentSquirrel;
+
+  if (s.isSleeping) {
+    // Si estaba dormida, despierta suavemente con bostezo tierno
+    s.isSleeping = false;
+    playTamaSound('chirp');
+    showBubbleDialogue("Mmm... ¡Qué lindo despertar con tu saludo! ☀️🌸");
+    saveActiveSquirrel();
+    renderSquirrelUI();
+    return;
+  }
+
+  s.affection = Math.min(100, (s.affection || 0) + 6);
+  s.acorns = (s.acorns || 0) + 1; // +1 bellotita por mimarla
+  playTamaSound('pet');
+
+  // Frase aleatoria de Nuez
+  const phrase = NUEZ_PET_PHRASES[Math.floor(Math.random() * NUEZ_PET_PHRASES.length)];
+  showBubbleDialogue(phrase);
+
+  // Animación de rebote alegre en la figura
+  const figure = document.getElementById('tamagotchiFigure');
+  if (figure) {
+    figure.style.transform = 'scale(1.12) translateY(-6px)';
+    setTimeout(() => {
+      figure.style.transform = '';
+    }, 280);
+  }
+
+  saveActiveSquirrel();
+  renderSquirrelUI();
+}
+
+// Mostrar diálogo en el bocadillo de Nuez
+function showBubbleDialogue(text) {
+  const bubble = document.getElementById('tamagotchiBubble');
+  const bubbleText = document.getElementById('tamagotchiBubbleText');
+  if (bubble && bubbleText) {
+    bubbleText.textContent = text;
+    bubble.style.animation = 'none';
+    setTimeout(() => {
+      bubble.style.animation = 'bubbleFloat 2.6s infinite alternate ease-in-out';
+    }, 10);
+  }
+}
+
+// Menú de Snacks / Alimentación
+function openSnackMenu() {
+  const menu = document.getElementById('snackMenu');
+  if (menu) menu.style.display = 'flex';
+  playTamaSound('chirp');
+}
+
+function closeSnackMenu() {
+  const menu = document.getElementById('snackMenu');
+  if (menu) menu.style.display = 'none';
+}
+
+function feedSquirrel(snackKey) {
+  if (!currentSquirrel) loadActiveSquirrel();
+  const s = currentSquirrel;
+
+  const costs = { bellota: 0, nuez: 2, te: 2, muffin: 4 };
+  const cost = costs[snackKey] || 0;
+
+  if (cost > (s.acorns || 0)) {
+    alert(`¡Necesitas ${cost} bellotas 🌰 para este snack! Puedes conseguir más leyendo libros o jugando en el minijuego.`);
+    return;
+  }
+
+  s.acorns = Math.max(0, (s.acorns || 0) - cost);
+
+  if (snackKey === 'bellota') {
+    s.hunger = Math.min(100, (s.hunger || 0) + 25);
+    showBubbleDialogue("¡Crunch crunch! ¡Qué bellota tan crujiente y dulce! 🌰✨");
+  } else if (snackKey === 'nuez') {
+    s.hunger = Math.min(100, (s.hunger || 0) + 45);
+    s.affection = Math.min(100, (s.affection || 0) + 12);
+    showBubbleDialogue("¡Una nuez dorada! ¡Mi favorita de todo el bosque! 🥜💖");
+  } else if (snackKey === 'te') {
+    s.energy = Math.min(100, (s.energy || 0) + 35);
+    s.affection = Math.min(100, (s.affection || 0) + 15);
+    showBubbleDialogue("¡Ahhh! Té de lavanda calientito... ¡Me da mucha energía para leer! 🫖🌿");
+  } else if (snackKey === 'muffin') {
+    s.hunger = Math.min(100, (s.hunger || 0) + 60);
+    s.affection = Math.min(100, (s.affection || 0) + 25);
+    showBubbleDialogue("¡Qué rico muffin de zarzamora! ¡Eres el mejor cocinero del mundo! 🧁🎉");
+  }
+
+  playTamaSound('eat');
+  closeSnackMenu();
+  saveActiveSquirrel();
+  renderSquirrelUI();
+}
+
+// Dormir / Despertar
+function handleToggleSleep() {
+  if (!currentSquirrel) loadActiveSquirrel();
+  const s = currentSquirrel;
+
+  s.isSleeping = !s.isSleeping;
+
+  if (s.isSleeping) {
+    playTamaSound('snore');
+    showBubbleDialogue("Zzz... Buenas noches, soñaré con cuentos y aventuras... 🌙💤");
+    s.energy = Math.min(100, (s.energy || 0) + 25);
+  } else {
+    playTamaSound('chirp');
+    showBubbleDialogue("¡Buenos días! ¡Qué bien descansé! ¿Qué vamos a leer hoy? ☀️✨");
+  }
+
+  saveActiveSquirrel();
+  renderSquirrelUI();
+}
+
+// Selector de Ambientes
+function toggleRoomSelectorModal(force) {
+  const menu = document.getElementById('roomMenu');
+  if (!menu) return;
+  const isOpening = force !== undefined ? force : menu.style.display === 'none';
+  menu.style.display = isOpening ? 'flex' : 'none';
+  if (isOpening) {
+    playTamaSound('chirp');
+    // Marcar activo
+    const currentRoom = currentSquirrel?.room || 'cottage_room';
+    document.querySelectorAll('.room-option-card').forEach(card => {
+      card.classList.toggle('active', card.getAttribute('data-room-id') === currentRoom);
+    });
+  }
+}
+
+function selectSquirrelRoom(roomId) {
+  if (!currentSquirrel) loadActiveSquirrel();
+  currentSquirrel.room = roomId;
+
+  playTamaSound('chirp');
+  saveActiveSquirrel();
+  renderSquirrelUI();
+  toggleRoomSelectorModal(false);
+
+  const roomNames = {
+    cottage_room: "¡Qué acogedora es nuestra casita con chimenea! 🏡🔥",
+    garden_bridge: "¡El arroyo y las flores huelen delicioso! 🌸🌿",
+    tea_nook: "¡Me encanta ver la lluvia mientras tomamos té! 🪟🌧️",
+    starlit_roof: "¡Cuántas estrellas! ¡Busquemos constelaciones! 🌌✨"
+  };
+  showBubbleDialogue(roomNames[roomId] || "¡Qué lindo ambiente! ✨");
+}
+
+// Guardarropa / Armario de Nuez
+function openWardrobeModal() {
+  const menu = document.getElementById('wardrobeMenu');
+  if (menu) {
+    menu.style.display = 'flex';
+    playTamaSound('chirp');
+    renderWardrobeItems();
+  }
+}
+
+function closeWardrobeModal() {
+  const menu = document.getElementById('wardrobeMenu');
+  if (menu) menu.style.display = 'none';
+}
+
+function switchWardrobeTab(tabKey) {
+  activeWardrobeTab = tabKey;
+  document.querySelectorAll('.wardrobe-tab').forEach(t => t.classList.remove('active'));
+  if (tabKey === 'hats') document.getElementById('tabHats')?.classList.add('active');
+  if (tabKey === 'clothes') document.getElementById('tabClothes')?.classList.add('active');
+  if (tabKey === 'glasses') document.getElementById('tabGlasses')?.classList.add('active');
+  renderWardrobeItems();
+}
+
+function renderWardrobeItems() {
+  const container = document.getElementById('wardrobeItemsContainer');
+  if (!container || !currentSquirrel) return;
+
+  const items = WARDROBE_CATALOG[activeWardrobeTab] || [];
+  const currentEquipped = currentSquirrel.equipped || {};
+
+  container.innerHTML = items.map(item => {
+    let isEquipped = false;
+    if (activeWardrobeTab === 'hats') isEquipped = currentEquipped.hat === item.id;
+    if (activeWardrobeTab === 'clothes') isEquipped = currentEquipped.clothes === item.id;
+    if (activeWardrobeTab === 'glasses') isEquipped = currentEquipped.glasses === item.id;
+
+    return `
+      <div class="wardrobe-item-card ${isEquipped ? 'equipped' : ''}" onclick="equipWardrobeItem('${activeWardrobeTab}', '${item.id}')">
+        <span class="wardrobe-item-icon">${item.icon}</span>
+        <span class="wardrobe-item-name">${item.name}</span>
+        <span class="wardrobe-item-status">${isEquipped ? '✓ Puesto' : 'Poner'}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+function equipWardrobeItem(category, itemId) {
+  if (!currentSquirrel) loadActiveSquirrel();
+  if (!currentSquirrel.equipped) currentSquirrel.equipped = {};
+
+  if (category === 'hats') currentSquirrel.equipped.hat = itemId;
+  if (category === 'clothes') currentSquirrel.equipped.clothes = itemId;
+  if (category === 'glasses') currentSquirrel.equipped.glasses = itemId;
+
+  playTamaSound('chirp');
+  saveActiveSquirrel();
+  renderSquirrelUI();
+  renderWardrobeItems();
+  showBubbleDialogue("¡Mira cómo me veo! ¿Te gusta mi nuevo look? 👒✨");
+}
+
+// Minijuego: Lluvia de Bellotas
+function startAcornMiniGame() {
+  const screen = document.getElementById('minigameScreen');
+  if (!screen) return;
+
+  miniGameScore = 0;
+  miniGameTimeLeft = 30;
+  screen.style.display = 'flex';
+  playTamaSound('chirp');
+
+  const scoreEl = document.getElementById('minigameScoreText');
+  const timerEl = document.getElementById('minigameTimerText');
+  if (scoreEl) scoreEl.textContent = '0';
+  if (timerEl) timerEl.textContent = '30s';
+
+  const canvas = document.getElementById('minigameCanvasArea');
+  const catcher = document.getElementById('minigameCatcher');
+  if (!canvas || !catcher) return;
+
+  // Limpiar objetos anteriores
+  canvas.querySelectorAll('.minigame-falling-item').forEach(el => el.remove());
+
+  // Movimiento del receptor con el cursor / touch
+  function handleMove(e) {
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const x = Math.max(25, Math.min(rect.width - 25, clientX - rect.left));
+    catcher.style.left = `${x}px`;
+  }
+
+  canvas.onmousemove = handleMove;
+  canvas.ontouchmove = handleMove;
+
+  // Caída periódica de bellotas y hojas
+  miniGameInterval = setInterval(() => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width <= 0) return;
+
+    const item = document.createElement('div');
+    item.className = 'minigame-falling-item';
+    const isAcorn = Math.random() > 0.25;
+    item.textContent = isAcorn ? '🌰' : '🍂';
+    item.dataset.type = isAcorn ? 'acorn' : 'leaf';
+
+    const spawnX = Math.random() * (rect.width - 35) + 10;
+    item.style.left = `${spawnX}px`;
+    item.style.animationDuration = `${(Math.random() * 1.2 + 1.6).toFixed(2)}s`;
+    canvas.appendChild(item);
+
+    // Detección de colisión simple
+    const checkCollision = setInterval(() => {
+      const cRect = catcher.getBoundingClientRect();
+      const iRect = item.getBoundingClientRect();
+
+      if (
+        iRect.bottom >= cRect.top + 5 &&
+        iRect.top <= cRect.bottom &&
+        iRect.right >= cRect.left &&
+        iRect.left <= cRect.right
+      ) {
+        clearInterval(checkCollision);
+        if (item.dataset.type === 'acorn') {
+          miniGameScore += 1;
+          if (scoreEl) scoreEl.textContent = miniGameScore;
+          playTamaSound('catch');
+        }
+        item.remove();
+      } else if (iRect.top > rect.bottom) {
+        clearInterval(checkCollision);
+        item.remove();
+      }
+    }, 40);
+
+    setTimeout(() => {
+      clearInterval(checkCollision);
+      if (item.parentNode) item.remove();
+    }, 3200);
+
+  }, 650);
+
+  // Cuenta regresiva
+  miniGameTimer = setInterval(() => {
+    miniGameTimeLeft--;
+    if (timerEl) timerEl.textContent = `${miniGameTimeLeft}s`;
+
+    if (miniGameTimeLeft <= 0) {
+      endMiniGame();
+    }
+  }, 1000);
+}
+
+function endMiniGame() {
+  clearInterval(miniGameInterval);
+  clearInterval(miniGameTimer);
+  miniGameInterval = null;
+  miniGameTimer = null;
+
+  playTamaSound('levelUp');
+  if (!currentSquirrel) loadActiveSquirrel();
+  currentSquirrel.acorns = (currentSquirrel.acorns || 0) + miniGameScore;
+  currentSquirrel.affection = Math.min(100, (currentSquirrel.affection || 0) + Math.min(30, miniGameScore * 2));
+  saveActiveSquirrel();
+  renderSquirrelUI();
+
+  alert(`🎉 ¡Juego terminado!\n\nAtrapaste ${miniGameScore} bellotas 🌰 que se han sumado al bolso de Nuez.`);
+  quitMiniGame();
+}
+
+function quitMiniGame() {
+  clearInterval(miniGameInterval);
+  clearInterval(miniGameTimer);
+  miniGameInterval = null;
+  miniGameTimer = null;
+  const screen = document.getElementById('minigameScreen');
+  if (screen) screen.style.display = 'none';
+}
+
+// Recompensa mágica cuando el lector avanza o termina libros
+function rewardSquirrelForReading(type, title) {
+  if (!currentSquirrel) loadActiveSquirrel();
+  const s = currentSquirrel;
+
+  if (type === 'progress') {
+    s.acorns = (s.acorns || 0) + 4;
+    s.affection = Math.min(100, (s.affection || 0) + 8);
+    showBubbleDialogue(`¡Bravo por leer! Ganamos 4 bellotas con tu lectura. 🌰✨`);
+  } else if (type === 'completed') {
+    s.acorns = (s.acorns || 0) + 15;
+    s.affection = 100;
+    s.level = (s.level || 1) + 1;
+    playTamaSound('levelUp');
+    showBubbleDialogue(`🎉 ¡TERMINASTE UN LIBRO! ¡Qué orgullo tan grande! Ganamos 15 bellotas y subí a Nivel ${s.level} 🌰🏆`);
+  }
+
+  saveActiveSquirrel();
+  renderSquirrelUI();
+
+  // Encender el puntito de atención en la pestaña de Nuez
+  const dot = document.getElementById('tamaAttentionDot');
+  if (dot && currentNookMode !== 'tamagotchi') {
+    dot.style.display = 'inline-block';
+  }
+}
+
+// Inicializar Tamagotchi al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    loadActiveSquirrel();
+    renderSquirrelUI();
+  }, 100);
+});

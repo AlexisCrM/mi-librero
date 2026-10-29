@@ -266,6 +266,17 @@
             <span class="time-phase-tag" id="windowPhaseLabel">☀️ Tarde</span>
           </div>
 
+          <!-- Selector de Modo: Postal Artística vs. Tamagotchi de Nuez -->
+          <div class="nook-mode-pills" id="nookModePills">
+            <button type="button" class="btn-nook-mode active" id="btnModePostal" onclick="switchNookMode('postal')" title="Ver postal de lectura 🖼️">
+              <span>🖼️ Postal</span>
+            </button>
+            <button type="button" class="btn-nook-mode" id="btnModeTamagotchi" onclick="switchNookMode('tamagotchi')" title="Cuidar y visitar a Nuez 🐿️">
+              <span>🐿️ Nuez</span>
+              <span class="tama-bubble-ping" id="tamaAttentionDot" style="display: none;"></span>
+            </button>
+          </div>
+
           <!-- Barra de 3 botones con iconos modernos (Música, Cambiar Foto, Configuración) -->
           <div class="window-control-bar">
             <!-- 1. Música ambiental relajante -->
@@ -297,7 +308,7 @@
           </div>
 
           <div class="window-frame" id="windowFrame">
-            <!-- Cristal de la ventana con vista exterior: Escenario Ilustrado o Foto Personalizada (sin espacios vacíos) -->
+            <!-- 1. Vista POSTAL TRADICIONAL (Cristal de la ventana con vista exterior o Foto Personalizada) -->
             <div class="window-glass" id="windowGlass">
               <div class="window-scene-image-container">
                 <img src="assets/window_scene.jpg" alt="Rincón de lectura en el centro del librero" class="window-scene-hd-img" id="windowSceneImg">
@@ -306,6 +317,213 @@
                 <div class="garden-signpost-badge" id="gardenSignpostBadge">
                   <span id="gardenSignpostText">Un buen libro también es un hogar 🌸</span>
                 </div>
+              </div>
+            </div>
+
+            <!-- 2. Vista TAMAGOTCHI INTERACTIVO DE NUEZ -->
+            <div class="tamagotchi-glass" id="tamagotchiGlass" style="display: none;">
+              <div class="tamagotchi-stage" id="tamagotchiStage" data-room="cottage_room">
+                <!-- Capa de Ambiente Decorativo y Efectos Ambientales (Lluvia, Chispitas, Estrellas) -->
+                <div class="stage-room-bg" id="stageRoomBg"></div>
+                <div class="stage-particles-layer" id="stageParticlesLayer"></div>
+
+                <!-- HUD Superior de Nuez (Nombre, Título, Bellotas y Selector de Ambiente) -->
+                <div class="tamagotchi-hud">
+                  <div class="hud-profile-card">
+                    <span class="hud-name" id="tamagotchiName">Nuez</span>
+                    <span class="hud-title-badge" id="tamagotchiTitleBadge">Nivel 1 • Amiga Fiel</span>
+                  </div>
+
+                  <div class="hud-tools-card">
+                    <div class="hud-acorn-counter" title="Bellotas reunidas leyendo y jugando">
+                      <span class="acorn-icon">🌰</span>
+                      <span class="acorn-num" id="tamagotchiAcornCount">20</span>
+                    </div>
+                    <button type="button" class="btn-hud-tool" id="btnSwitchRoom" onclick="toggleRoomSelectorModal()" title="Cambiar escenario">
+                      <span>🎨 Ambiente</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Barras de Estado / Necesidades (Apetito, Cariño, Energía) -->
+                <div class="tamagotchi-status-strip">
+                  <div class="status-metric" title="Apetito: Dale bellotas y snacks">
+                    <span class="metric-icon">🌰</span>
+                    <div class="metric-track"><div class="metric-fill fill-hunger" id="barHunger" style="width: 85%;"></div></div>
+                  </div>
+                  <div class="status-metric" title="Cariño: Acaríciala o lee libros">
+                    <span class="metric-icon">💖</span>
+                    <div class="metric-track"><div class="metric-fill fill-affection" id="barAffection" style="width: 90%;"></div></div>
+                  </div>
+                  <div class="status-metric" title="Energía: Té o siesta reparadora">
+                    <span class="metric-icon">⚡</span>
+                    <div class="metric-track"><div class="metric-fill fill-energy" id="barEnergy" style="width: 75%;"></div></div>
+                  </div>
+                </div>
+
+                <!-- Escenario Principal con Nuez -->
+                <div class="tamagotchi-character-area">
+                  <!-- Bocadillo de pensamiento / diálogo de Nuez estilo Animal Crossing -->
+                  <div class="tamagotchi-bubble" id="tamagotchiBubble">
+                    <span id="tamagotchiBubbleText">¡Qué lindo verte por aquí! ¿Leemos un ratito? 🌸</span>
+                  </div>
+
+                  <!-- Mascota Interactiva con capas de ropita y animaciones -->
+                  <div class="tamagotchi-mascot-wrapper" id="tamagotchiMascotWrapper" onclick="handlePetSquirrel(event)">
+                    <div class="mascot-interactive-figure" id="tamagotchiFigure">
+                      <img src="img/logoardilla.png" alt="Nuez la ardillita" class="figure-base-img" id="figureBaseImg">
+                      <!-- Capas de accesorios y ropa sobrepuesta -->
+                      <div class="mascot-accessory-hat hat-none" id="mascotHatLayer"></div>
+                      <div class="mascot-accessory-clothes clothes-none" id="mascotClothesLayer"></div>
+                      <div class="mascot-accessory-glasses glasses-none" id="mascotGlassesLayer"></div>
+                      <!-- Efectos visuales de amor y sueño -->
+                      <div class="mascot-sleep-zzz" id="mascotSleepZzz">💤</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Barra Inferior de Acciones / Herramientas -->
+                <div class="tamagotchi-toolbar">
+                  <button type="button" class="btn-tama-action" onclick="openSnackMenu()" title="Darle de comer a Nuez">
+                    <span class="tama-btn-icon">🌰</span>
+                    <span class="tama-btn-label">Alimentar</span>
+                  </button>
+
+                  <button type="button" class="btn-tama-action" onclick="handlePetSquirrel(event)" title="Acariciar y mimar">
+                    <span class="tama-btn-icon">💕</span>
+                    <span class="tama-btn-label">Acariciar</span>
+                  </button>
+
+                  <button type="button" class="btn-tama-action" id="btnToggleSleep" onclick="handleToggleSleep()" title="Dormir / Despertar">
+                    <span class="tama-btn-icon" id="sleepBtnIcon">🌙</span>
+                    <span class="tama-btn-label" id="sleepBtnLabel">Dormir</span>
+                  </button>
+
+                  <button type="button" class="btn-tama-action" onclick="openWardrobeModal()" title="Guardarropa y accesorios">
+                    <span class="tama-btn-icon">👗</span>
+                    <span class="tama-btn-label">Armario</span>
+                  </button>
+
+                  <button type="button" class="btn-tama-action" onclick="startAcornMiniGame()" title="Minijuego: Lluvia de Bellotas">
+                    <span class="tama-btn-icon">🎮</span>
+                    <span class="tama-btn-label">Jugar</span>
+                  </button>
+                </div>
+
+                <!-- Menú Desplegable Flotante de Snacks -->
+                <div class="tama-popup-menu" id="snackMenu" style="display: none;">
+                  <div class="popup-menu-header">
+                    <span>🌰 Alacena de Snacks de Nuez</span>
+                    <button type="button" class="btn-close-popup" onclick="closeSnackMenu()">✕</button>
+                  </div>
+                  <div class="snack-grid">
+                    <div class="snack-item" onclick="feedSquirrel('bellota')">
+                      <span class="snack-emoji">🌰</span>
+                      <div class="snack-info">
+                        <span class="snack-name">Bellota Silvestre</span>
+                        <span class="snack-benefit">+25 Apetito</span>
+                      </div>
+                      <span class="snack-price free">Gratis</span>
+                    </div>
+                    <div class="snack-item" onclick="feedSquirrel('nuez')">
+                      <span class="snack-emoji">🥜</span>
+                      <div class="snack-info">
+                        <span class="snack-name">Nuez Dorada</span>
+                        <span class="snack-benefit">+45 Apetito • +10 Cariño</span>
+                      </div>
+                      <span class="snack-price">2 🌰</span>
+                    </div>
+                    <div class="snack-item" onclick="feedSquirrel('te')">
+                      <span class="snack-emoji">🫖</span>
+                      <div class="snack-info">
+                        <span class="snack-name">Té de Lavanda</span>
+                        <span class="snack-benefit">+35 Energía • +15 Cariño</span>
+                      </div>
+                      <span class="snack-price">2 🌰</span>
+                    </div>
+                    <div class="snack-item" onclick="feedSquirrel('muffin')">
+                      <span class="snack-emoji">🧁</span>
+                      <div class="snack-info">
+                        <span class="snack-name">Muffin Frutal</span>
+                        <span class="snack-benefit">+60 Apetito • +25 Cariño</span>
+                      </div>
+                      <span class="snack-price">4 🌰</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Menú Flotante Selector de Escenarios -->
+                <div class="tama-popup-menu" id="roomMenu" style="display: none;">
+                  <div class="popup-menu-header">
+                    <span>🎨 Ambientes para Nuez</span>
+                    <button type="button" class="btn-close-popup" onclick="toggleRoomSelectorModal(false)">✕</button>
+                  </div>
+                  <div class="room-options-grid">
+                    <div class="room-option-card" id="roomOpt-cottage_room" onclick="selectSquirrelRoom('cottage_room')">
+                      <span class="room-card-icon">🏡</span>
+                      <div class="room-card-details">
+                        <span class="room-card-title">Casita de Madera</span>
+                        <span class="room-card-desc">Chimenea con leña chisporroteando y alfombra acogedora</span>
+                      </div>
+                    </div>
+                    <div class="room-option-card" id="roomOpt-garden_bridge" onclick="selectSquirrelRoom('garden_bridge')">
+                      <span class="room-card-icon">🌸</span>
+                      <div class="room-card-details">
+                        <span class="room-card-title">Jardín del Arroyo</span>
+                        <span class="room-card-desc">Puente de madera, arroyo cristalino y flores de cerezo</span>
+                      </div>
+                    </div>
+                    <div class="room-option-card" id="roomOpt-tea_nook" onclick="selectSquirrelRoom('tea_nook')">
+                      <span class="room-card-icon">☕</span>
+                      <div class="room-card-details">
+                        <span class="room-card-title">Rincón de Té & Lluvia</span>
+                        <span class="room-card-desc">Ventanal con lluvia suave exterior y tetera aromática</span>
+                      </div>
+                    </div>
+                    <div class="room-option-card" id="roomOpt-starlit_roof" onclick="selectSquirrelRoom('starlit_roof')">
+                      <span class="room-card-icon">🌌</span>
+                      <div class="room-card-details">
+                        <span class="room-card-title">Ático Estrellado</span>
+                        <span class="room-card-desc">Cielo nocturno de constelaciones y luciérnagas mágicas</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Modal del Guardarropa de Nuez -->
+                <div class="tama-popup-menu wardrobe-menu" id="wardrobeMenu" style="display: none;">
+                  <div class="popup-menu-header">
+                    <span>👗 Guardarropa de Nuez</span>
+                    <button type="button" class="btn-close-popup" onclick="closeWardrobeModal()">✕</button>
+                  </div>
+                  <div class="wardrobe-tabs">
+                    <button type="button" class="wardrobe-tab active" id="tabHats" onclick="switchWardrobeTab('hats')">👒 Sombreros</button>
+                    <button type="button" class="wardrobe-tab" id="tabClothes" onclick="switchWardrobeTab('clothes')">🧣 Ropita</button>
+                    <button type="button" class="wardrobe-tab" id="tabGlasses" onclick="switchWardrobeTab('glasses')">👓 Lentes</button>
+                  </div>
+                  <div class="wardrobe-items-container" id="wardrobeItemsContainer">
+                    <!-- Contenido renderizado dinámicamente con app.js -->
+                  </div>
+                </div>
+
+                <!-- Pantalla del Minijuego: Lluvia de Bellotas -->
+                <div class="minigame-screen" id="minigameScreen" style="display: none;">
+                  <div class="minigame-header">
+                    <div class="minigame-score">Bellotas: <span id="minigameScoreText">0</span> 🌰</div>
+                    <div class="minigame-timer">Tiempo: <span id="minigameTimerText">30s</span></div>
+                    <button type="button" class="btn-close-minigame" onclick="quitMiniGame()">✕ Salir</button>
+                  </div>
+                  <div class="minigame-canvas-area" id="minigameCanvasArea">
+                    <div class="minigame-catcher" id="minigameCatcher">
+                      <span class="catcher-basket">🧺</span>
+                      <span class="catcher-mascot">🐿️</span>
+                    </div>
+                  </div>
+                  <div class="minigame-controls-hint">
+                    Mueve el ratón o desliza el dedo de lado a lado para atrapar bellotas 🌰 y evitar ramas secas 🍂
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
