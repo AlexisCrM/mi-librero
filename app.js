@@ -61,7 +61,7 @@ const PHOTO_1_STARTER_BOOKS = [
     id: 'b-rom-1',
     title: 'Orgullo y Prejuicio',
     author: 'Jane Austen',
-    reader: 'Ella',
+    reader: 'Carolina Ornelas',
     shelfId: 'col-izq-1',
     totalPages: 420,
     currentPage: 420,
@@ -73,7 +73,7 @@ const PHOTO_1_STARTER_BOOKS = [
     id: 'b-rom-2',
     title: 'La Hipótesis del Amor',
     author: 'Ali Hazelwood',
-    reader: 'Ella',
+    reader: 'Carolina Ornelas',
     shelfId: 'col-izq-1',
     totalPages: 280,
     currentPage: 252,
@@ -85,7 +85,7 @@ const PHOTO_1_STARTER_BOOKS = [
     id: 'b-sci-1',
     title: 'Dune',
     author: 'Frank Herbert',
-    reader: 'Él',
+    reader: 'Carolina Ornelas',
     shelfId: 'col-izq-2',
     totalPages: 420,
     currentPage: 378,
@@ -97,7 +97,7 @@ const PHOTO_1_STARTER_BOOKS = [
     id: 'b-sci-2',
     title: 'Fundación',
     author: 'Isaac Asimov',
-    reader: 'Él',
+    reader: 'Carolina Ornelas',
     shelfId: 'col-izq-2',
     totalPages: 256,
     currentPage: 256,
@@ -109,7 +109,7 @@ const PHOTO_1_STARTER_BOOKS = [
     id: 'b-manga-1',
     title: "Frieren: Beyond Journey's End Vol. 1",
     author: 'Kanehito Yamada',
-    reader: 'Ella',
+    reader: 'Carolina Ornelas',
     shelfId: 'col-izq-3',
     totalPages: 192,
     currentPage: 192,
@@ -121,7 +121,7 @@ const PHOTO_1_STARTER_BOOKS = [
     id: 'b-manga-2',
     title: 'Spy x Family Vol. 1',
     author: 'Tatsuya Endo',
-    reader: 'Ella',
+    reader: 'Carolina Ornelas',
     shelfId: 'col-izq-3',
     totalPages: 210,
     currentPage: 210,
@@ -133,7 +133,7 @@ const PHOTO_1_STARTER_BOOKS = [
     id: 'b-fant-1',
     title: 'El Nombre del Viento',
     author: 'Patrick Rothfuss',
-    reader: 'Él',
+    reader: 'Carolina Ornelas',
     shelfId: 'puente-1',
     totalPages: 232,
     currentPage: 215,
@@ -145,7 +145,7 @@ const PHOTO_1_STARTER_BOOKS = [
     id: 'b-clas-1',
     title: 'Cien Años de Soledad',
     author: 'Gabriel García Márquez',
-    reader: 'Ella',
+    reader: 'Carolina Ornelas',
     shelfId: 'puente-2',
     totalPages: 417,
     currentPage: 417,
@@ -157,7 +157,7 @@ const PHOTO_1_STARTER_BOOKS = [
     id: 'b-des-1',
     title: 'Hábitos Atómicos',
     author: 'James Clear',
-    reader: 'Ella',
+    reader: 'Carolina Ornelas',
     shelfId: 'puente-3',
     totalPages: 320,
     currentPage: 0,
@@ -169,7 +169,7 @@ const PHOTO_1_STARTER_BOOKS = [
     id: 'b-mist-1',
     title: 'El Asesinato de Roger Ackroyd',
     author: 'Agatha Christie',
-    reader: 'Ella',
+    reader: 'Carolina Ornelas',
     shelfId: 'col-der-1',
     totalPages: 280,
     currentPage: 0,
@@ -181,7 +181,7 @@ const PHOTO_1_STARTER_BOOKS = [
     id: 'b-rec-1',
     title: 'Cocina & Repostería con Lavanda',
     author: 'Recetas de la Casa',
-    reader: 'Ella',
+    reader: 'Carolina Ornelas',
     shelfId: 'col-der-3',
     totalPages: 240,
     currentPage: 0,
@@ -193,7 +193,7 @@ const PHOTO_1_STARTER_BOOKS = [
     id: 'b-ing-1',
     title: 'The Midnight Library',
     author: 'Matt Haig',
-    reader: 'Ella',
+    reader: 'Carolina Ornelas',
     shelfId: 'col-der-5',
     totalPages: 304,
     currentPage: 0,
@@ -229,11 +229,11 @@ const SHELF_DECORATIVE_PALETTES = {
 let appState = {
   books: [...PHOTO_1_STARTER_BOOKS], // Precargado con la hermosa colección de Photo 1
   drawers: { ...DEFAULT_DRAWERS },
-  readers: ['Ella', 'Él'],
+  readers: ['Carolina Ornelas'],
   shelfTitle: 'El Rincón de Lectura & Lavanda',
   activeShelfId: null,
   activeDrawerId: null,
-  activeReaderFilter: 'all',
+  activeReaderFilter: 'Carolina Ornelas',
   searchQuery: '',
   selectedSpineColor: '#9575cd',
   blindHeight: 35, // Altura de persiana en porcentaje (10% a 88%)
@@ -312,9 +312,35 @@ function loadData() {
   if (savedConfig) {
     try {
       const cfg = JSON.parse(savedConfig);
-      if (cfg.readers && Array.isArray(cfg.readers)) appState.readers = cfg.readers;
+      if (cfg.readers && Array.isArray(cfg.readers) && cfg.readers.length > 0) {
+        // Migración automática si venían de la versión demo 'Ella' o 'Él'
+        if (cfg.readers.includes('Ella') || cfg.readers.includes('Él')) {
+          const others = cfg.readers.filter(r => r !== 'Ella' && r !== 'Él');
+          appState.readers = ['Carolina Ornelas', ...others];
+        } else {
+          appState.readers = cfg.readers;
+        }
+      } else {
+        appState.readers = ['Carolina Ornelas'];
+      }
       if (cfg.shelfTitle) appState.shelfTitle = cfg.shelfTitle;
-    } catch (e) {}
+    } catch (e) {
+      appState.readers = ['Carolina Ornelas'];
+    }
+  } else {
+    appState.readers = ['Carolina Ornelas'];
+  }
+
+  // Migrar libros con 'Ella' o 'Él' hacia 'Carolina Ornelas'
+  let booksMigrated = false;
+  appState.books.forEach(b => {
+    if (b.reader === 'Ella' || b.reader === 'Él' || !b.reader) {
+      b.reader = 'Carolina Ornelas';
+      booksMigrated = true;
+    }
+  });
+  if (booksMigrated) {
+    localStorage.setItem(STORAGE_KEY_BOOKS, JSON.stringify(appState.books));
   }
 
   // 4. Cargar Persiana y Modo de Tiempo de Zakia
@@ -326,6 +352,13 @@ function loadData() {
   const savedTimeMode = localStorage.getItem(STORAGE_KEY_TIME_MODE);
   if (savedTimeMode) {
     appState.windowTimeMode = savedTimeMode;
+  }
+
+  // Si solo hay 1 lector, asegurar que el filtro activo sea ese lector
+  if (appState.readers.length === 1) {
+    appState.activeReaderFilter = appState.readers[0];
+  } else if (appState.activeReaderFilter !== 'all' && !appState.readers.includes(appState.activeReaderFilter)) {
+    appState.activeReaderFilter = appState.readers[0];
   }
 
   updateReadersDropdowns();
@@ -358,27 +391,43 @@ function updateShelfTitleUI() {
 function updateReadersDropdowns() {
   const selectFilter = document.getElementById('readerSelect');
   const bookReaderInput = document.getElementById('bookReaderInput');
-  if (!selectFilter || !bookReaderInput) return;
+  if (!selectFilter) return;
 
-  const currentFilterVal = appState.activeReaderFilter;
-  
-  selectFilter.innerHTML = '<option value="all">👥 Todos los lectores</option>';
-  bookReaderInput.innerHTML = '';
+  selectFilter.innerHTML = '';
+  if (bookReaderInput) bookReaderInput.innerHTML = '';
+
+  // Solo mostrar la opción "Todos los lectores" si hay más de 1 lector registrado
+  if (appState.readers.length > 1) {
+    const optAll = document.createElement('option');
+    optAll.value = 'all';
+    optAll.textContent = '👥 Todos los lectores';
+    selectFilter.appendChild(optAll);
+  }
 
   appState.readers.forEach((reader, index) => {
     const icon = index === 0 ? '🌸' : '☕';
+
     const optFilter = document.createElement('option');
     optFilter.value = reader;
     optFilter.textContent = `${icon} ${reader}`;
     selectFilter.appendChild(optFilter);
 
-    const optForm = document.createElement('option');
-    optForm.value = reader;
-    optForm.textContent = `${icon} ${reader}`;
-    bookReaderInput.appendChild(optForm);
+    if (bookReaderInput) {
+      const optForm = document.createElement('option');
+      optForm.value = reader;
+      optForm.textContent = `${icon} ${reader}`;
+      bookReaderInput.appendChild(optForm);
+    }
   });
 
-  selectFilter.value = currentFilterVal;
+  // Validar selección actual
+  if (appState.readers.length === 1) {
+    appState.activeReaderFilter = appState.readers[0];
+  } else if (appState.activeReaderFilter !== 'all' && !appState.readers.includes(appState.activeReaderFilter)) {
+    appState.activeReaderFilter = appState.readers[0];
+  }
+
+  selectFilter.value = appState.activeReaderFilter;
 }
 
 // ===================================================================
@@ -470,29 +519,32 @@ function setupEventListeners() {
   // Guardar Cajón
   document.getElementById('saveDrawerBtn').addEventListener('click', handleSaveDrawer);
 
-  // Personalización de Lectores
-  document.getElementById('manageReadersBtn').addEventListener('click', () => {
-    const reader1 = prompt('Nombre de la lectora (actualmente: ' + appState.readers[0] + '):', appState.readers[0]);
-    if (reader1 !== null && reader1.trim()) {
-      const reader2 = prompt('Nombre del lector (actualmente: ' + (appState.readers[1] || 'Él') + '):', appState.readers[1] || 'Él');
-      if (reader2 !== null && reader2.trim()) {
-        const oldReader1 = appState.readers[0];
-        const oldReader2 = appState.readers[1];
+  // Botón "➕ Nuevo" para crear perfil de lector
+  const manageReadersBtn = document.getElementById('manageReadersBtn');
+  if (manageReadersBtn) {
+    manageReadersBtn.addEventListener('click', () => {
+      const newName = prompt('Escribe el nombre del nuevo lector/a para añadir al librero:');
+      if (newName !== null) {
+        const trimmed = newName.trim();
+        if (!trimmed) {
+          alert('Por favor ingresa un nombre válido.');
+          return;
+        }
 
-        appState.readers = [reader1.trim(), reader2.trim()];
-        
-        // Actualizar libros que tenían los nombres viejos
-        appState.books.forEach(b => {
-          if (b.reader === oldReader1) b.reader = appState.readers[0];
-          else if (b.reader === oldReader2) b.reader = appState.readers[1];
-        });
+        // Si el lector no existe, se añade a la lista
+        if (!appState.readers.includes(trimmed)) {
+          appState.readers.push(trimmed);
+          saveConfig();
+        }
 
-        saveConfig();
-        saveData();
+        // Activar inmediatamente el nuevo perfil
+        appState.activeReaderFilter = trimmed;
         updateReadersDropdowns();
+        renderApp();
+        alert(`¡Bienvenido/a al librero, ${trimmed}! 🎉 Ahora tu perfil está activo.`);
       }
-    }
-  });
+    });
+  }
 
   // Personalización del Título del Librero
   const editTitleBtn = document.getElementById('editTitleBtn');
@@ -508,21 +560,30 @@ function setupEventListeners() {
   }
 
   // Filtro de lector
-  document.getElementById('readerSelect').addEventListener('change', (e) => {
-    appState.activeReaderFilter = e.target.value;
-    renderApp();
-  });
+  const readerSelect = document.getElementById('readerSelect');
+  if (readerSelect) {
+    readerSelect.addEventListener('change', (e) => {
+      appState.activeReaderFilter = e.target.value;
+      renderApp();
+    });
+  }
 
   // Buscador
-  document.getElementById('searchInput').addEventListener('input', (e) => {
-    appState.searchQuery = e.target.value.toLowerCase().trim();
-    renderApp();
-  });
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      appState.searchQuery = e.target.value.toLowerCase().trim();
+      renderApp();
+    });
+  }
 
-  // Modal de Backup
-  document.getElementById('backupBtn').addEventListener('click', () => {
-    document.getElementById('backupModalBackdrop').classList.add('open');
-  });
+  // Modal de Backup (protegido si el botón está ausente)
+  const backupBtn = document.getElementById('backupBtn');
+  if (backupBtn) {
+    backupBtn.addEventListener('click', () => {
+      document.getElementById('backupModalBackdrop')?.classList.add('open');
+    });
+  }
   document.getElementById('closeBackupModalBtn').addEventListener('click', () => {
     document.getElementById('backupModalBackdrop').classList.remove('open');
   });
@@ -770,50 +831,46 @@ function renderApp() {
   }
 }
 
-// Cálculo 100% real basado exclusivamente en los libros agregados
+// Cálculo 100% real basado en el lector seleccionado
 function updateRealStats() {
-  const filtered = getFilteredBooks();
-  const total = filtered.length;
+  // 1. Libros en total: siempre es el total de libros en el mueble, igual para todos los lectores
+  const totalBooks = appState.books.length;
+
+  // 2. Libros pertenecientes al lector seleccionado en la sesión activa
+  const isAll = appState.activeReaderFilter === 'all';
+  const readerBooks = isAll
+    ? appState.books
+    : appState.books.filter(b => b.reader === appState.activeReaderFilter);
 
   let reading = 0;
   let completed = 0;
   let totalPagesRead = 0;
-  let sumPercentage = 0;
 
-  filtered.forEach(b => {
+  readerBooks.forEach(b => {
     const totalP = Math.max(1, Number(b.totalPages) || 1);
     const curP = Math.min(Math.max(0, Number(b.currentPage) || 0), totalP);
-    const pct = Math.round((curP / totalP) * 100);
-
     totalPagesRead += curP;
-    sumPercentage += pct;
 
-    if (pct >= 100) {
+    if (b.status === 'completed' || curP >= totalP) {
       completed++;
-    } else if (curP > 0) {
+    } else if (b.status === 'reading' || curP > 0) {
       reading++;
     }
   });
 
-  let avgProgress = 0;
-  if (total > 0) {
-    if (total === 12 && totalPagesRead === 2340) {
-      avgProgress = 68; // Coincide exactamente con la referencia visual de Photo 1
-    } else {
-      avgProgress = Math.round(sumPercentage / total);
-    }
-  }
+  // 3. Progreso general: libros completados por el lector entre el total de libros del librero
+  const progressPct = totalBooks > 0 ? Math.round((completed / totalBooks) * 100) : 0;
 
-  // Actualizar números en pantalla
-  document.getElementById('statTotalBooks').textContent = total;
+  // 4. Actualizar números en pantalla
+  document.getElementById('statTotalBooks').textContent = totalBooks;
   document.getElementById('statReading').textContent = reading;
   document.getElementById('statCompleted').textContent = completed;
   document.getElementById('statTotalPages').textContent = totalPagesRead.toLocaleString();
-  document.getElementById('statAvgProgress').textContent = `${avgProgress}%`;
+  document.getElementById('statAvgProgress').textContent = `${progressPct}%`;
 
   const miniBar = document.getElementById('statMiniBarFill');
   if (miniBar) {
-    miniBar.style.width = `${avgProgress}%`;
+    miniBar.style.width = `${progressPct}%`;
   }
 
   // Mostrar u ocultar el banner de bienvenida cuando no hay libros
@@ -835,9 +892,22 @@ function updateMascotDialogue() {
   const total = appState.books.length;
   if (total === 0) {
     dialogueText.textContent = `¡Hola! Tu librero está listo para llenarse con tus libros favoritos. Selecciona cualquier repisa para entrar o los cajones inferiores para organizar tu papelería y recuerdos. 🌸🪻`;
+    return;
+  }
+
+  const isAll = appState.activeReaderFilter === 'all';
+  const currentReader = appState.activeReaderFilter;
+  const readerBooks = isAll 
+    ? appState.books 
+    : appState.books.filter(b => b.reader === currentReader);
+
+  const completed = readerBooks.filter(b => b.status === 'completed' || (b.currentPage || 0) >= (b.totalPages || 1)).length;
+  const reading = readerBooks.filter(b => (b.status === 'reading' || (b.currentPage || 0) > 0) && (b.currentPage || 0) < (b.totalPages || 1)).length;
+
+  if (isAll) {
+    dialogueText.textContent = `¡Llevamos ${total} libro${total === 1 ? '' : 's'} en el librero y ${completed} completado${completed === 1 ? '' : 's'} entre todos! 🍃 ¿Cuál vamos a leer hoy en la isla?`;
   } else {
-    const completed = appState.books.filter(b => (b.currentPage || 0) >= (b.totalPages || 1)).length;
-    dialogueText.textContent = `¡Llevamos ${total} libro${total === 1 ? '' : 's'} en el librero y ${completed} completado${completed === 1 ? '' : 's'}! 🍃 ¿Cuál vamos a leer hoy en la isla?`;
+    dialogueText.textContent = `¡Hola, ${currentReader}! 🌸 Tienes ${reading} libro${reading === 1 ? '' : 's'} en lectura activa y ${completed} completado${completed === 1 ? '' : 's'}. 🍃 ¿Cuál vamos a leer hoy?`;
   }
 }
 
