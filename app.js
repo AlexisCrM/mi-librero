@@ -657,8 +657,9 @@ async function initLocationDetection() {
 }
 
 // ===================================================================
-// AUDIO / MÚSICA AMBIENTAL RELAJANTE (Web Audio API Pentatonic Chimes)
+// AUDIO / MÚSICA AMBIENTAL (Taylor Swift & Cozy Chimes)
 // ===================================================================
+let bgMusicAudio = null;
 let audioCtx = null;
 let isMusicPlaying = false;
 let musicInterval = null;
@@ -667,22 +668,33 @@ const PENTATONIC_FREQS = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33
 
 function toggleCozyMusic() {
   const btn = document.getElementById('btnToggleMusic');
-  if (!audioCtx) {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-  if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
+  
+  if (!bgMusicAudio) {
+    bgMusicAudio = new Audio(encodeURI("music/Taylor.mp3"));
+    bgMusicAudio.loop = true;
+    bgMusicAudio.volume = 0.6;
   }
 
   isMusicPlaying = !isMusicPlaying;
 
   if (isMusicPlaying) {
     btn?.classList.add('playing');
-    btn?.setAttribute('title', 'Pausar música relajante ⏸️');
-    startCozyChimes();
+    btn?.setAttribute('title', 'Pausar música ⏸️');
+
+    // Reproducir la canción del librero
+    const playPromise = bgMusicAudio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // Fallback a campanas relajantes en caso de que el navegador bloquee o no encuentre el archivo
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        startCozyChimes();
+      });
+    }
   } else {
     btn?.classList.remove('playing');
-    btn?.setAttribute('title', 'Música ambiental relajante 🎵');
+    btn?.setAttribute('title', 'Música ambiental 🎵');
+    if (bgMusicAudio) bgMusicAudio.pause();
     stopCozyChimes();
   }
 }

@@ -830,40 +830,123 @@ body.ac-theme {
     inset 0 2px 4px rgba(255, 255, 255, 0.65);
 }
 
-/* Etiqueta flotante de la repisa estilo Photo 1 */
+/* Tarjeta novedosa y pequeña en la esquina superior que indica el lado del librero */
+.tower-side-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(135deg, #fffdfa 0%, #faeee0 100%);
+  border: 1.5px solid #d4b28c;
+  border-radius: 12px;
+  padding: 3px 10px;
+  box-shadow: 0 3px 8px rgba(45, 20, 5, 0.22), inset 0 1px 1px #ffffff;
+  width: fit-content;
+  user-select: none;
+  margin-bottom: 2px;
+  z-index: 8;
+  transition: transform 0.2s ease;
+}
+
+.tower-side-badge:hover {
+  transform: translateY(-1px) scale(1.04);
+}
+
+.tower-side-badge.badge-left {
+  align-self: flex-start;
+  margin-left: 2px;
+}
+
+.tower-side-badge.badge-right {
+  align-self: flex-end;
+  margin-right: 2px;
+}
+
+.tower-side-badge .badge-icon {
+  font-size: 0.82rem;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
+}
+
+.tower-side-badge .badge-text {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #78350f;
+}
+
+/* Placa de porcelana / esmalte cozy centrada con remaches dorados (Estilo Foto 2) */
 .compartment-tag-pill {
   position: absolute;
   top: 7px;
-  left: 8px;
-  right: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 34px);
+  max-width: 178px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(4px);
-  padding: 3px 8px;
-  border-radius: var(--border-radius-pill);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  justify-content: center;
+  background: linear-gradient(180deg, #ffffff 0%, #faf3eb 55%, #f2e4d4 100%);
+  border: 1.5px solid #d5bc9f;
+  border-top-color: #faede0;
+  border-bottom-color: #be9d7c;
+  border-radius: 11px;
+  padding: 3px 16px;
+  box-shadow: 
+    0 3px 7px rgba(45, 20, 5, 0.22),
+    inset 0 1px 1px rgba(255, 255, 255, 0.95),
+    inset 0 -1px 2px rgba(180, 140, 100, 0.18);
   pointer-events: none;
   z-index: 5;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.tag-title {
-  font-size: 0.66rem;
+/* Remaches dorados a los extremos izquierdo y derecho (Foto 2) */
+.compartment-tag-pill::before,
+.compartment-tag-pill::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5.5px;
+  height: 5.5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffeaa7 0%, #dfa539 65%, #996815 100%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.45), inset 0 0.5px 0.5px #ffffff;
+}
+
+.compartment-tag-pill::before {
+  left: 6px;
+}
+
+.compartment-tag-pill::after {
+  right: 6px;
+}
+
+.shelf-compartment:hover .compartment-tag-pill {
+  box-shadow: 
+    0 4px 10px rgba(45, 20, 5, 0.3),
+    inset 0 1px 1.5px rgba(255, 255, 255, 1);
+  border-color: #c7a47e;
+}
+
+/* Tipografía de categoría bien centrada y nítida estilo Foto 2 */
+.tag-category {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.74rem;
   font-weight: 700;
-  color: var(--wood-deep);
+  letter-spacing: 0.25px;
+  color: #334e68;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  text-align: center;
+  width: 100%;
+  display: block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.tag-category {
-  font-size: 0.62rem;
-  font-weight: 800;
-  color: #a855f7;
-  background: #f3e8ff;
-  padding: 1px 6px;
-  border-radius: 10px;
+  text-shadow: 0 0.5px 0 rgba(255, 255, 255, 0.85);
 }
 
 /* Objetos decorativos cozy en repisas (Photo 1) */
