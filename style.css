@@ -1551,12 +1551,156 @@ body.ac-theme {
 }
 
 .section-modal-header {
-  padding: 1.2rem 1.8rem;
+  padding: 1.25rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(180deg, #fdf8fc, #f6eefa);
-  border-bottom: 2px solid #ede1f2;
+  background: linear-gradient(180deg, #fffafd 0%, #f7eff9 100%);
+  border-bottom: 2px solid #ecd8f0;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.section-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  flex: 1;
+  min-width: 280px;
+}
+
+.section-category-header-wrap {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.section-category-main-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.category-icon-accent {
+  font-size: 1.65rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(120, 50, 150, 0.2));
+}
+
+.section-category-title {
+  font-family: 'Quicksand', 'Playfair Display', -apple-system, sans-serif;
+  font-size: 2.15rem;
+  font-weight: 800;
+  color: #3b1452;
+  letter-spacing: 0.5px;
+  margin: 0;
+  line-height: 1.15;
+  transition: transform 0.25s ease, color 0.25s ease;
+  text-shadow: 0 1px 2px rgba(88, 28, 135, 0.08);
+}
+
+.category-pop-anim {
+  animation: categoryPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes categoryPop {
+  0% { transform: scale(0.92); opacity: 0.6; }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.gandhi-category-picker-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  background: #ffffff;
+  padding: 0.35rem 0.85rem 0.35rem 0.55rem;
+  border-radius: 999px;
+  border: 1.5px solid #dcbfe5;
+  box-shadow: 0 3px 10px rgba(118, 48, 142, 0.08);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.gandhi-category-picker-box:hover,
+.gandhi-category-picker-box:focus-within {
+  border-color: #a855f7;
+  box-shadow: 0 4px 14px rgba(168, 85, 247, 0.18);
+}
+
+.gandhi-select-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #6b21a8;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.gandhi-badge {
+  background: #ffe600; /* Amarillo icónico de Gandhi */
+  color: #1e1b4b; /* Letras oscuras */
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.6px;
+  padding: 2px 7px;
+  border-radius: 6px;
+  border: 1px solid #eab308;
+  text-shadow: none;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  display: inline-block;
+}
+
+.gandhi-select-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.gandhi-category-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: #fbf5fe;
+  border: 1px solid #d8b4e2;
+  border-radius: 999px;
+  padding: 0.35rem 1.9rem 0.35rem 0.85rem;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #4a154b;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  max-width: 260px;
+}
+
+.gandhi-category-select:focus {
+  border-color: #9333ea;
+  box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.15);
+  background: #ffffff;
+}
+
+.gandhi-category-select optgroup {
+  font-weight: 800;
+  color: #6b21a8;
+  background: #fcf8fd;
+}
+
+.gandhi-category-select option {
+  font-weight: 600;
+  color: #2e1065;
+  background: #ffffff;
+  padding: 5px 10px;
+}
+
+.select-chevron {
+  position: absolute;
+  right: 0.7rem;
+  pointer-events: none;
+  font-size: 0.72rem;
+  color: #8b5cf6;
 }
 
 .section-tag {
@@ -1577,8 +1721,13 @@ body.ac-theme {
 }
 
 .section-stats {
-  font-size: 0.85rem;
-  color: var(--text-muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #7e638b;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .section-modal-actions {

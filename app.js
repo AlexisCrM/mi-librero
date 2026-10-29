@@ -364,6 +364,9 @@ function loadData() {
     signText.textContent = customSign;
   }
 
+  // 7. Cargar categorías personalizadas de repisas (Catálogo Gandhi / Personalizadas)
+  loadSavedShelfCategories();
+
   // Si solo hay 1 lector, asegurar que el filtro activo sea ese lector
   if (appState.readers.length === 1) {
     appState.activeReaderFilter = appState.readers[0];
@@ -373,6 +376,7 @@ function loadData() {
 
   updateReadersDropdowns();
   updateShelfTitleUI();
+  updateShelfPlaquesUI();
   renderDrawersFace();
 }
 
@@ -465,6 +469,39 @@ function setupEventListeners() {
   document.getElementById('sectionModalBackdrop').addEventListener('click', (e) => {
     if (e.target.id === 'sectionModalBackdrop') closeSectionModal();
   });
+
+  // Selector desplegable de categorías estilo Gandhi en repisa
+  const shelfCategorySelect = document.getElementById('shelfCategorySelect');
+  if (shelfCategorySelect) {
+    shelfCategorySelect.addEventListener('change', (e) => {
+      const selectedVal = e.target.value;
+      if (!appState.activeShelfId) return;
+
+      const shelfId = appState.activeShelfId;
+
+      if (selectedVal === '__custom__') {
+        const currentCat = SHELF_DEFINITIONS[shelfId]?.category || '';
+        const customName = prompt('Escribe el nombre de la nueva categoría para esta repisa:', currentCat);
+        if (customName && customName.trim()) {
+          const finalCategory = customName.trim();
+          // Añadir opción personalizada al selector
+          const customOpt = document.createElement('option');
+          customOpt.value = finalCategory;
+          customOpt.textContent = `🏷️ ${finalCategory}`;
+          const group = shelfCategorySelect.querySelector('optgroup[label*="Organización"]') || shelfCategorySelect;
+          group.insertBefore(customOpt, group.lastElementChild);
+          shelfCategorySelect.value = finalCategory;
+          setShelfCategory(shelfId, finalCategory);
+        } else {
+          // Revertir a la categoría previa
+          shelfCategorySelect.value = SHELF_DEFINITIONS[shelfId]?.category || 'Romance';
+        }
+        return;
+      }
+
+      setShelfCategory(shelfId, selectedVal);
+    });
+  }
 
   // Botón "Agregar Libro Aquí" dentro de la repisa
   document.getElementById('addBookInThisShelfBtn').addEventListener('click', () => {
@@ -1165,12 +1202,46 @@ function renderFurniturePreviews() {
 // ===================================================================
 // MODAL DE ZOOM / ENTRAR A UNA REPISA DE LIBROS
 // ===================================================================
+const STORAGE_KEY_SHELF_CATEGORIES = 'mi_librero_shelf_categories_v1';
+
 function openSectionModal(shelfId) {
   appState.activeShelfId = shelfId;
-  const shelfInfo = SHELF_DEFINITIONS[shelfId] || { name: 'Repisa', category: 'Librero' };
+  const shelfInfo = SHELF_DEFINITIONS[shelfId] || { name: 'Repisa', category: 'Romance' };
 
-  document.getElementById('activeSectionCategory').textContent = shelfInfo.category;
-  document.getElementById('activeSectionTitle').textContent = shelfInfo.name;
+  // 1. Título principal en grande con el nombre de la categoría
+  const categoryElem = document.getElementById('activeSectionCategory');
+  if (categoryElem) {
+    categoryElem.textContent = shelfInfo.category;
+  }
+
+  // 2. Título secundario si existiera en DOM (oculto / opcional)
+  const titleElem = document.getElementById('activeSectionTitle');
+  if (titleElem) {
+    titleElem.textContent = shelfInfo.name;
+  }
+
+  // 3. Sincronizar el selector desplegable con catálogo Gandhi
+  const categorySelect = document.getElementById('shelfCategorySelect');
+  if (categorySelect) {
+    let matched = false;
+    for (let i = 0; i < categorySelect.options.length; i++) {
+      const opt = categorySelect.options[i];
+      if (opt.value.toLowerCase() === shelfInfo.category.toLowerCase()) {
+        categorySelect.value = opt.value;
+        matched = true;
+        break;
+      }
+    }
+    if (!matched && shelfInfo.category) {
+      // Si la categoría no está predefinida, agregarla dinámicamente y seleccionarla
+      const customOpt = document.createElement('option');
+      customOpt.value = shelfInfo.category;
+      customOpt.textContent = `🏷️ ${shelfInfo.category}`;
+      const group = categorySelect.querySelector('optgroup[label*="Organización"]') || categorySelect;
+      group.insertBefore(customOpt, group.lastElementChild);
+      categorySelect.value = shelfInfo.category;
+    }
+  }
 
   renderSectionStage(shelfId);
   document.getElementById('sectionModalBackdrop').classList.add('open');
@@ -1179,6 +1250,85 @@ function openSectionModal(shelfId) {
 function closeSectionModal() {
   document.getElementById('sectionModalBackdrop').classList.remove('open');
   appState.activeShelfId = null;
+}
+
+function setShelfCategory(shelfId, newCategory) {
+  if (!SHELF_DEFINITIONS[shelfId]) return;
+
+  SHELF_DEFINITIONS[shelfId].category = newCategory;
+
+  // Actualizar el título principal en grande del modal
+  const catTitleEl = document.getElementById('activeSectionCategory');
+  if (catTitleEl) {
+    catTitleEl.textContent = newCategory;
+    catTitleEl.classList.remove('category-pop-anim');
+    void catTitleEl.offsetWidth; // reiniciar animación
+    catTitleEl.classList.add('category-pop-anim');
+  }
+
+  // Actualizar la placa de madera del mueble en la vista principal
+  const shelfEl = document.querySelector(`[data-shelf-id="${shelfId}"]`);
+  if (shelfEl) {
+    const plaqueTag = shelfEl.querySelector('.tag-category');
+    if (plaqueTag) {
+      plaqueTag.textContent = newCategory;
+    }
+  }
+
+  // Guardar en almacenamiento local
+  saveShelfCategories();
+
+  // Actualizar el selector del modal de agregar libro
+  updateBookShelfDropdownOptions();
+}
+
+function saveShelfCategories() {
+  const categoriesMap = {};
+  Object.keys(SHELF_DEFINITIONS).forEach(id => {
+    categoriesMap[id] = SHELF_DEFINITIONS[id].category;
+  });
+  localStorage.setItem(STORAGE_KEY_SHELF_CATEGORIES, JSON.stringify(categoriesMap));
+}
+
+function loadSavedShelfCategories() {
+  const saved = localStorage.getItem(STORAGE_KEY_SHELF_CATEGORIES);
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      Object.keys(parsed).forEach(id => {
+        if (SHELF_DEFINITIONS[id] && parsed[id]) {
+          SHELF_DEFINITIONS[id].category = parsed[id];
+        }
+      });
+    } catch (e) {}
+  }
+}
+
+function updateShelfPlaquesUI() {
+  Object.keys(SHELF_DEFINITIONS).forEach(id => {
+    const shelfEl = document.querySelector(`[data-shelf-id="${id}"]`);
+    if (shelfEl) {
+      const plaqueTag = shelfEl.querySelector('.tag-category');
+      if (plaqueTag && SHELF_DEFINITIONS[id]?.category) {
+        plaqueTag.textContent = SHELF_DEFINITIONS[id].category;
+      }
+    }
+  });
+  updateBookShelfDropdownOptions();
+}
+
+function updateBookShelfDropdownOptions() {
+  const select = document.getElementById('bookShelfInput');
+  if (!select) return;
+
+  select.querySelectorAll('option').forEach(opt => {
+    const shelfId = opt.value;
+    if (SHELF_DEFINITIONS[shelfId]) {
+      const info = SHELF_DEFINITIONS[shelfId];
+      const baseLabel = opt.textContent.split(' - ')[0];
+      opt.textContent = `${baseLabel} - ${info.category}`;
+    }
+  });
 }
 
 function renderSectionStage(shelfId) {
@@ -1416,11 +1566,17 @@ function handleDeleteCurrentBook() {
 // RESPALDOS JSON
 // ===================================================================
 function exportBackupJSON() {
+  const categoriesMap = {};
+  Object.keys(SHELF_DEFINITIONS).forEach(id => {
+    categoriesMap[id] = SHELF_DEFINITIONS[id].category;
+  });
+
   const payload = {
     books: appState.books,
     drawers: appState.drawers,
     readers: appState.readers,
     shelfTitle: appState.shelfTitle,
+    shelfCategories: categoriesMap,
     windowTimeMode: appState.windowTimeMode,
     customWindowImg: localStorage.getItem('mi_librero_custom_window_img'),
     gardenSign: localStorage.getItem('mi_librero_garden_sign'),
@@ -1463,6 +1619,15 @@ function importBackupJSON(e) {
         if (importedData.windowTimeMode) {
           appState.windowTimeMode = importedData.windowTimeMode;
           updateZakiaSky();
+        }
+        if (importedData.shelfCategories && typeof importedData.shelfCategories === 'object') {
+          Object.keys(importedData.shelfCategories).forEach(id => {
+            if (SHELF_DEFINITIONS[id]) {
+              SHELF_DEFINITIONS[id].category = importedData.shelfCategories[id];
+            }
+          });
+          saveShelfCategories();
+          updateShelfPlaquesUI();
         }
 
         saveConfig();
