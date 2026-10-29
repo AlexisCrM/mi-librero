@@ -121,7 +121,7 @@ body.ac-theme {
   background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(14px);
   border-bottom: 2px solid #ede3f2;
-  padding: 0.9rem 2.2rem;
+  padding: 0.65rem 2.2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -141,39 +141,25 @@ body.ac-theme {
 .ac-mascot-avatar {
   position: relative;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin: -4px 0;
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .ac-mascot-avatar:hover {
-  transform: scale(1.08) rotate(4deg);
-}
-
-.mascot-img-circle {
-  width: 54px;
-  height: 54px;
-  background: linear-gradient(135deg, #fdf2f7, #f3e8ff);
-  border: 2.5px solid #f472b6;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(244, 114, 182, 0.25);
+  transform: scale(1.08) rotate(3deg);
 }
 
 .mascot-avatar-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: auto;
+  height: 68px;
+  max-width: 85px;
+  object-fit: contain;
   display: block;
-}
-
-.flower-badge {
-  position: absolute;
-  bottom: -3px;
-  right: -3px;
-  font-size: 1.1rem;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+  filter: drop-shadow(0 4px 10px rgba(138, 75, 175, 0.22));
 }
 
 .app-title-row {
@@ -414,8 +400,8 @@ body.ac-theme {
 .ac-speech-bubble {
   background: #ffffff;
   border: 2px solid #e9d5ff;
-  border-radius: 28px;
-  padding: 0.9rem 1.6rem;
+  border-radius: 26px;
+  padding: 0.35rem 1.4rem 0.35rem 0.6rem;
   display: flex;
   align-items: center;
   gap: 1.1rem;
@@ -429,25 +415,28 @@ body.ac-theme {
 }
 
 .bubble-mascot-wrap {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: #fdf4ff;
-  border: 2px solid #d8b4fe;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: transparent;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  overflow: hidden;
-  box-shadow: 0 4px 10px rgba(192, 132, 252, 0.2);
+  overflow: visible;
+  box-shadow: none;
+  margin: 0;
 }
 
 .bubble-mascot-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: auto;
+  height: 94px;
+  max-width: 118px;
+  object-fit: contain;
   display: block;
-  animation: cuteBob 2.5s ease-in-out infinite;
+  filter: drop-shadow(0 4px 12px rgba(138, 75, 175, 0.24));
+  animation: cuteBob 2.8s ease-in-out infinite;
 }
 
 .bubble-mascot {
