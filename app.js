@@ -260,6 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initLocationDetection();
   initZakiaTimeEngine();
   initBookshelfLightingEngine();
+  initStickyNoteQuotes();
   renderApp();
 });
 
@@ -709,6 +710,30 @@ function setupEventListeners() {
       document.getElementById('backupModalBackdrop').classList.remove('open');
     }
   });
+
+  // Tarjeta de Nuez: Clic para descubrir sus 50 mensajes diferentes
+  const mascotBubble = document.getElementById('mascotSpeechBubble');
+  if (mascotBubble) {
+    mascotBubble.addEventListener('click', cycleMascotMessage);
+    mascotBubble.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        cycleMascotMessage();
+      }
+    });
+  }
+
+  // Notita adhesiva Foto 2: Clic para descubrir sus 100 frases cozy
+  const stickyCard = document.getElementById('cozyStickyCard');
+  if (stickyCard) {
+    stickyCard.addEventListener('click', cycleStickyQuote);
+    stickyCard.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        cycleStickyQuote();
+      }
+    });
+  }
 }
 
 // ===================================================================
@@ -1070,6 +1095,7 @@ function renderApp() {
   updateRealStats();
   renderFurniturePreviews();
   updateMascotDialogue();
+  updateStickyQuote();
 
   // Si la vitrina de una repisa está abierta, sincronizarla
   if (appState.activeShelfId) {
@@ -1130,31 +1156,289 @@ function updateRealStats() {
   }
 }
 
-// Diálogo dinámico de la ardillita mascota
-function updateMascotDialogue() {
-  const dialogueText = document.getElementById('mascotDialogueText');
-  if (!dialogueText) return;
+// ===================================================================
+// 50 MENSAJES VARIADOS DE NUEZ LA ARDILLITA GUÍA
+// ===================================================================
+const NUEZ_MESSAGES_50 = [
+  // 1-10: Bienvenida, bellotas y tesoros literarios
+  "¡Hola! Soy Nuez 🌸 ¿Sabías que guardar libros en el librero es como guardar bellotas para el invierno? ¡Cada uno es un tesoro!",
+  "¡Bienvenida a nuestro rincón de paz! Prepara un tecito caliente de lavanda y cuéntame qué página leeremos hoy. 🫖💜",
+  "¡Un día sin leer es como una ardilla sin nuez! Hojeemos un ratito hoy. 🌰📖",
+  "¡Hola, {reader}! 🌸 Tienes {reading} libro{s_reading} en curso y {completed} completado{s_completed}. ¡Qué orgullo tan grande!",
+  "¡Llevamos {total} historias increíbles en este librero! Cada repisa tiene su propia magia isleña. ✨",
+  "Tip de ardillita: Si una página te hace sonreír, anótala en las notas o citas memorables del libro. 📝💕",
+  "¿Escuchas el viento suave entre los árboles de la isla? Es el clima perfecto para perderse en un buen capítulo. 🍃🍂",
+  "¡Hoy es un día hermoso para avanzar aunque sea cinco paginitas! Pasito a pasito se llega a la copa del roble. 🐿️🌱",
+  "Acabo de sacudir las repisas superiores... ¡huele a lavanda fresca y papel nuevo! ¿Por cuál empezamos? 🪻📚",
+  "¡Psst! Fígaro me preparó un café con leche de pichón mientras leías. ¡Te guardé una galletita con forma de bellota! ☕🍪",
 
-  const total = appState.books.length;
-  if (total === 0) {
-    dialogueText.textContent = `¡Hola! Tu librero está listo para llenarse con tus libros favoritos. Selecciona cualquier repisa para entrar o los cajones inferiores para organizar tu papelería y recuerdos. 🌸🪻`;
-    return;
-  }
+  // 11-20: Cozy tips, música y hábitos lectores
+  "Si alguna vez necesitas paz para concentrarte, activa la música de piano con el botón de la ventana. ¡Es pura calma! 🎶🎹",
+  "¡Un aplauso para {reader}! 🎉 Ya has terminado {completed} libro{s_completed}. ¡Te mereces una lluvia de estrellas fugaces!",
+  "¡Mira cuántos mundos habitan en estas maderas! Desde romances de época hasta misterios bajo la lluvia. 🏰🌧️",
+  "A veces me siento sobre la repisa de Clásicos a ver el atardecer por la ventana. ¡Es el mejor mirador del mundo! 🌅🐿️",
+  "¿Tienes a la mano tu separador favorito? Las ardillitas jamás doblamos las esquinas de las páginas, ¡las cuidamos como oro! 📑✨",
+  "¡Hola! ¿Buscabas inspiración? Recuerda que leer no es una carrera de velocidad, es un abrazo al corazón con calma. 🛋️🌸",
+  "Hoy vi cruzar una mariposa celeste junto al librero... dicen en la isla que trae suerte para encontrar lecturas de 5 estrellas. 🦋🌟",
+  "¡Tengo mis patitas listas para ayudarte a organizar repisas o buscar lo que guardaste en los cajones! 📦🐾",
+  "¿Sabías que el aroma a lavanda relaja la mente? Por eso nuestro rincón huele tan dulce y sereno. 🪻💭",
+  "¡Totakeke me contó que las mejores canciones nacen después de leer un poema inolvidable! 🎸🎵",
 
+  // 21-30: Aventuras, géneros y momentos acogedores
+  "Dime qué género te apetece hoy: ¿algo de romance tierno, fantasía épica o misterio? ¡Toca una repisa para entrar! 🧭✨",
+  "¡Me fascina cuando un libro es tan atrapante que no puedes soltarlo ni para cenar! ¿Te ha pasado esta semana? 🌙📖",
+  "Recuerda que puedes cambiar la foto del centro del librero cuando quieras para admirar tus recuerdos favoritos. 🖼️💖",
+  "¡{reader}, tu constancia lectora ilumina este rincón más que una noche de luciérnagas de verano! 🌟",
+  "Entre capítulo y capítulo, acuérdate de estirar tus bracitos y tomar un sorbito de agua fresca o té. 💧🌿",
+  "Si el mundo de afuera hace demasiado ruido, ven conmigo: abramos un libro y creemos un universo propio. 🚪🕊️",
+  "¡Tengo una nuez dorada escondida en el librero! Bueno, en realidad es un secreto... ¡la cambié por un marcapáginas de flores! 🌰🌸",
+  "¡5 estrellas para tu pasión lectora! Cada historia que terminas se queda grabada para siempre en tu memoria. ⭐⭐⭐⭐⭐",
+  "¿Ya checaste la notita adhesiva al lado? Tócale y verás pensamientos hermosos sobre libros, flores y canciones. 📌💌",
+  "¡Qué emoción ver cómo se llena nuestro mueble de roble! Pronto tendremos que pedirle a Tom Nook una ampliación. 🏠✨",
+
+  // 31-40: Reflexiones cálidas y pequeños placeres
+  "A veces los libros más pequeñitos son los que guardan los mensajes más gigantescos para el alma. 🐾💕",
+  "Hoy el cielo está teñido de violeta... el clima oficial para leer bajo una mantita tejida con amor. 🌧️🕯️",
+  "¡Hola, {reader}! ¿Seguimos con el libro que tienes en curso o exploramos una nueva repisa? 📖💫",
+  "¡No hay nada más reconfortante que encender una velita aromática, ponerte tu suéter favorito y escuchar las páginas crujir! 🧶🕯️",
+  "¡Las ardillitas coleccionamos semillas y tú coleccionas grandes historias! Hacemos la mejor dupla de la isla. 🐿️🌱",
+  "Si abres los cajones inferiores podrás ver tus notas, stickers y recuerdos siempre bien guardaditos. 🖍️🌸",
+  "¡Qué satisfacción ver los lomos alineados por colores pastel! Nuestro librero parece salido de una postal. 🎨📚",
+  "Nunca subestimes el poder de diez minutos de lectura antes de dormir; tus sueños se llenarán de magia. 🌙✨",
+  "¡Amo cuando un final feliz nos hace suspirar y dar saltitos de alegría por toda la habitación! 🐿️🎉",
+  "En este rincón siempre florecen cosas buenas. Respira hondo... y déjate llevar por las siguientes líneas. 🌸🍃",
+
+  // 41-50: Afecto, motivación y ternura isleña
+  "¡Aviso de ternura! Si te quedas dormida leyendo, prometo taparte con una hojita suave de cerezo. 🌸😴",
+  "¡La imaginación no tiene fronteras! Hoy podemos viajar a castillos lejanos o a jardines secretos sin salir de la habitación. 🚀🏰",
+  "¡Gracias por visitar nuestro librero hoy, {reader}! Pasar tiempo contigo entre libros es mi momento preferido. 💖",
+  "¡Una repisa ordenada con amor es el mejor remedio para un día cansado! 🌿📖",
+  "¿Qué tal una melodía acústica suavecita de fondo mientras descubres el desenlace de tu libro? 🎶🎻",
+  "¡Cada libro que abres es una puerta mágica y cada autor se convierte en un amigo que te habla al oído! 🤝✨",
+  "¡Dicen en la isla que quien lee bajo las ramas de wisteria sueña con historias de amor verdadero! 🪻🕊️",
+  "¡Hoy celebramos que leíste! No importa si leíste una sola página o tres capítulos enteros, ¡cada página cuenta! 📈🌷",
+  "Tus gustos literarios son preciosos. ¡Me encanta trepar por las repisas a curiosear tus selecciones! 🧐📚",
+  "¡Siempre que quieras charlar o necesites una dosis de ánimo, haz clic en mi tarjeta y aquí estaré para ti! 🐿️💕"
+];
+
+// ===================================================================
+// 100 FRASES CORTITAS PARA LA NOTA ADHESIVA (FOTO 2)
+// Temas: Libros, Ardillas, Lavanda, Animal Crossing, Taylor Swift
+// ===================================================================
+const COZY_QUOTES_100 = [
+  // --- 1 a 20: Libros & Lectura ---
+  "Pequeños libros, grandes aventuras 💕",
+  "Un libro abierto es un refugio esperándote 📖✨",
+  "Perderse en una buena historia es encontrarse a uno mismo 🌿",
+  "Solo un capítulo más y a dormir... prometido 🌙💤",
+  "El olor a libro nuevo alegra cualquier tarde gris ☕📚",
+  "Vivir mil vidas distintas en una sola biblioteca 🌸",
+  "Un marcapáginas es un boleto de tren a otro universo 🚂✨",
+  "Quedarse despierta leyendo porque la ficción es hermosa 🌟",
+  "Las conversaciones más íntimas se leen en papel 💌",
+  "Un buen libro, una manta suave y una taza de té 🛋️🫖",
+  "Donde las palabras susurran, el corazón descansa 🕊️",
+  "Cada página leída es un regalo que te haces a ti misma 🌷",
+  "La magia existe: viene encuadernada en pasta dura ✨📕",
+  "Lecturas compartidas que unen almas para siempre 💕",
+  "Subrayar frases que parecen escritas justo para ti ✏️💭",
+  "Hogar es donde tus libros favoritos te esperan 🏡📚",
+  "Viajar al pasado, al futuro y a las estrellas en un sillón 🚀⭐",
+  "Un gran final te acompaña en el corazón toda la vida 💖",
+  "Coleccionar libros es coleccionar portales para soñar 🌸",
+  "Tu librero cuenta la historia más bonita: la tuya 📖🌿",
+
+  // --- 21 a 40: Ardillas, Bellotas & Naturaleza ---
+  "Paso a pasito, como ardillita guardando tesoros 🐿️🌰",
+  "Una bellota hoy, un roble gigante mañana 🌱✨",
+  "Las cosas más dulces de la vida caben entre dos patitas 🐾💕",
+  "Saltar de rama en rama y de página en página 🍃🐿️",
+  "Guardar momentos felices como nueces para el invierno 🌰🍂",
+  "La curiosidad de una ardillita siempre encuentra maravillas 🌸",
+  "Mañanas tibias entre piñas de pino y musgo verde 🌲☀️",
+  "El secreto de la felicidad: una nuez, sol y calma 🐿️✨",
+  "Dejar huellitas de ternura por dondequiera que pases 🐾💖",
+  "Un corazón generoso siempre tiene una bellota para compartir 🌰🤝",
+  "Abrazos esponjosos que abrigan los días más fríos 🐿️🧣",
+  "El bosque guarda secretos que solo los lectores comprenden 🌲📚",
+  "Una ardillita con un libro es el cuadro más tierno del mundo 🎨🐿️",
+  "Pequeñas patitas, grandes sueños en el horizonte 🌅🐾",
+  "Leer en el huequito acogedor de un viejo roble 🌳📖",
+  "Encontrar un gran libro es hallar la nuez dorada del bosque 🌰🌟",
+  "La serenidad del bosque se parece a leer en silencio 🍃🕊️",
+  "Atesora cada recuerdo feliz como una semilla mágica 🌱🌸",
+  "Cola esponjosa, corazón contento y páginas por descubrir 🐿️💕",
+  "La naturaleza escribe los mejores versos en sus hojas 🍂📜",
+
+  // --- 41 a 60: Lavanda & Flores ---
+  "Respirar hondo y dejar que florezca la calma 🪻🌿",
+  "El suave susurro de los campos de lavanda al viento 💜💨",
+  "Pétalos lilas que perfuman nuestras tardes de lectura 🌸🪻",
+  "Donde florecen flores, florece la esperanza en el alma 🌷✨",
+  "Un té de lavanda y miel para acariciar los pensamientos 🫖🍯",
+  "La delicadeza de una flor es la mayor fuerza del jardín 🌸🌱",
+  "Llenar la vida de detalles lilas y sonrisas sinceras 💜😊",
+  "Tardes de wisteria cayendo suave sobre el librero 🪻📖",
+  "Florecer a tu propio ritmo, sin prisas y con amor propio 🌺🕊️",
+  "Cuidar tus lecturas como riegas tus flores consentidas 🪴💧",
+  "Un rincón que huele a primavera en cualquier estación 🌸🏡",
+  "La lavanda nos enseña que la belleza florece en la paz 🪻💫",
+  "Bañar las mañanas de sol con rocío sobre los jazmines 🌼☀️",
+  "Flores silvestres que crecen libres entre los libros 🌾📚",
+  "Un ramito de lavanda seca entre las páginas de un diario 💜🔖",
+  "El jardín de tus sueños se cultiva leyendo cada día 🌷📖",
+  "Pétalos flotando en la brisa de un atardecer dorado 🌸🌅",
+  "La paz no se busca afuera, florece dentro de ti 🪻💖",
+  "Aromas florales que te transportan a los recuerdos más felices 🌿💭",
+  "Que nunca te falten flores frescas ni historias hermosas 💐💕",
+
+  // --- 61 a 80: Animal Crossing & Vida en la Isla ---
+  "La vida en la isla es más dulce con un buen libro en mano 🏝️📖",
+  "Deseos pedidos a las estrellas fugaces en la orilla del mar 🌠✨",
+  "Un café caliente servido con amor en El Alpiste de Fígaro ☕🕊️",
+  "Totakeke tocando la guitarra acústica bajo la luz del farol 🎸🎶",
+  "Plantar un árbol de duraznos y verlo crecer con paciencia 🍑🌱",
+  "Buscar fósiles en la tierra y tesoros entre las páginas 🦴📚",
+  "El buzón siempre guarda una carta con cariño de un amigo 💌🎁",
+  "Caminar descalza por la arena recogiendo conchitas brillantes 🐚🌊",
+  "Canela dando los buenos días con su alegría contagiosa 🐶🌸",
+  "Una isla acogedora se construye con pequeños detalles de amor 🏡🌾",
+  "Pescar momentos dorados en el río de la imaginación 🎣⭐",
+  "Bajo el cielo estrellado de las dos de la mañana todo es paz 🌌🌙",
+  "Los domingos de nabos se disfrutan mejor leyendo en el muelle 🥬⛵",
+  "Un hogar isleño con repisas llenas de libros y recuerdos 🌸🛋️",
+  "La brisa marina agitando las cortinas de encaje blanco 🪟🍃",
+  "Globos con regalos volando sobre un cielo color pastel 🎈🎀",
+  "Un banquito de madera junto al puente para leer al sol 🪵☀️",
+  "Cazar mariposas de papel entre las páginas de una novela 🦋📖",
+  "Si golpeas una roca, que sea para descubrir campanitas doradas 🔔💛",
+  "En nuestra isla siempre habrá un lugar reservado para ti 🏝️💕",
+
+  // --- 81 a 100: Taylor Swift & Folklore Coziness ---
+  "And when I felt like I was an old cardigan, you put me on 🧶✨",
+  "I just wanna stay in that lavender haze 🪻🌫️",
+  "I once was poison ivy, but now I'm your daisy 🌼💖",
+  "Step into the daylight and let it go ☀️🕊️",
+  "Meet me behind the mall with a book in hand 📖🍁",
+  "All's well that ends well to end up with you 💕✨",
+  "Are there still beautiful things? Yes, right in these pages 🌿📚",
+  "I'd give you my sunshine, give you my best ☀️💛",
+  "Please don't ever become a stranger whose laugh I know 🍂🤍",
+  "This love is glowing in the dark, like a bookmark in the night 🌙📖",
+  "Time, mystical time, cutting me open, then healing me fine ⏳✨",
+  "August sipped away like a bottle of wine... and a good story 🍷🍃",
+  "I was enchanted to meet you in the pages of this book 🏰💫",
+  "Shining just for you, like a disco mirrorball in the library 🪩✨",
+  "You showed me colors you know I can't see with anyone else 🎨🌸",
+  "Left my scarf at your house, but I brought all my books with me 🧣📚",
+  "Sweet tea in the summer and poetry by the fire in the winter 🫖❄️",
+  "Long story short, I survived and found my happy ending 🏰💖",
+  "An invisible string tying your heart to every story you love 🧵✨",
+  "And at every table, I'll save you a seat next to my books 🪑📖💕"
+];
+
+let currentNuezMessageIndex = 3; // Empezar con el saludo cálido y estadísticas del lector
+let currentStickyQuoteIndex = 0;
+
+// Reemplaza marcadores dinámicos ({reader}, {reading}, {completed}, {total}) con valores reales
+function formatNuezMessage(template) {
   const isAll = appState.activeReaderFilter === 'all';
-  const currentReader = appState.activeReaderFilter;
+  const readerName = isAll ? 'amiga lectora' : (appState.activeReaderFilter || 'Carolina Ornelas');
   const readerBooks = isAll 
     ? appState.books 
-    : appState.books.filter(b => b.reader === currentReader);
-
+    : appState.books.filter(b => b.reader === appState.activeReaderFilter);
+  const total = appState.books.length;
   const completed = readerBooks.filter(b => b.status === 'completed' || (b.currentPage || 0) >= (b.totalPages || 1)).length;
   const reading = readerBooks.filter(b => (b.status === 'reading' || (b.currentPage || 0) > 0) && (b.currentPage || 0) < (b.totalPages || 1)).length;
 
-  if (isAll) {
-    dialogueText.textContent = `¡Llevamos ${total} libro${total === 1 ? '' : 's'} en el librero y ${completed} completado${completed === 1 ? '' : 's'} entre todos! 🍃 ¿Cuál vamos a leer hoy en la isla?`;
-  } else {
-    dialogueText.textContent = `¡Hola, ${currentReader}! 🌸 Tienes ${reading} libro${reading === 1 ? '' : 's'} en lectura activa y ${completed} completado${completed === 1 ? '' : 's'}. 🍃 ¿Cuál vamos a leer hoy?`;
+  return template
+    .replace(/{reader}/g, readerName)
+    .replace(/{total}/g, total)
+    .replace(/{reading}/g, reading)
+    .replace(/{completed}/g, completed)
+    .replace(/{s_reading}/g, reading === 1 ? '' : 's')
+    .replace(/{s_completed}/g, completed === 1 ? '' : 's')
+    .replace(/{s_total}/g, total === 1 ? '' : 's');
+}
+
+// Diálogo dinámico de la ardillita mascota (50 mensajes rotativos)
+function updateMascotDialogue(forcedIndex = null) {
+  const dialogueText = document.getElementById('mascotDialogueText');
+  if (!dialogueText) return;
+
+  if (forcedIndex !== null) {
+    currentNuezMessageIndex = (forcedIndex % NUEZ_MESSAGES_50.length + NUEZ_MESSAGES_50.length) % NUEZ_MESSAGES_50.length;
   }
+
+  const rawTemplate = NUEZ_MESSAGES_50[currentNuezMessageIndex] || NUEZ_MESSAGES_50[0];
+  dialogueText.textContent = formatNuezMessage(rawTemplate);
+}
+
+// Avanzar al siguiente mensaje de Nuez con rebote animado
+function cycleMascotMessage() {
+  currentNuezMessageIndex = (currentNuezMessageIndex + 1) % NUEZ_MESSAGES_50.length;
+  updateMascotDialogue();
+
+  const bubble = document.getElementById('mascotSpeechBubble');
+  if (bubble) {
+    bubble.classList.remove('bubble-bounce');
+    void bubble.offsetWidth;
+    bubble.classList.add('bubble-bounce');
+  }
+
+  const mascotImg = document.getElementById('mascotBubbleImg');
+  if (mascotImg) {
+    mascotImg.classList.remove('mascot-talk-bounce');
+    void mascotImg.offsetWidth;
+    mascotImg.classList.add('mascot-talk-bounce');
+    setTimeout(() => mascotImg.classList.remove('mascot-talk-bounce'), 550);
+  }
+}
+
+// Actualizar el texto de la notita adhesiva Foto 2 (100 frases)
+function updateStickyQuote(forcedIndex = null) {
+  const quoteText = document.getElementById('stickyQuoteText');
+  if (!quoteText) return;
+
+  if (forcedIndex !== null) {
+    currentStickyQuoteIndex = (forcedIndex % COZY_QUOTES_100.length + COZY_QUOTES_100.length) % COZY_QUOTES_100.length;
+  }
+
+  const quote = COZY_QUOTES_100[currentStickyQuoteIndex] || COZY_QUOTES_100[0];
+  quoteText.textContent = quote;
+}
+
+// Avanzar a la siguiente frase con animación táctil de despegar papel
+function cycleStickyQuote() {
+  currentStickyQuoteIndex = (currentStickyQuoteIndex + 1) % COZY_QUOTES_100.length;
+  
+  const card = document.getElementById('cozyStickyCard');
+  const quoteText = document.getElementById('stickyQuoteText');
+
+  if (quoteText) {
+    quoteText.style.opacity = '0';
+    quoteText.style.transform = 'scale(0.95)';
+  }
+
+  if (card) {
+    card.classList.remove('paper-peel-anim');
+    void card.offsetWidth;
+    card.classList.add('paper-peel-anim');
+  }
+
+  setTimeout(() => {
+    updateStickyQuote();
+    if (quoteText) {
+      quoteText.style.opacity = '1';
+      quoteText.style.transform = 'scale(1)';
+    }
+  }, 120);
+}
+
+// Elegir una frase inicial aleatoria para la nota adhesiva al cargar
+function initStickyNoteQuotes() {
+  currentStickyQuoteIndex = Math.floor(Math.random() * COZY_QUOTES_100.length);
+  updateStickyQuote();
 }
 
 // ===================================================================

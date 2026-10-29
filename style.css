@@ -414,17 +414,70 @@ body.ac-theme {
   background: #ffffff;
   border: 2px solid #e9d5ff;
   border-radius: 26px;
-  padding: 0.35rem 1.4rem 0.35rem 0.6rem;
+  padding: 0.45rem 1.4rem 0.45rem 0.75rem;
   display: flex;
   align-items: center;
-  gap: 1.1rem;
+  gap: 1.15rem;
   box-shadow: 0 8px 24px rgba(168, 85, 247, 0.1);
   position: relative;
-  transition: transform 0.25s ease;
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease, border-color 0.22s ease;
+  cursor: pointer;
+  user-select: none;
 }
 
 .ac-speech-bubble:hover {
   transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(168, 85, 247, 0.18);
+  border-color: #d8b4fe;
+}
+
+.ac-speech-bubble:active {
+  transform: scale(0.99);
+}
+
+.ac-speech-bubble:focus-visible {
+  outline: 3px solid #c084fc;
+  outline-offset: 3px;
+}
+
+.bubble-bounce {
+  animation: bubbleBounce 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes bubbleBounce {
+  0% { transform: scale(1); }
+  35% { transform: scale(0.97) translateY(2px); }
+  65% { transform: scale(1.025) translateY(-3px); }
+  100% { transform: scale(1); }
+}
+
+.bubble-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 3px;
+}
+
+.bubble-hint-chip {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #9333ea;
+  background: #faf5ff;
+  border: 1px solid #f3e8ff;
+  border-radius: 12px;
+  padding: 2px 8px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.ac-speech-bubble:hover .bubble-hint-chip {
+  background: #f3e8ff;
+  color: #7e22ce;
+  border-color: #e9d5ff;
 }
 
 .bubble-mascot-wrap {
@@ -450,6 +503,18 @@ body.ac-theme {
   display: block;
   filter: drop-shadow(0 4px 12px rgba(138, 75, 175, 0.24));
   animation: cuteBob 2.8s ease-in-out infinite;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.mascot-talk-bounce {
+  animation: mascotTalkBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+@keyframes mascotTalkBounce {
+  0% { transform: scale(1) rotate(0deg); }
+  30% { transform: scale(1.12) rotate(-5deg); }
+  60% { transform: scale(1.05) rotate(4deg); }
+  100% { transform: scale(1) rotate(0deg); }
 }
 
 .bubble-mascot {
@@ -464,6 +529,7 @@ body.ac-theme {
 
 .bubble-content {
   flex: 1;
+  min-width: 0;
 }
 
 .bubble-sender {
@@ -472,7 +538,6 @@ body.ac-theme {
   font-weight: 700;
   color: #7e22ce;
   display: block;
-  margin-bottom: 3px;
 }
 
 .bubble-text {
@@ -480,42 +545,154 @@ body.ac-theme {
   color: var(--text-main);
   line-height: 1.45;
   font-weight: 500;
+  transition: opacity 0.15s ease;
 }
 
-/* Nota adhesiva cozy al lado de la ardilla (Photo 1) */
+/* ===================================================================
+   TARJETA NOTA ADHESIVA REALISTA TIPO FOTO 2 (Warm Post-it Note)
+   =================================================================== */
 .cozy-sticky-card {
-  background: #fffbeb;
-  border: 1.5px solid #fef08a;
-  border-radius: 20px;
-  padding: 1rem 1.2rem;
-  box-shadow: 0 6px 18px rgba(245, 158, 11, 0.12);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   position: relative;
-  transform: rotate(1deg);
-  transition: transform 0.2s;
+  background: linear-gradient(145deg, #fffcf6 0%, #fff6e8 48%, #fcecd4 100%);
+  border: 1px solid rgba(224, 185, 140, 0.55);
+  border-radius: 6px 8px 16px 6px;
+  padding: 1.15rem 1.35rem 1.1rem 1.35rem;
+  box-shadow: 
+    0 3px 6px rgba(84, 51, 16, 0.06),
+    3px 10px 24px rgba(92, 53, 18, 0.15),
+    0 1px 2px rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-1.5deg);
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease, border-color 0.22s ease;
+  cursor: pointer;
+  user-select: none;
+  min-height: 82px;
 }
 
 .cozy-sticky-card:hover {
-  transform: rotate(0deg) scale(1.02);
+  transform: rotate(-0.5deg) translateY(-3px) scale(1.025);
+  box-shadow: 
+    0 6px 12px rgba(84, 51, 16, 0.08),
+    5px 16px 30px rgba(92, 53, 18, 0.22);
+  border-color: rgba(200, 155, 105, 0.75);
 }
 
-.sticky-pin {
+.cozy-sticky-card:active {
+  transform: rotate(-1deg) scale(0.98);
+}
+
+.cozy-sticky-card:focus-visible {
+  outline: 3px solid #d97706;
+  outline-offset: 3px;
+}
+
+/* Tachuela / Chincheta de madera en el centro superior (Foto 2) */
+.sticky-pin-head {
   position: absolute;
-  top: -8px;
+  top: -9px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 1.1rem;
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle at 35% 30%, #e8c599 0%, #c48b4b 60%, #855322 100%);
+  border-radius: 50%;
+  box-shadow: 0 4px 6px rgba(60, 30, 10, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(110, 55, 15, 0.45);
+  z-index: 5;
 }
 
-.sticky-quote {
-  font-family: 'Quicksand', sans-serif;
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: #b45309;
+.sticky-pin-head::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #5a2e0a;
+  opacity: 0.65;
+}
+
+/* Contenido interior de la nota */
+.sticky-card-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0 0.6rem;
   text-align: center;
+}
+
+/* Flor / detalle delicado a la izquierda (Foto 2) */
+.sticky-flower-accent {
+  position: absolute;
+  left: -8px;
+  top: -8px;
+  font-size: 0.95rem;
+  opacity: 0.88;
+  filter: drop-shadow(0 2px 4px rgba(236, 72, 153, 0.25));
+  pointer-events: none;
+}
+
+/* Tipografía manuscrita cálida tipo cuento / post-it */
+.sticky-quote {
+  font-family: 'Patrick Hand', 'Caveat', 'Quicksand', cursive, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #4a2c11;
   line-height: 1.35;
+  text-align: center;
+  margin: 0;
+  letter-spacing: 0.2px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+/* Sticker corazón rosa con contorno blanco brillante a la derecha (Foto 2) */
+.sticky-heart-badge {
+  position: absolute;
+  right: -8px;
+  bottom: -10px;
+  font-size: 1.15rem;
+  display: inline-block;
+  filter: 
+    drop-shadow(0 0 1px #ffffff) 
+    drop-shadow(0 0 2px #ffffff) 
+    drop-shadow(0 2px 4px rgba(236, 72, 153, 0.4));
+  animation: heartGentlePulse 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes heartGentlePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+/* Detalle de esquina doblada / sombra de papel en la esquina inferior derecha */
+.sticky-curl-corner {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 18px;
+  height: 18px;
+  background: linear-gradient(135deg, transparent 50%, rgba(200, 160, 115, 0.35) 50%, rgba(160, 115, 75, 0.45) 100%);
+  border-bottom-right-radius: 14px;
+  pointer-events: none;
+}
+
+/* Animación de voltear / despegar papel al hacer clic */
+.paper-peel-anim {
+  animation: paperPeel 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes paperPeel {
+  0% { transform: scale(1) rotate(-1.5deg); }
+  35% { transform: scale(0.95) rotate(3deg) translateY(-3px); }
+  70% { transform: scale(1.03) rotate(-3deg) translateY(1px); }
+  100% { transform: scale(1) rotate(-1.5deg); }
 }
 
 /* ===================================================================

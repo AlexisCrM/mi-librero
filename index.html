@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Quicksand:wght@500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Patrick+Hand&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Quicksand:wght@500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="ac-theme">
@@ -67,24 +67,32 @@
     </div>
   </header>
 
-  <!-- Saludo de Ardillita Guía + Tarjeta de Inspiración (Photo 1) -->
+  <!-- Saludo de Ardillita Guía + Tarjeta de Inspiración (Photo 1 & Photo 2) -->
   <section class="ac-dialogue-section">
-    <div class="ac-speech-bubble">
+    <div class="ac-speech-bubble" id="mascotSpeechBubble" title="Haz clic para platicar con Nuez 🐿️💬 (50 mensajes disponibles)" role="button" tabindex="0">
       <div class="bubble-mascot-wrap">
-        <img src="img/logoardilla.png" alt="Nuez" class="bubble-mascot-img">
+        <img src="img/logoardilla.png" alt="Nuez" class="bubble-mascot-img" id="mascotBubbleImg">
       </div>
       <div class="bubble-content">
-        <strong class="bubble-sender" id="mascotGreetingSender">¡Hola! Soy Nuez 🌸</strong>
+        <div class="bubble-header-row">
+          <strong class="bubble-sender" id="mascotGreetingSender">¡Hola! Soy Nuez 🌸</strong>
+          <span class="bubble-hint-chip">💬 Haz clic para platicar</span>
+        </div>
         <p class="bubble-text" id="mascotDialogueText">
           Tu librero está listo para llenarse con tus libros favoritos. Selecciona cualquier repisa para entrar o empieza por añadir tu primer libro. ¡Estoy aquí para acompañarte en cada historia! 💜🪻
         </p>
       </div>
     </div>
 
-    <!-- Tarjetita de frase inspiradora al estilo Photo 1 -->
-    <div class="cozy-sticky-card">
-      <span class="sticky-pin">📌</span>
-      <p class="sticky-quote">Pequeños libros, grandes aventuras 💕</p>
+    <!-- Tarjetita de nota adhesiva realista tipo Foto 2 -->
+    <div class="cozy-sticky-card" id="cozyStickyCard" title="Haz clic para ver otra notita mágica 🌸 (100 frases disponibles)" role="button" tabindex="0">
+      <div class="sticky-pin-head" aria-hidden="true"></div>
+      <div class="sticky-card-inner">
+        <span class="sticky-flower-accent" aria-hidden="true">🌸</span>
+        <p class="sticky-quote" id="stickyQuoteText">Pequeños libros, grandes aventuras</p>
+        <span class="sticky-heart-badge" aria-hidden="true">💖</span>
+      </div>
+      <span class="sticky-curl-corner" aria-hidden="true"></span>
     </div>
   </section>
 
