@@ -344,6 +344,13 @@ function loadData() {
     localStorage.setItem(STORAGE_KEY_BOOKS, JSON.stringify(appState.books));
   }
 
+  // Asegurar que cualquier lector registrado en libros existentes se encuentre en appState.readers
+  appState.books.forEach(b => {
+    if (b.reader && b.reader !== 'Ella' && b.reader !== 'Él' && !appState.readers.includes(b.reader)) {
+      appState.readers.push(b.reader);
+    }
+  });
+
   // 4. Cargar Persiana y Modo de Tiempo de Zakia
   const savedTimeMode = localStorage.getItem(STORAGE_KEY_TIME_MODE);
   if (savedTimeMode) {
@@ -1436,9 +1443,14 @@ function openBookModal(bookId = null, defaultShelfId = null) {
   const form = document.getElementById('bookForm');
   form.reset();
 
+  // Asegurar que el selector de lectores contenga todos los creados y existentes
+  updateReadersDropdowns();
+
   const modalTitle = document.getElementById('bookModalTitle');
   const deleteBtn = document.getElementById('deleteBookBtn');
   const bookIdInput = document.getElementById('bookIdInput');
+  const bookShelfInput = document.getElementById('bookShelfInput');
+  const bookReaderInput = document.getElementById('bookReaderInput');
 
   if (bookId) {
     const book = appState.books.find(b => b.id === bookId);
@@ -1450,8 +1462,33 @@ function openBookModal(bookId = null, defaultShelfId = null) {
     bookIdInput.value = book.id;
     document.getElementById('bookTitleInput').value = book.title;
     document.getElementById('bookAuthorInput').value = book.author || '';
-    document.getElementById('bookReaderInput').value = book.reader || appState.readers[0];
-    document.getElementById('bookShelfInput').value = book.shelfId;
+
+    // Asignar lector del libro asegurando que esté en la lista
+    if (bookReaderInput) {
+      if (book.reader) {
+        let found = false;
+        for (let opt of bookReaderInput.options) {
+          if (opt.value === book.reader) {
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          const opt = document.createElement('option');
+          opt.value = book.reader;
+          opt.textContent = `👤 ${book.reader}`;
+          bookReaderInput.appendChild(opt);
+        }
+        bookReaderInput.value = book.reader;
+      } else {
+        bookReaderInput.value = appState.readers[0];
+      }
+    }
+
+    if (bookShelfInput) {
+      bookShelfInput.value = book.shelfId;
+    }
+
     document.getElementById('bookTotalPages').value = book.totalPages || 300;
     document.getElementById('bookCurrentPage').value = book.currentPage || 0;
     document.getElementById('bookRating').value = book.rating || '0';
@@ -1463,10 +1500,20 @@ function openBookModal(bookId = null, defaultShelfId = null) {
     deleteBtn.classList.add('hidden');
     bookIdInput.value = '';
 
-    if (defaultShelfId) {
-      document.getElementById('bookShelfInput').value = defaultShelfId;
+    // Asignar la repisa automáticamente desde la repisa abierta
+    const targetShelf = defaultShelfId || appState.activeShelfId || 'col-izq-1';
+    if (bookShelfInput) {
+      bookShelfInput.value = targetShelf;
     }
-    document.getElementById('bookReaderInput').value = appState.activeReaderFilter !== 'all' ? appState.activeReaderFilter : appState.readers[0];
+
+    // Seleccionar por defecto el lector activo en la sesión (o el primero registrado)
+    if (bookReaderInput) {
+      const activeReader = (appState.activeReaderFilter && appState.activeReaderFilter !== 'all')
+        ? appState.activeReaderFilter
+        : (appState.readers[0] || 'Carolina Ornelas');
+      bookReaderInput.value = activeReader;
+    }
+
     document.getElementById('bookTotalPages').value = 300;
     document.getElementById('bookCurrentPage').value = 0;
     appState.selectedSpineColor = '#9575cd';
@@ -1508,8 +1555,8 @@ function handleBookFormSubmit(e) {
   const id = document.getElementById('bookIdInput').value;
   const title = document.getElementById('bookTitleInput').value.trim();
   const author = document.getElementById('bookAuthorInput').value.trim();
-  const reader = document.getElementById('bookReaderInput').value;
-  const shelfId = document.getElementById('bookShelfInput').value;
+  const reader = document.getElementById('bookReaderInput')?.value || appState.readers[0] || 'Carolina Ornelas';
+  const shelfId = document.getElementById('bookShelfInput')?.value || appState.activeShelfId || 'col-izq-1';
   const totalPages = Math.max(1, parseInt(document.getElementById('bookTotalPages').value) || 1);
   const currentPage = Math.min(totalPages, Math.max(0, parseInt(document.getElementById('bookCurrentPage').value) || 0));
   const rating = document.getElementById('bookRating').value;

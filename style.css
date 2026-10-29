@@ -2123,36 +2123,70 @@ body.ac-theme {
   gap: 0.8rem;
 }
 
+.progress-inputs-row .page-input-group {
+  flex: 0 0 100px;
+  width: 100px;
+  max-width: 110px;
+}
+
+.progress-inputs-row .page-input-group label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #6b21a8;
+  white-space: nowrap;
+}
+
+.progress-inputs-row .page-input-group input[type="number"] {
+  width: 100%;
+  padding: 0.5rem 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
+  border-radius: var(--border-radius-sm);
+  background: #ffffff;
+  border: 1.5px solid #d8b4e2;
+  color: #3b1452;
+}
+
 .progress-slash {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
+  font-weight: 600;
   color: var(--lavender-medium);
   margin-top: 1.1rem;
+  user-select: none;
+  flex-shrink: 0;
 }
 
 .progress-preview-badge {
   margin-left: auto;
-  text-align: right;
+  text-align: center;
   background: #ffffff;
-  padding: 0.45rem 1rem;
-  border-radius: var(--border-radius-sm);
-  border: 1.5px solid var(--pink-medium);
-  box-shadow: 0 2px 6px rgba(240, 98, 146, 0.15);
+  padding: 0.45rem 1.1rem;
+  border-radius: 12px;
+  border: 1.5px solid #f472b6;
+  box-shadow: 0 2px 8px rgba(240, 98, 146, 0.18);
+  min-width: 118px;
+  flex-shrink: 0;
 }
 
 .progress-preview-badge span {
   display: block;
   font-family: 'Quicksand', sans-serif;
-  font-size: 1.4rem;
+  font-size: 1.45rem;
   font-weight: 800;
-  color: var(--pink-deep);
-  line-height: 1;
+  color: #db2777;
+  line-height: 1.1;
 }
 
 .progress-preview-badge small {
-  font-size: 0.7rem;
+  display: block;
+  font-size: 0.72rem;
   text-transform: uppercase;
-  color: var(--text-muted);
-  font-weight: 700;
+  color: #64748b;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  margin-top: 2px;
+  white-space: nowrap;
 }
 
 .progress-bar-container {

@@ -626,44 +626,18 @@
           <div class="form-group flex-1">
             <label for="bookReaderInput">Lector(a) *</label>
             <select id="bookReaderInput" required>
-              <option value="Ella">🌸 Ella</option>
-              <option value="Él">☕ Él</option>
+              <option value="Carolina Ornelas">🌸 Carolina Ornelas</option>
             </select>
           </div>
         </div>
 
-        <div class="form-row">
-          <div class="form-group flex-2">
-            <label for="bookAuthorInput">Autor(a) / Saga</label>
-            <input type="text" id="bookAuthorInput" placeholder="Ej: Gabriel García Márquez">
-          </div>
-          <div class="form-group flex-1">
-            <label for="bookShelfInput">Repisa del Mueble *</label>
-            <select id="bookShelfInput" required>
-              <optgroup label="Columna Izquierda (6 Repisas)">
-                <option value="col-izq-1">Izquierda 1 (Superior) - Romance</option>
-                <option value="col-izq-2">Izquierda 2 - Ciencia Ficción</option>
-                <option value="col-izq-3">Izquierda 3 - Manga</option>
-                <option value="col-izq-4">Izquierda 4 - Novelas</option>
-                <option value="col-izq-5">Izquierda 5 - Pendientes</option>
-                <option value="col-izq-6">Izquierda 6 (Inferior) - Favoritos</option>
-              </optgroup>
-              <optgroup label="Puente Superior (Sobre Ventana)">
-                <option value="puente-1">Puente 1 (Izquierdo) - Fantasía</option>
-                <option value="puente-2">Puente 2 (Centro) - Clásicos</option>
-                <option value="puente-3">Puente 3 (Derecho) - Desarrollo Personal</option>
-              </optgroup>
-              <optgroup label="Columna Derecha (6 Repisas)">
-                <option value="col-der-1">Derecha 1 (Superior) - Misterio</option>
-                <option value="col-der-2">Derecha 2 (Colección) - Crecimiento</option>
-                <option value="col-der-3">Derecha 3 - Recetas</option>
-                <option value="col-der-4">Derecha 4 - Poesía & Arte</option>
-                <option value="col-der-5">Derecha 5 - Libros en Inglés</option>
-                <option value="col-der-6">Derecha 6 (Inferior) - Por leer</option>
-              </optgroup>
-            </select>
-          </div>
+        <div class="form-group">
+          <label for="bookAuthorInput">Autor(a) / Saga</label>
+          <input type="text" id="bookAuthorInput" placeholder="Ej: Gabriel García Márquez, Taylor Jenkins Reid...">
         </div>
+
+        <!-- Repisa oculta asignada automáticamente al interactuar con el librero -->
+        <input type="hidden" id="bookShelfInput">
 
         <!-- Barra interactiva de Páginas y Porcentaje Dinámico -->
         <div class="reading-progress-card">
@@ -673,12 +647,12 @@
           </div>
 
           <div class="progress-inputs-row">
-            <div class="form-group">
+            <div class="form-group page-input-group">
               <label for="bookCurrentPage">Página Actual</label>
               <input type="number" id="bookCurrentPage" min="0" value="0">
             </div>
             <div class="progress-slash">/</div>
-            <div class="form-group">
+            <div class="form-group page-input-group">
               <label for="bookTotalPages">Total Páginas *</label>
               <input type="number" id="bookTotalPages" min="1" value="300" required>
             </div>
