@@ -257,44 +257,55 @@
           </div>
         </div>
 
-        <!-- Ventana central con rincón de lectura, paisaje de Zakia y persiana interactiva -->
+        <!-- Ventana central con rincón de lectura, paisaje de Zakia y controles modernos -->
         <div class="window-nook" id="windowNook">
           <!-- Píldora de ubicación, reloj y momento del día en Zakia -->
           <div class="window-time-badge" id="windowTimeBadge" title="Haz clic para alternar: Mañana 🌅, Tarde ☀️, Atardecer 🌇, Noche 🌙 o Automático 🔄">
-            <span class="location-pin">📍 Nuez, Qro</span>
+            <span class="location-pin" id="windowLocationText">📍 Zakia, Qro.</span>
             <span class="time-sep">•</span>
-            <span class="time-clock" id="windowClockTime">14:43</span>
+            <span class="time-clock" id="windowClockTime">17:45</span>
             <span class="time-phase-tag" id="windowPhaseLabel">☀️ Tarde</span>
           </div>
 
+          <!-- Barra de 3 botones con iconos modernos (Música, Cambiar Foto, Configuración) -->
+          <div class="window-control-bar">
+            <!-- 1. Música ambiental relajante -->
+            <button type="button" class="btn-window-icon" id="btnToggleMusic" title="Música ambiental relajante 🎵">
+              <svg class="modern-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 18V5l12-2v13"></path>
+                <circle cx="6" cy="18" r="3"></circle>
+                <circle cx="18" cy="16" r="3"></circle>
+              </svg>
+            </button>
+
+            <!-- 2. Cambiar / Agregar Foto -->
+            <button type="button" class="btn-window-icon" id="btnChangePhoto" title="Cambiar foto del centro del librero 🖼️">
+              <svg class="modern-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="3" ry="3"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+            </button>
+            <input type="file" id="windowPhotoInput" accept="image/*" style="display: none;">
+
+            <!-- 3. Configuración del librero -->
+            <button type="button" class="btn-window-icon" id="btnWindowSettings" title="Configuración del librero ⚙️">
+              <svg class="modern-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+            </button>
+          </div>
+
           <div class="window-frame" id="windowFrame">
-            <!-- Persiana enrollable interactiva limpia (SIN EMOJIS, tela de lino premium) -->
-            <div class="window-blind" id="windowBlind" style="height: 25%;">
-              <div class="blind-fabric">
-                <div class="blind-texture-weave"></div>
-                <div class="blind-hem-stitch"></div>
-              </div>
-              <div class="blind-bottom-bar" id="blindHandle" title="↔️ Arrastra hacia arriba o abajo para regular la persiana">
-                <div class="blind-handle-grip"></div>
-                <div class="blind-pull-ring"></div>
-              </div>
-            </div>
-
-            <!-- Botones rápidos flotantes para ajustar la persiana -->
-            <div class="blind-quick-bar">
-              <button type="button" class="btn-blind-action" id="btnBlindUp" title="Subir persiana por completo">▲ Subir</button>
-              <button type="button" class="btn-blind-action" id="btnBlindMid" title="A la mitad">◼ Mitad</button>
-              <button type="button" class="btn-blind-action" id="btnBlindDown" title="Bajar persiana">▼ Bajar</button>
-            </div>
-
-            <!-- Cristal de la ventana con vista exterior: Escenario Ilustrado en Alta Definición (Photo 1) -->
+            <!-- Cristal de la ventana con vista exterior: Escenario Ilustrado o Foto Personalizada (sin espacios vacíos) -->
             <div class="window-glass" id="windowGlass">
               <div class="window-scene-image-container">
-                <img src="assets/window_scene.jpg" alt="Rincón de lectura en el jardín de Zakia" class="window-scene-hd-img" id="windowSceneImg">
+                <img src="assets/window_scene.jpg" alt="Rincón de lectura en el centro del librero" class="window-scene-hd-img" id="windowSceneImg">
                 <div class="window-time-atmosphere" id="windowTimeAtmosphere"></div>
                 <!-- Frase en el jardín como en Photo 1 -->
-                <div class="garden-signpost-badge">
-                  <span>Un buen libro también es un hogar 🌸</span>
+                <div class="garden-signpost-badge" id="gardenSignpostBadge">
+                  <span id="gardenSignpostText">Un buen libro también es un hogar 🌸</span>
                 </div>
               </div>
             </div>
@@ -667,6 +678,66 @@
           <button type="submit" class="btn btn-ac-primary">🌸 Guardar Libro</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- MODAL DE CONFIGURACIÓN DEL LIBRERO (⚙️)                           -->
+  <!-- ================================================================= -->
+  <div class="window-settings-backdrop" id="windowSettingsModalBackdrop">
+    <div class="window-settings-modal">
+      <div class="window-settings-header">
+        <div class="book-modal-title-wrap">
+          <span class="book-mascot-chip">⚙️🌸</span>
+          <h3>Configuración del Rincón de Lectura</h3>
+        </div>
+        <button id="closeWindowSettingsBtn" class="btn-close">✕</button>
+      </div>
+
+      <div class="window-settings-body">
+        <!-- 1. Momento del día y atmósfera -->
+        <div class="settings-group">
+          <label class="settings-label">🌅 Momento del Día / Luz de la Ventana:</label>
+          <div class="time-modes-grid">
+            <button type="button" class="btn-time-opt" data-mode="auto">🔄 Automático (Hora real)</button>
+            <button type="button" class="btn-time-opt" data-mode="morning">🌅 Mañana</button>
+            <button type="button" class="btn-time-opt" data-mode="afternoon">☀️ Tarde</button>
+            <button type="button" class="btn-time-opt" data-mode="sunset">🌇 Atardecer</button>
+            <button type="button" class="btn-time-opt" data-mode="night">🌙 Noche</button>
+          </div>
+        </div>
+
+        <!-- 2. Foto del centro del librero -->
+        <div class="settings-group">
+          <label class="settings-label">🖼️ Foto del Centro del Librero:</label>
+          <p class="settings-hint">Puedes subir cualquier foto especial y se acoplará perfectamente sin espacios vacíos.</p>
+          <div class="settings-btns-row">
+            <button type="button" class="btn btn-ac-primary" id="btnUploadPhotoModal">
+              📸 Elegir Foto de mi Computadora
+            </button>
+            <button type="button" class="btn btn-ac-secondary" id="btnResetPhotoModal">
+              🔄 Restablecer Ilustración de Zakia
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. Frase del jardín -->
+        <div class="settings-group">
+          <label for="gardenSignInput" class="settings-label">🌸 Frase del Rincón de Lectura:</label>
+          <div class="input-with-btn-row">
+            <input type="text" id="gardenSignInput" class="form-input" placeholder="Un buen libro también es un hogar 🌸">
+            <button type="button" class="btn btn-ac-secondary" id="btnSaveGardenSign">Guardar Frase</button>
+          </div>
+        </div>
+
+        <!-- 4. Respaldo de datos -->
+        <div class="settings-group">
+          <label class="settings-label">💾 Respaldos de tus Libros:</label>
+          <button type="button" class="btn btn-bubble-pill" id="btnOpenBackupModalFromSettings">
+            💾 Abrir Administrador de Copias de Seguridad
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 

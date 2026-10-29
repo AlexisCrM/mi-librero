@@ -252,7 +252,8 @@ const STORAGE_KEY_TIME_MODE = 'mi_librero_time_mode_v2';
 document.addEventListener('DOMContentLoaded', () => {
   loadData();
   setupEventListeners();
-  initBlindController();
+  initWindowControls();
+  initLocationDetection();
   initZakiaTimeEngine();
   initBookshelfLightingEngine();
   renderApp();
@@ -344,14 +345,23 @@ function loadData() {
   }
 
   // 4. Cargar Persiana y Modo de Tiempo de Zakia
-  const savedBlind = localStorage.getItem(STORAGE_KEY_BLIND);
-  if (savedBlind !== null) {
-    appState.blindHeight = parseInt(savedBlind) || 35;
-  }
-
   const savedTimeMode = localStorage.getItem(STORAGE_KEY_TIME_MODE);
   if (savedTimeMode) {
     appState.windowTimeMode = savedTimeMode;
+  }
+
+  // 5. Cargar foto personalizada del centro del librero
+  const customImg = localStorage.getItem('mi_librero_custom_window_img');
+  const windowImg = document.getElementById('windowSceneImg');
+  if (customImg && windowImg) {
+    windowImg.src = customImg;
+  }
+
+  // 6. Cargar frase personalizada del jardín
+  const customSign = localStorage.getItem('mi_librero_garden_sign');
+  const signText = document.getElementById('gardenSignpostText');
+  if (customSign && signText) {
+    signText.textContent = customSign;
   }
 
   // Si solo hay 1 lector, asegurar que el filtro activo sea ese lector
@@ -617,96 +627,235 @@ function setupEventListeners() {
 }
 
 // ===================================================================
-// CONTROLADOR DE PERSIANA INTERACTIVA (SUBIR Y BAJAR A PLACER)
+// DETECCIÓN DE UBICACIÓN (ZAKIA, QRO / GEOLOCALIZACIÓN DEL VISITANTE)
 // ===================================================================
-function initBlindController() {
-  const blind = document.getElementById('windowBlind');
-  const handle = document.getElementById('blindHandle');
-  const frame = document.getElementById('windowFrame');
-  const btnUp = document.getElementById('btnBlindUp');
-  const btnMid = document.getElementById('btnBlindMid');
-  const btnDown = document.getElementById('btnBlindDown');
-  if (!blind || !handle || !frame) return;
+async function initLocationDetection() {
+  const locEl = document.getElementById('windowLocationText');
+  if (!locEl) return;
 
-  // Aplicar altura inicial guardada
-  setBlindHeight(appState.blindHeight, false);
+  // 1. Por defecto siempre inicia en Zakia, Qro.
+  locEl.textContent = '📍 Zakia, Qro.';
 
-  // Botones de ajuste rápido
-  if (btnUp) btnUp.addEventListener('click', (e) => { e.stopPropagation(); setBlindHeight(12, true); saveBlindHeight(); });
-  if (btnMid) btnMid.addEventListener('click', (e) => { e.stopPropagation(); setBlindHeight(45, true); saveBlindHeight(); });
-  if (btnDown) btnDown.addEventListener('click', (e) => { e.stopPropagation(); setBlindHeight(85, true); saveBlindHeight(); });
+  // 2. Intentar geolocalización por IP ligera para detectar dónde está ubicada la persona
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2200);
+    const res = await fetch('https://ipapi.co/json/', { signal: controller.signal });
+    clearTimeout(timeoutId);
 
-  // Arrastre interactivo de la persiana
-  let isDragging = false;
-  let startY = 0;
-  let startHeight = 0;
-  let clickStartTime = 0;
-
-  function onPointerDown(e) {
-    isDragging = true;
-    clickStartTime = Date.now();
-    blind.classList.add('dragging');
-
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    startY = clientY;
-    startHeight = appState.blindHeight;
-
-    document.addEventListener('mousemove', onPointerMove);
-    document.addEventListener('mouseup', onPointerUp);
-    document.addEventListener('touchmove', onPointerMove, { passive: false });
-    document.addEventListener('touchend', onPointerUp);
-  }
-
-  function onPointerMove(e) {
-    if (!isDragging) return;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    const frameRect = frame.getBoundingClientRect();
-    const currentYRelative = clientY - frameRect.top;
-    let newPercent = Math.round((currentYRelative / frameRect.height) * 100);
-    // Limitar entre 10% (abierta) y 88% (cerrada)
-    newPercent = Math.max(10, Math.min(88, newPercent));
-    setBlindHeight(newPercent, false);
-    if (e.cancelable) e.preventDefault();
-  }
-
-  function onPointerUp(e) {
-    if (!isDragging) return;
-    isDragging = false;
-    blind.classList.remove('dragging');
-
-    document.removeEventListener('mousemove', onPointerMove);
-    document.removeEventListener('mouseup', onPointerUp);
-    document.removeEventListener('touchmove', onPointerMove);
-    document.removeEventListener('touchend', onPointerUp);
-
-    // Si fue un clic rápido sin arrastrar mucho, alternar entre arriba y abajo
-    if (Date.now() - clickStartTime < 250) {
-      if (appState.blindHeight < 40) {
-        setBlindHeight(75, true);
-      } else {
-        setBlindHeight(15, true);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.city) {
+        const region = data.region_code || data.region || '';
+        const detected = region ? `${data.city}, ${region}` : data.city;
+        locEl.textContent = `📍 ${detected}`;
       }
     }
-    saveBlindHeight();
-  }
-
-  handle.addEventListener('mousedown', onPointerDown);
-  handle.addEventListener('touchstart', onPointerDown, { passive: true });
-}
-
-function setBlindHeight(percent, animated = true) {
-  const blind = document.getElementById('windowBlind');
-  if (!blind) return;
-  appState.blindHeight = Math.max(10, Math.min(88, percent));
-  if (!animated) blind.classList.add('dragging');
-  blind.style.height = `${appState.blindHeight}%`;
-  if (!animated) {
-    setTimeout(() => blind.classList.remove('dragging'), 60);
+  } catch (err) {
+    // Si falla o no hay conexión externa, se mantiene con orgullo Zakia, Qro.
   }
 }
 
-function saveBlindHeight() {
-  localStorage.setItem(STORAGE_KEY_BLIND, String(appState.blindHeight));
+// ===================================================================
+// AUDIO / MÚSICA AMBIENTAL RELAJANTE (Web Audio API Pentatonic Chimes)
+// ===================================================================
+let audioCtx = null;
+let isMusicPlaying = false;
+let musicInterval = null;
+
+const PENTATONIC_FREQS = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25];
+
+function toggleCozyMusic() {
+  const btn = document.getElementById('btnToggleMusic');
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+
+  isMusicPlaying = !isMusicPlaying;
+
+  if (isMusicPlaying) {
+    btn?.classList.add('playing');
+    btn?.setAttribute('title', 'Pausar música relajante ⏸️');
+    startCozyChimes();
+  } else {
+    btn?.classList.remove('playing');
+    btn?.setAttribute('title', 'Música ambiental relajante 🎵');
+    stopCozyChimes();
+  }
+}
+
+function playSoftChime(freq, duration = 2.8) {
+  if (!audioCtx || !isMusicPlaying) return;
+  const now = audioCtx.currentTime;
+
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  const filter = audioCtx.createBiquadFilter();
+
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(freq, now);
+
+  filter.type = 'lowpass';
+  filter.frequency.setValueAtTime(750, now);
+
+  gain.gain.setValueAtTime(0, now);
+  gain.gain.linearRampToValueAtTime(0.045, now + 0.12);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+  osc.connect(filter);
+  filter.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.start(now);
+  osc.stop(now + duration + 0.1);
+}
+
+function startCozyChimes() {
+  function nextChime() {
+    if (!isMusicPlaying) return;
+    const randomFreq = PENTATONIC_FREQS[Math.floor(Math.random() * PENTATONIC_FREQS.length)];
+    playSoftChime(randomFreq, 2.8);
+
+    if (Math.random() > 0.45) {
+      setTimeout(() => {
+        if (!isMusicPlaying) return;
+        const harmonyFreq = randomFreq * (Math.random() > 0.5 ? 1.25 : 1.5);
+        playSoftChime(harmonyFreq, 2.3);
+      }, 320);
+    }
+
+    const nextDelay = 1900 + Math.random() * 1700;
+    musicInterval = setTimeout(nextChime, nextDelay);
+  }
+  nextChime();
+}
+
+function stopCozyChimes() {
+  if (musicInterval) {
+    clearTimeout(musicInterval);
+    musicInterval = null;
+  }
+}
+
+// ===================================================================
+// CONTROLES DE LA VENTANA (Música, Cambio de Foto y Configuración)
+// ===================================================================
+function initWindowControls() {
+  // 1. Botón de Música
+  const btnMusic = document.getElementById('btnToggleMusic');
+  if (btnMusic) {
+    btnMusic.addEventListener('click', toggleCozyMusic);
+  }
+
+  // 2. Botón de Cambiar / Agregar Foto
+  const btnPhoto = document.getElementById('btnChangePhoto');
+  const photoInput = document.getElementById('windowPhotoInput');
+  const windowImg = document.getElementById('windowSceneImg');
+
+  if (btnPhoto && photoInput) {
+    btnPhoto.addEventListener('click', () => photoInput.click());
+  }
+
+  // También desde el modal de configuración
+  const btnUploadModal = document.getElementById('btnUploadPhotoModal');
+  if (btnUploadModal && photoInput) {
+    btnUploadModal.addEventListener('click', () => photoInput.click());
+  }
+
+  if (photoInput && windowImg) {
+    photoInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const dataUrl = event.target.result;
+          windowImg.src = dataUrl;
+          localStorage.setItem('mi_librero_custom_window_img', dataUrl);
+          alert('¡Foto del centro del librero actualizada con éxito! 🌸📸');
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  // Restablecer foto original de Zakia
+  const btnResetPhoto = document.getElementById('btnResetPhotoModal');
+  if (btnResetPhoto && windowImg) {
+    btnResetPhoto.addEventListener('click', () => {
+      localStorage.removeItem('mi_librero_custom_window_img');
+      windowImg.src = 'assets/window_scene.jpg';
+      alert('Se ha restablecido la vista ilustrada original de Zakia 🌿');
+    });
+  }
+
+  // 3. Modal de Configuración
+  const btnSettings = document.getElementById('btnWindowSettings');
+  const settingsModal = document.getElementById('windowSettingsModalBackdrop');
+  const closeSettingsBtn = document.getElementById('closeWindowSettingsBtn');
+
+  if (btnSettings && settingsModal) {
+    btnSettings.addEventListener('click', () => {
+      // Actualizar estado activo de botones de modo de luz
+      document.querySelectorAll('.btn-time-opt').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-mode') === appState.windowTimeMode);
+      });
+      // Cargar frase actual del jardín
+      const signText = document.getElementById('gardenSignpostText');
+      const signInput = document.getElementById('gardenSignInput');
+      if (signText && signInput) signInput.value = signText.textContent.trim();
+
+      settingsModal.classList.add('open');
+    });
+  }
+
+  if (closeSettingsBtn && settingsModal) {
+    closeSettingsBtn.addEventListener('click', () => settingsModal.classList.remove('open'));
+  }
+
+  if (settingsModal) {
+    settingsModal.addEventListener('click', (e) => {
+      if (e.target.id === 'windowSettingsModalBackdrop') settingsModal.classList.remove('open');
+    });
+  }
+
+  // Opciones de momento de luz dentro del modal
+  document.querySelectorAll('.btn-time-opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const mode = btn.getAttribute('data-mode');
+      appState.windowTimeMode = mode;
+      localStorage.setItem(STORAGE_KEY_TIME_MODE, mode);
+      document.querySelectorAll('.btn-time-opt').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      updateZakiaSky();
+    });
+  });
+
+  // Guardar frase del jardín
+  const btnSaveSign = document.getElementById('btnSaveGardenSign');
+  const signInput = document.getElementById('gardenSignInput');
+  const signText = document.getElementById('gardenSignpostText');
+  if (btnSaveSign && signInput && signText) {
+    btnSaveSign.addEventListener('click', () => {
+      const val = signInput.value.trim();
+      if (val) {
+        signText.textContent = val;
+        localStorage.setItem('mi_librero_garden_sign', val);
+        alert('¡Frase guardada con éxito! 🌸');
+      }
+    });
+  }
+
+  // Botón para abrir modal de backup desde configuración
+  const btnOpenBackup = document.getElementById('btnOpenBackupModalFromSettings');
+  if (btnOpenBackup) {
+    btnOpenBackup.addEventListener('click', () => {
+      settingsModal?.classList.remove('open');
+      document.getElementById('backupModalBackdrop')?.classList.add('open');
+    });
+  }
 }
 
 // ===================================================================
@@ -1260,8 +1409,9 @@ function exportBackupJSON() {
     drawers: appState.drawers,
     readers: appState.readers,
     shelfTitle: appState.shelfTitle,
-    blindHeight: appState.blindHeight,
     windowTimeMode: appState.windowTimeMode,
+    customWindowImg: localStorage.getItem('mi_librero_custom_window_img'),
+    gardenSign: localStorage.getItem('mi_librero_garden_sign'),
     exportedAt: new Date().toISOString()
   };
   const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
@@ -1288,10 +1438,15 @@ function importBackupJSON(e) {
         if (importedData.drawers) appState.drawers = importedData.drawers;
         if (importedData.readers) appState.readers = importedData.readers;
         if (importedData.shelfTitle) appState.shelfTitle = importedData.shelfTitle;
-        if (typeof importedData.blindHeight === 'number') {
-          appState.blindHeight = importedData.blindHeight;
-          setBlindHeight(appState.blindHeight, false);
-          saveBlindHeight();
+        if (importedData.customWindowImg) {
+          localStorage.setItem('mi_librero_custom_window_img', importedData.customWindowImg);
+          const windowImg = document.getElementById('windowSceneImg');
+          if (windowImg) windowImg.src = importedData.customWindowImg;
+        }
+        if (importedData.gardenSign) {
+          localStorage.setItem('mi_librero_garden_sign', importedData.gardenSign);
+          const signText = document.getElementById('gardenSignpostText');
+          if (signText) signText.textContent = importedData.gardenSign;
         }
         if (importedData.windowTimeMode) {
           appState.windowTimeMode = importedData.windowTimeMode;
