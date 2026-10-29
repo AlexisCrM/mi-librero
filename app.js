@@ -34,21 +34,25 @@ const DEFAULT_DRAWERS = {
   'cajon-izq-1': {
     name: 'Papelería & Stickers',
     icon: '✏️',
+    items: ['Plumas pastel', 'Stickers de Animal Crossing', 'Clips dorados', 'Post-its'],
     notes: 'Plumas pastel, stickers de Animal Crossing, clips dorados y post-its.'
   },
   'cajon-izq-2': {
     name: 'Archivos & Documentos',
     icon: '📁',
+    items: ['Carpetas importantes', 'Garantías', 'Documentos'],
     notes: 'Carpetas, documentos importantes y garantías.'
   },
   'cajon-der-1': {
     name: 'Cuadernos & Libretas',
     icon: '📓',
+    items: ['Bullet journal', 'Libreta de notas', 'Agendas 2026', 'Separadores'],
     notes: 'Bullet journal, libreta de notas, agendas y separadores.'
   },
   'cajon-der-2': {
     name: 'Recuerdos & Varios',
     icon: '🌸',
+    items: ['Fotografías', 'Cartas', 'Recuerdos especiales', 'Regalitos'],
     notes: 'Fotografías, cartas, recuerdos especiales y regalitos.'
   }
 };
@@ -560,15 +564,52 @@ function setupEventListeners() {
     if (e.target.id === 'drawerModalBackdrop') closeDrawerModal();
   });
 
-  // Presets rápidos para el cajón
-  document.querySelectorAll('.btn-preset').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.btn-preset').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('drawerNameInput').value = btn.getAttribute('data-name');
-      document.getElementById('drawerIconInput').value = btn.getAttribute('data-icon');
+  // Selector desplegable de íconos del cajón (Abrir / Cerrar ventana)
+  const openIconPickerBtn = document.getElementById('openDrawerIconPickerBtn');
+  const iconPopover = document.getElementById('drawerIconPopover');
+  const closeIconPopoverBtn = document.getElementById('closeIconPopoverBtn');
+
+  if (openIconPickerBtn && iconPopover) {
+    openIconPickerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      iconPopover.classList.toggle('open');
+    });
+  }
+
+  if (closeIconPopoverBtn && iconPopover) {
+    closeIconPopoverBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      iconPopover.classList.remove('open');
+    });
+  }
+
+  // Selección de ícono al hacer clic en cualquiera de las opciones
+  document.querySelectorAll('.btn-icon-choice').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const chosenIcon = btn.textContent.trim();
+      document.getElementById('drawerIconInput').value = chosenIcon;
+      document.getElementById('drawerIconPreview').textContent = chosenIcon;
+      if (iconPopover) iconPopover.classList.remove('open');
     });
   });
+
+  // Agregar objetos uno a uno con botón '+' o Enter
+  const addDrawerItemBtn = document.getElementById('addDrawerItemBtn');
+  const newDrawerItemInput = document.getElementById('newDrawerItemInput');
+
+  if (addDrawerItemBtn) {
+    addDrawerItemBtn.addEventListener('click', addDrawerItem);
+  }
+
+  if (newDrawerItemInput) {
+    newDrawerItemInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addDrawerItem();
+      }
+    });
+  }
 
   // Guardar Cajón
   document.getElementById('saveDrawerBtn').addEventListener('click', handleSaveDrawer);
@@ -1128,6 +1169,8 @@ function renderDrawersFace() {
         <span class="drawer-icon">${data.icon || '📦'}</span>
         <span class="drawer-name">${escapeHTML(data.name || 'Cajón')}</span>
       `;
+      const contentsPreview = data.items?.length ? data.items.join(', ') : (data.notes || '');
+      pill.title = contentsPreview ? `${data.name}: ${contentsPreview}` : data.name;
     }
   });
 }
@@ -1397,31 +1440,93 @@ function renderSectionStage(shelfId) {
 // ===================================================================
 // MODAL DE CAJÓN: ORGANIZADOR DE ARCHIVOS, PAPELERÍA Y RECUERDOS
 // ===================================================================
+let currentDrawerItems = [];
+
 function openDrawerModal(drawerId) {
   appState.activeDrawerId = drawerId;
-  const drawer = appState.drawers[drawerId] || { name: 'Cajón', icon: '✏️', notes: '' };
+  const drawer = appState.drawers[drawerId] || { name: 'Cajón', icon: '📦', items: [], notes: '' };
 
-  const titleMap = {
-    'cajon-izq-1': 'Cajón Izquierdo Superior',
-    'cajon-izq-2': 'Cajón Izquierdo Inferior',
-    'cajon-der-1': 'Cajón Derecho Superior',
-    'cajon-der-2': 'Cajón Derecho Inferior'
-  };
+  const nameInput = document.getElementById('drawerNameInput');
+  const iconInput = document.getElementById('drawerIconInput');
+  const iconPreview = document.getElementById('drawerIconPreview');
+  const popover = document.getElementById('drawerIconPopover');
 
-  document.getElementById('drawerModalTitle').textContent = titleMap[drawerId] || 'Organizador de Cajón';
-  document.getElementById('drawerNameInput').value = drawer.name || '';
-  document.getElementById('drawerIconInput').value = drawer.icon || '✏️';
-  document.getElementById('drawerNotesInput').value = drawer.notes || '';
+  if (nameInput) nameInput.value = drawer.name || '';
+  if (iconInput) iconInput.value = drawer.icon || '📦';
+  if (iconPreview) iconPreview.textContent = drawer.icon || '📦';
+  if (popover) popover.classList.remove('open');
 
-  // Quitar presets activos
-  document.querySelectorAll('.btn-preset').forEach(b => b.classList.remove('active'));
+  // Inicializar lista de items
+  if (drawer.items && Array.isArray(drawer.items) && drawer.items.length > 0) {
+    currentDrawerItems = [...drawer.items];
+  } else if (drawer.notes && typeof drawer.notes === 'string' && drawer.notes.trim()) {
+    currentDrawerItems = drawer.notes.split(/,\s*|\n/).map(s => s.trim()).filter(Boolean);
+  } else {
+    currentDrawerItems = [];
+  }
+
+  renderDrawerItemsList();
+
+  const itemInput = document.getElementById('newDrawerItemInput');
+  if (itemInput) itemInput.value = '';
 
   document.getElementById('drawerModalBackdrop').classList.add('open');
 }
 
 function closeDrawerModal() {
   document.getElementById('drawerModalBackdrop').classList.remove('open');
+  const popover = document.getElementById('drawerIconPopover');
+  if (popover) popover.classList.remove('open');
   appState.activeDrawerId = null;
+}
+
+function renderDrawerItemsList() {
+  const container = document.getElementById('drawerItemsContainer');
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  if (currentDrawerItems.length === 0) {
+    container.innerHTML = `<span class="drawer-empty-hint">✨ El cajón está vacío. ¡Escribe arriba y presiona ➕ Agregar para guardar objetos!</span>`;
+    return;
+  }
+
+  currentDrawerItems.forEach((item, index) => {
+    const chip = document.createElement('div');
+    chip.className = 'drawer-item-chip';
+    chip.innerHTML = `
+      <span class="item-chip-bullet">🌸</span>
+      <span class="item-chip-text" title="${escapeHTML(item)}">${escapeHTML(item)}</span>
+      <button type="button" class="btn-remove-chip" title="Eliminar ${escapeHTML(item)}">✕</button>
+    `;
+
+    chip.querySelector('.btn-remove-chip').addEventListener('click', (e) => {
+      e.stopPropagation();
+      removeDrawerItem(index);
+    });
+
+    container.appendChild(chip);
+  });
+}
+
+function addDrawerItem() {
+  const input = document.getElementById('newDrawerItemInput');
+  if (!input) return;
+
+  const text = input.value.trim();
+  if (!text) return;
+
+  currentDrawerItems.push(text);
+  input.value = '';
+  input.focus();
+  renderDrawerItemsList();
+}
+
+function removeDrawerItem(index) {
+  if (index >= 0 && index < currentDrawerItems.length) {
+    currentDrawerItems.splice(index, 1);
+    renderDrawerItemsList();
+  }
 }
 
 function handleSaveDrawer() {
@@ -1429,9 +1534,10 @@ function handleSaveDrawer() {
 
   const name = document.getElementById('drawerNameInput').value.trim() || 'Cajón';
   const icon = document.getElementById('drawerIconInput').value.trim() || '📦';
-  const notes = document.getElementById('drawerNotesInput').value.trim();
+  const items = [...currentDrawerItems];
+  const notes = items.join(', ');
 
-  appState.drawers[appState.activeDrawerId] = { name, icon, notes };
+  appState.drawers[appState.activeDrawerId] = { name, icon, items, notes };
   saveDrawers();
   closeDrawerModal();
 }

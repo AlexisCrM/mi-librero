@@ -540,6 +540,7 @@
   </div>
 
   <!-- ================================================================= -->
+  <!-- ================================================================= -->
   <!-- MODAL DE CAJÓN: ORGANIZADOR DE ARCHIVOS, PAPELERÍA, RECUERDOS    -->
   <!-- ================================================================= -->
   <div class="drawer-modal-backdrop" id="drawerModalBackdrop">
@@ -547,51 +548,121 @@
       <div class="drawer-modal-header">
         <div class="drawer-header-info">
           <span class="drawer-ac-tag">🗄️ Organizador del Mueble</span>
-          <h3 id="drawerModalTitle">Cajón Izquierdo Superior</h3>
-          <p class="drawer-subtitle">Personaliza qué guardas en este cajón para mantener tu espacio organizado</p>
+          <h3 class="drawer-header-title">Personaliza tu Cajón</h3>
+          <p class="drawer-subtitle">Organiza los objetos, accesorios o recuerdos que guardas aquí</p>
         </div>
-        <button id="closeDrawerModalBtn" class="btn-close">✕</button>
+        <button id="closeDrawerModalBtn" class="btn-close" title="Cerrar (Esc)">✕</button>
       </div>
 
       <div class="drawer-modal-body">
-        <!-- Selector de categorías rápidas estilo Animal Crossing -->
-        <label class="form-label-ac">Selecciona la categoría principal:</label>
-        <div class="drawer-presets-grid" id="drawerPresetsGrid">
-          <button type="button" class="btn-preset" data-name="Papelería & Stickers" data-icon="✏️">
-            <span>✏️</span> Papelería & Plumas
-          </button>
-          <button type="button" class="btn-preset" data-name="Archivos & Documentos" data-icon="📁">
-            <span>📁</span> Archivos & Documentos
-          </button>
-          <button type="button" class="btn-preset" data-name="Cuadernos & Libretas" data-icon="📓">
-            <span>📓</span> Cuadernos & Agendas
-          </button>
-          <button type="button" class="btn-preset" data-name="Manualidades & Washi Tapes" data-icon="🎨">
-            <span>🎨</span> Manualidades & Washi
-          </button>
-          <button type="button" class="btn-preset" data-name="Recuerdos & Fotos" data-icon="🌸">
-            <span>🌸</span> Recuerdos & Fotos
-          </button>
-          <button type="button" class="btn-preset" data-name="Cables & Accesorios" data-icon="🔌">
-            <span>🔌</span> Cables & Gadgets
-          </button>
-        </div>
-
-        <!-- Campos de personalización -->
-        <div class="form-row-ac">
-          <div class="form-group-ac flex-1">
-            <label for="drawerIconInput">Ícono:</label>
-            <input type="text" id="drawerIconInput" maxlength="3" value="✏️">
+        <!-- Fila Principal: Ícono con ventana de selección + Nombre de lo que guardas -->
+        <div class="drawer-primary-config-row">
+          <div class="drawer-icon-picker-col">
+            <label class="form-label-ac">Ícono:</label>
+            <button type="button" id="openDrawerIconPickerBtn" class="btn-drawer-icon-picker" title="Haz clic para elegir un ícono">
+              <span id="drawerIconPreview" class="drawer-icon-current">✏️</span>
+              <span class="icon-picker-badge">Elegir ▾</span>
+            </button>
+            <input type="hidden" id="drawerIconInput" value="✏️">
           </div>
-          <div class="form-group-ac flex-3">
-            <label for="drawerNameInput">Nombre de lo que guardas aquí:</label>
-            <input type="text" id="drawerNameInput" placeholder="Ej: Papelería, Post-its, etc.">
+
+          <div class="drawer-name-col">
+            <label for="drawerNameInput" class="form-label-ac">Nombre de lo que guardas aquí:</label>
+            <input type="text" id="drawerNameInput" class="drawer-name-input" placeholder="Ej: Cuadernos & Libretas, Papelería...">
           </div>
         </div>
 
-        <div class="form-group-ac">
-          <label for="drawerNotesInput">Detalles / Lista de objetos guardados:</label>
-          <textarea id="drawerNotesInput" rows="3" placeholder="Ej: Plumas pastel, stickers de Animal Crossing, clips dorados, libreta de notas..."></textarea>
+        <!-- Ventana / Popover desplegable de íconos -->
+        <div class="drawer-icon-popover" id="drawerIconPopover">
+          <div class="icon-popover-header">
+            <span>✨ Elige un ícono para este cajón:</span>
+            <button type="button" id="closeIconPopoverBtn" class="btn-popover-close">✕</button>
+          </div>
+          <div class="icon-popover-categories">
+            <div class="icon-category-group">
+              <span class="icon-group-title">✏️ Papelería & Arte</span>
+              <div class="icon-grid">
+                <button type="button" class="btn-icon-choice">✏️</button>
+                <button type="button" class="btn-icon-choice">✒️</button>
+                <button type="button" class="btn-icon-choice">🖋️</button>
+                <button type="button" class="btn-icon-choice">🖊️</button>
+                <button type="button" class="btn-icon-choice">🖍️</button>
+                <button type="button" class="btn-icon-choice">🖌️</button>
+                <button type="button" class="btn-icon-choice">🎨</button>
+                <button type="button" class="btn-icon-choice">✂️</button>
+                <button type="button" class="btn-icon-choice">📎</button>
+                <button type="button" class="btn-icon-choice">📌</button>
+                <button type="button" class="btn-icon-choice">📏</button>
+                <button type="button" class="btn-icon-choice">📐</button>
+              </div>
+            </div>
+            <div class="icon-category-group">
+              <span class="icon-group-title">📓 Libretas & Documentos</span>
+              <div class="icon-grid">
+                <button type="button" class="btn-icon-choice">📓</button>
+                <button type="button" class="btn-icon-choice">📕</button>
+                <button type="button" class="btn-icon-choice">📗</button>
+                <button type="button" class="btn-icon-choice">📘</button>
+                <button type="button" class="btn-icon-choice">📙</button>
+                <button type="button" class="btn-icon-choice">📔</button>
+                <button type="button" class="btn-icon-choice">📒</button>
+                <button type="button" class="btn-icon-choice">📁</button>
+                <button type="button" class="btn-icon-choice">📂</button>
+                <button type="button" class="btn-icon-choice">🗂️</button>
+                <button type="button" class="btn-icon-choice">🗃️</button>
+                <button type="button" class="btn-icon-choice">📜</button>
+              </div>
+            </div>
+            <div class="icon-category-group">
+              <span class="icon-group-title">🌸 Recuerdos, Fotos & Amor</span>
+              <div class="icon-grid">
+                <button type="button" class="btn-icon-choice">🌸</button>
+                <button type="button" class="btn-icon-choice">🌺</button>
+                <button type="button" class="btn-icon-choice">🌷</button>
+                <button type="button" class="btn-icon-choice">📷</button>
+                <button type="button" class="btn-icon-choice">📸</button>
+                <button type="button" class="btn-icon-choice">🖼️</button>
+                <button type="button" class="btn-icon-choice">💌</button>
+                <button type="button" class="btn-icon-choice">✉️</button>
+                <button type="button" class="btn-icon-choice">🎁</button>
+                <button type="button" class="btn-icon-choice">🎀</button>
+                <button type="button" class="btn-icon-choice">🧸</button>
+                <button type="button" class="btn-icon-choice">🕯️</button>
+              </div>
+            </div>
+            <div class="icon-category-group">
+              <span class="icon-group-title">🔌 Gadgets & Varios</span>
+              <div class="icon-grid">
+                <button type="button" class="btn-icon-choice">🔌</button>
+                <button type="button" class="btn-icon-choice">🔋</button>
+                <button type="button" class="btn-icon-choice">🎧</button>
+                <button type="button" class="btn-icon-choice">📱</button>
+                <button type="button" class="btn-icon-choice">💻</button>
+                <button type="button" class="btn-icon-choice">⌨️</button>
+                <button type="button" class="btn-icon-choice">🖱️</button>
+                <button type="button" class="btn-icon-choice">🕹️</button>
+                <button type="button" class="btn-icon-choice">☕</button>
+                <button type="button" class="btn-icon-choice">🧋</button>
+                <button type="button" class="btn-icon-choice">🍪</button>
+                <button type="button" class="btn-icon-choice">🗝️</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección de detalles: Lista de objetos uno a uno con botón '+' -->
+        <div class="drawer-items-section">
+          <label class="form-label-ac">Detalles / Objetos guardados en este cajón:</label>
+          <div class="drawer-add-item-box">
+            <input type="text" id="newDrawerItemInput" class="drawer-add-input" placeholder="Escribe un objeto (ej: Plumas pastel, Agenda 2026, Stickers...)">
+            <button type="button" id="addDrawerItemBtn" class="btn-add-item-action">
+              <span>➕</span> Agregar
+            </button>
+          </div>
+
+          <div class="drawer-items-container" id="drawerItemsContainer">
+            <!-- Chips de objetos agregados dinámicamente -->
+          </div>
         </div>
       </div>
 
