@@ -834,12 +834,20 @@ async function initLocationDetection() {
 }
 
 // ===================================================================
-// AUDIO / MÚSICA AMBIENTAL (Taylor Swift - music/Taylor.mp3)
+// AUDIO / MÚSICA AMBIENTAL (Taylor Swift - Cloud + Local fallback)
 // ===================================================================
 let bgMusicAudio = null;
 let audioCtx = null;
 let isMusicPlaying = false;
 let musicInterval = null;
+
+const TAYLOR_AUDIO_SOURCES = [
+  'https://drive.usercontent.google.com/download?id=1Q2MqoNONNjif_Mq01Bbei0NoY6iKAwL8&export=download&confirm=t',
+  'https://docs.google.com/uc?export=open&id=1Q2MqoNONNjif_Mq01Bbei0NoY6iKAwL8',
+  'https://drive.google.com/uc?export=download&id=1Q2MqoNONNjif_Mq01Bbei0NoY6iKAwL8',
+  'music/Taylor.mp3'
+];
+let currentAudioSourceIdx = 0;
 
 const PENTATONIC_FREQS = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25];
 
@@ -847,16 +855,30 @@ function initCozyAudio() {
   if (bgMusicAudio) return bgMusicAudio;
 
   const audioEl = document.getElementById('bgMusicTrack');
-  bgMusicAudio = audioEl || new Audio('music/Taylor.mp3');
+  bgMusicAudio = audioEl || new Audio(TAYLOR_AUDIO_SOURCES[0]);
   bgMusicAudio.loop = true;
   bgMusicAudio.volume = 0.65;
+
+  // Manejador de error para probar automáticamente la siguiente fuente si una falla
+  bgMusicAudio.addEventListener('error', (e) => {
+    console.warn('Error al cargar fuente de música:', bgMusicAudio.currentSrc || bgMusicAudio.src, e);
+    if (currentAudioSourceIdx < TAYLOR_AUDIO_SOURCES.length - 1) {
+      currentAudioSourceIdx++;
+      console.log('Intentando fuente alternativa de audio #' + currentAudioSourceIdx + ':', TAYLOR_AUDIO_SOURCES[currentAudioSourceIdx]);
+      bgMusicAudio.src = TAYLOR_AUDIO_SOURCES[currentAudioSourceIdx];
+      bgMusicAudio.load();
+      if (isMusicPlaying) {
+        bgMusicAudio.play().catch(err => console.warn('Error al reproducir fuente alternativa:', err));
+      }
+    }
+  });
 
   // BUCLE INFINITO: cuando la canción se termine, volver a reproducirla de inmediato
   bgMusicAudio.addEventListener('ended', () => {
     bgMusicAudio.currentTime = 0;
     const replayPromise = bgMusicAudio.play();
     if (replayPromise !== undefined) {
-      replayPromise.catch(err => console.warn('Error al reiniciar en bucle Taylor.mp3:', err));
+      replayPromise.catch(err => console.warn('Error al reiniciar en bucle Taylor Swift:', err));
     }
   });
 
@@ -865,14 +887,14 @@ function initCozyAudio() {
     isMusicPlaying = true;
     const btn = document.getElementById('btnToggleMusic');
     btn?.classList.add('playing');
-    btn?.setAttribute('title', 'Pausar música ⏸️ (Taylor.mp3)');
+    btn?.setAttribute('title', 'Pausar música ⏸️ (Taylor Swift)');
   });
 
   bgMusicAudio.addEventListener('pause', () => {
     isMusicPlaying = false;
     const btn = document.getElementById('btnToggleMusic');
     btn?.classList.remove('playing');
-    btn?.setAttribute('title', 'Reproducir música 🎵 (Taylor.mp3)');
+    btn?.setAttribute('title', 'Reproducir música 🎵 (Taylor Swift)');
   });
 
   return bgMusicAudio;
@@ -889,23 +911,38 @@ function toggleCozyMusic() {
         .then(() => {
           isMusicPlaying = true;
           btn?.classList.add('playing');
-          btn?.setAttribute('title', 'Pausar música ⏸️ (Taylor.mp3)');
+          btn?.setAttribute('title', 'Pausar música ⏸️ (Taylor Swift)');
         })
         .catch((err) => {
-          console.warn('El navegador bloqueó la reproducción o hubo problema con el archivo:', err);
-          // Fallback sutil a campanas relajantes si no se pudo reproducir
-          if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-          if (audioCtx.state === 'suspended') audioCtx.resume();
-          isMusicPlaying = true;
-          btn?.classList.add('playing');
-          startCozyChimes();
+          console.warn('El navegador bloqueó la reproducción o la fuente externa está restringida:', err);
+          // Si falla la primera fuente, intentamos la siguiente inmediatamente
+          if (currentAudioSourceIdx < TAYLOR_AUDIO_SOURCES.length - 1) {
+            currentAudioSourceIdx++;
+            audio.src = TAYLOR_AUDIO_SOURCES[currentAudioSourceIdx];
+            audio.load();
+            audio.play().catch(() => {
+              // Fallback de campanas relajantes en caso de no poder conectar
+              if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+              if (audioCtx.state === 'suspended') audioCtx.resume();
+              isMusicPlaying = true;
+              btn?.classList.add('playing');
+              startCozyChimes();
+            });
+          } else {
+            // Fallback de campanas relajantes
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            isMusicPlaying = true;
+            btn?.classList.add('playing');
+            startCozyChimes();
+          }
         });
     }
   } else {
     audio.pause();
     isMusicPlaying = false;
     btn?.classList.remove('playing');
-    btn?.setAttribute('title', 'Reproducir música 🎵 (Taylor.mp3)');
+    btn?.setAttribute('title', 'Reproducir música 🎵 (Taylor Swift)');
     stopCozyChimes();
   }
 }
