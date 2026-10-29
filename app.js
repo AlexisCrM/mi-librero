@@ -767,7 +767,7 @@ async function initLocationDetection() {
 }
 
 // ===================================================================
-// AUDIO / MÚSICA AMBIENTAL (Taylor Swift & Cozy Chimes)
+// AUDIO / MÚSICA AMBIENTAL (Taylor Swift - music/Taylor.mp3)
 // ===================================================================
 let bgMusicAudio = null;
 let audioCtx = null;
@@ -776,35 +776,69 @@ let musicInterval = null;
 
 const PENTATONIC_FREQS = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25];
 
-function toggleCozyMusic() {
-  const btn = document.getElementById('btnToggleMusic');
-  
-  if (!bgMusicAudio) {
-    bgMusicAudio = new Audio(encodeURI("music/Taylor.mp3"));
-    bgMusicAudio.loop = true;
-    bgMusicAudio.volume = 0.6;
-  }
+function initCozyAudio() {
+  if (bgMusicAudio) return bgMusicAudio;
 
-  isMusicPlaying = !isMusicPlaying;
+  const audioEl = document.getElementById('bgMusicTrack');
+  bgMusicAudio = audioEl || new Audio('music/Taylor.mp3');
+  bgMusicAudio.loop = true;
+  bgMusicAudio.volume = 0.65;
 
-  if (isMusicPlaying) {
+  // BUCLE INFINITO: cuando la canción se termine, volver a reproducirla de inmediato
+  bgMusicAudio.addEventListener('ended', () => {
+    bgMusicAudio.currentTime = 0;
+    const replayPromise = bgMusicAudio.play();
+    if (replayPromise !== undefined) {
+      replayPromise.catch(err => console.warn('Error al reiniciar en bucle Taylor.mp3:', err));
+    }
+  });
+
+  // Sincronizar el botón visual con los estados de audio
+  bgMusicAudio.addEventListener('play', () => {
+    isMusicPlaying = true;
+    const btn = document.getElementById('btnToggleMusic');
     btn?.classList.add('playing');
-    btn?.setAttribute('title', 'Pausar música ⏸️');
+    btn?.setAttribute('title', 'Pausar música ⏸️ (Taylor.mp3)');
+  });
 
-    // Reproducir la canción del librero
-    const playPromise = bgMusicAudio.play();
+  bgMusicAudio.addEventListener('pause', () => {
+    isMusicPlaying = false;
+    const btn = document.getElementById('btnToggleMusic');
+    btn?.classList.remove('playing');
+    btn?.setAttribute('title', 'Reproducir música 🎵 (Taylor.mp3)');
+  });
+
+  return bgMusicAudio;
+}
+
+function toggleCozyMusic() {
+  const audio = initCozyAudio();
+  const btn = document.getElementById('btnToggleMusic');
+
+  if (audio.paused) {
+    const playPromise = audio.play();
     if (playPromise !== undefined) {
-      playPromise.catch(() => {
-        // Fallback a campanas relajantes en caso de que el navegador bloquee o no encuentre el archivo
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        startCozyChimes();
-      });
+      playPromise
+        .then(() => {
+          isMusicPlaying = true;
+          btn?.classList.add('playing');
+          btn?.setAttribute('title', 'Pausar música ⏸️ (Taylor.mp3)');
+        })
+        .catch((err) => {
+          console.warn('El navegador bloqueó la reproducción o hubo problema con el archivo:', err);
+          // Fallback sutil a campanas relajantes si no se pudo reproducir
+          if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+          isMusicPlaying = true;
+          btn?.classList.add('playing');
+          startCozyChimes();
+        });
     }
   } else {
+    audio.pause();
+    isMusicPlaying = false;
     btn?.classList.remove('playing');
-    btn?.setAttribute('title', 'Música ambiental 🎵');
-    if (bgMusicAudio) bgMusicAudio.pause();
+    btn?.setAttribute('title', 'Reproducir música 🎵 (Taylor.mp3)');
     stopCozyChimes();
   }
 }
