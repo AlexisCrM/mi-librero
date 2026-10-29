@@ -228,16 +228,29 @@ const SHELF_DECORATIVE_PALETTES = {
 // ===================================================================
 // ESTADO GLOBAL DE LA APLICACIÓN
 // ===================================================================
+const DEFAULT_COLLECTIONS = [
+  'Clásicos Inolvidables',
+  'Trilogía de la Fundación',
+  'Crónica del Asesino de Reyes',
+  'Realismo Mágico',
+  'Desarrollo & Hábitos',
+  'Novelas Contemporáneas',
+  'Misterios & Policiaca'
+];
+
 let appState = {
   books: [...PHOTO_1_STARTER_BOOKS], // Precargado con la hermosa colección de Photo 1
   drawers: { ...DEFAULT_DRAWERS },
   readers: ['Carolina Ornelas'],
+  collections: [...DEFAULT_COLLECTIONS],
   shelfTitle: 'El Rincón de Lectura & Lavanda',
   activeShelfId: null,
   activeDrawerId: null,
+  currentActiveBookId: null,
   activeReaderFilter: 'Carolina Ornelas',
   searchQuery: '',
-  selectedSpineColor: '#9575cd',
+  selectedAddSpineColor: '#9575cd',
+  selectedEditSpineColor: '#9575cd',
   blindHeight: 35, // Altura de persiana en porcentaje (10% a 88%)
   windowTimeMode: 'auto' // 'auto', 'morning', 'afternoon', 'sunset', 'night'
 };
@@ -245,6 +258,7 @@ let appState = {
 const STORAGE_KEY_BOOKS = 'mi_librero_books_v2';
 const STORAGE_KEY_DRAWERS = 'mi_librero_drawers_v2';
 const STORAGE_KEY_CONFIG = 'mi_librero_config_v2';
+const STORAGE_KEY_COLLECTIONS = 'mi_librero_collections_v2';
 const STORAGE_KEY_BLIND = 'mi_librero_blind_v2';
 const STORAGE_KEY_TIME_MODE = 'mi_librero_time_mode_v2';
 
@@ -381,6 +395,17 @@ function loadData() {
   // 7. Cargar categorías personalizadas de repisas (Catálogo Gandhi / Personalizadas)
   loadSavedShelfCategories();
 
+  // 8. Cargar Colecciones Guardadas (Persistentes para futuros libros)
+  const savedCols = localStorage.getItem(STORAGE_KEY_COLLECTIONS);
+  if (savedCols) {
+    try {
+      const parsed = JSON.parse(savedCols);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        appState.collections = parsed;
+      }
+    } catch (e) {}
+  }
+
   // Si solo hay 1 lector, asegurar que el filtro activo sea ese lector
   if (appState.readers.length === 1) {
     appState.activeReaderFilter = appState.readers[0];
@@ -389,6 +414,7 @@ function loadData() {
   }
 
   updateReadersDropdowns();
+  updateCollectionDropdowns();
   updateShelfTitleUI();
   updateShelfPlaquesUI();
   renderDrawersFace();
@@ -418,11 +444,12 @@ function updateShelfTitleUI() {
 
 function updateReadersDropdowns() {
   const selectFilter = document.getElementById('readerSelect');
-  const bookReaderInput = document.getElementById('bookReaderInput');
+  const addReaderSelect = document.getElementById('addBookReader');
+  const editReaderSelect = document.getElementById('editBookReader');
+  const legacyReaderInput = document.getElementById('bookReaderInput');
   if (!selectFilter) return;
 
   selectFilter.innerHTML = '';
-  if (bookReaderInput) bookReaderInput.innerHTML = '';
 
   // Solo mostrar la opción "Todos los lectores" si hay más de 1 lector registrado
   if (appState.readers.length > 1) {
@@ -439,12 +466,21 @@ function updateReadersDropdowns() {
     optFilter.value = reader;
     optFilter.textContent = `${icon} ${reader}`;
     selectFilter.appendChild(optFilter);
+  });
 
-    if (bookReaderInput) {
-      const optForm = document.createElement('option');
-      optForm.value = reader;
-      optForm.textContent = `${icon} ${reader}`;
-      bookReaderInput.appendChild(optForm);
+  [addReaderSelect, editReaderSelect, legacyReaderInput].forEach(sel => {
+    if (!sel) return;
+    const currentVal = sel.value;
+    sel.innerHTML = '';
+    appState.readers.forEach((reader, index) => {
+      const icon = index === 0 ? '🌸' : '☕';
+      const opt = document.createElement('option');
+      opt.value = reader;
+      opt.textContent = `${icon} ${reader}`;
+      sel.appendChild(opt);
+    });
+    if (currentVal && appState.readers.includes(currentVal)) {
+      sel.value = currentVal;
     }
   });
 
@@ -519,45 +555,69 @@ function setupEventListeners() {
 
   // Botón "Agregar Libro Aquí" dentro de la repisa
   document.getElementById('addBookInThisShelfBtn').addEventListener('click', () => {
-    openBookModal(null, appState.activeShelfId);
+    openAddBookModal(appState.activeShelfId);
   });
 
   // Botón "+ Añadir Libro" global
   document.getElementById('quickAddBookBtn').addEventListener('click', () => {
-    openBookModal(null, appState.activeShelfId || 'puente-2');
+    openAddBookModal(appState.activeShelfId || 'puente-2');
   });
 
-  // Cerrar modal de libro
-  document.getElementById('closeBookModalBtn').addEventListener('click', closeBookModal);
-  document.getElementById('cancelBookBtn').addEventListener('click', closeBookModal);
-  document.getElementById('bookModalBackdrop').addEventListener('click', (e) => {
-    if (e.target.id === 'bookModalBackdrop') closeBookModal();
+  // Cerrar modales de libros
+  document.getElementById('closeAddBookBtn')?.addEventListener('click', closeBookModals);
+  document.getElementById('cancelAddBookBtn')?.addEventListener('click', closeBookModals);
+  document.getElementById('closeProgressBookBtn')?.addEventListener('click', closeBookModals);
+  document.getElementById('closeEditBookBtn')?.addEventListener('click', closeBookModals);
+  document.getElementById('bookModalBackdrop')?.addEventListener('click', (e) => {
+    if (e.target.id === 'bookModalBackdrop') closeBookModals();
   });
 
-  // Envío del formulario de libro
-  document.getElementById('bookForm').addEventListener('submit', handleBookFormSubmit);
-  document.getElementById('deleteBookBtn').addEventListener('click', handleDeleteCurrentBook);
-
-  // Cálculo en vivo de progreso de páginas
-  const curPageInput = document.getElementById('bookCurrentPage');
-  const totPageInput = document.getElementById('bookTotalPages');
-  curPageInput.addEventListener('input', updateFormProgressPreview);
-  totPageInput.addEventListener('input', updateFormProgressPreview);
-
-  // Paleta de colores para el libro
-  document.querySelectorAll('.color-swatch').forEach(swatch => {
-    swatch.addEventListener('click', () => {
-      document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
-      swatch.classList.add('selected');
-      const color = swatch.getAttribute('data-color');
-      appState.selectedSpineColor = color;
-      document.getElementById('customColorPicker').value = color;
-    });
+  // Botón "✏️ Editar Libro" dentro de la tarjeta de Progreso (reemplaza al botón Cancelar)
+  document.getElementById('openEditFromProgressBtn')?.addEventListener('click', () => {
+    if (appState.currentActiveBookId) {
+      openEditBookModal(appState.currentActiveBookId);
+    }
   });
 
-  document.getElementById('customColorPicker').addEventListener('input', (e) => {
-    appState.selectedSpineColor = e.target.value;
-    document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+  // Botón "← Volver a Progreso" dentro de Editar Libro
+  document.getElementById('backToProgressBtn')?.addEventListener('click', () => {
+    if (appState.currentActiveBookId) {
+      openProgressModal(appState.currentActiveBookId);
+    }
+  });
+
+  // Envíos de los formularios
+  document.getElementById('addBookForm')?.addEventListener('submit', handleAddBookFormSubmit);
+  document.getElementById('progressBookForm')?.addEventListener('submit', handleProgressFormSubmit);
+  document.getElementById('editBookForm')?.addEventListener('submit', handleEditBookFormSubmit);
+  document.getElementById('deleteBookFromProgressBtn')?.addEventListener('click', handleDeleteCurrentBook);
+
+  // Cálculo en vivo de progreso de páginas en la tarjeta Progreso
+  const curPageInput = document.getElementById('progressCurrentPage');
+  const totPageInput = document.getElementById('progressTotalPages');
+  if (curPageInput) curPageInput.addEventListener('input', updateProgressModalPreview);
+  if (totPageInput) totPageInput.addEventListener('input', updateProgressModalPreview);
+
+  // Selectores de colecciones con opción "➕ Añadir Nueva Colección..."
+  ['addBookCollectionSelect', 'editBookCollectionSelect'].forEach(selId => {
+    const el = document.getElementById(selId);
+    if (el) {
+      el.addEventListener('change', (e) => {
+        if (e.target.value === '__new__') {
+          handlePromptNewCollection(e.target);
+        }
+      });
+    }
+  });
+
+  // Paleta de colores para Añadir Libro
+  setupColorPalette('addColorPalette', 'addCustomColorPicker', (color) => {
+    appState.selectedAddSpineColor = color;
+  });
+
+  // Paleta de colores para Editar Libro
+  setupColorPalette('editColorPalette', 'editCustomColorPicker', (color) => {
+    appState.selectedEditSpineColor = color;
   });
 
   // Modal de Cajón
@@ -706,7 +766,7 @@ function setupEventListeners() {
   // Atajo ESC
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      closeBookModal();
+      closeBookModals();
       closeSectionModal();
       closeDrawerModal();
       document.getElementById('backupModalBackdrop').classList.remove('open');
@@ -1714,7 +1774,7 @@ function renderSectionStage(shelfId) {
       <div class="empty-shelf-banner">
         <div class="empty-shelf-icon">🌸📖</div>
         <div class="empty-shelf-text">Esta repisa está vacía y lista para recibir libros</div>
-        <button class="btn btn-ac-primary" onclick="openBookModal(null, '${shelfId}')">
+        <button class="btn btn-ac-primary" onclick="openAddBookModal('${shelfId}')">
           🌸 + Colocar Primer Libro Aquí
         </button>
       </div>
@@ -1750,7 +1810,7 @@ function renderSectionStage(shelfId) {
     `;
 
     bookElem.addEventListener('click', () => {
-      openBookModal(book.id);
+      openProgressModal(book.id);
     });
 
     container.appendChild(bookElem);
@@ -1898,111 +1958,190 @@ function handleSaveDrawer() {
 }
 
 // ===================================================================
-// MODAL DE LIBRO: CREAR / EDITAR / ACTUALIZAR PÁGINAS Y %
+// MODALES MODULARES: AÑADIR LIBRO / PROGRESO / EDITAR LIBRO
 // ===================================================================
-function openBookModal(bookId = null, defaultShelfId = null) {
-  const form = document.getElementById('bookForm');
-  form.reset();
 
-  // Asegurar que el selector de lectores contenga todos los creados y existentes
-  updateReadersDropdowns();
+function setupColorPalette(containerId, pickerId, onSelect) {
+  const container = document.getElementById(containerId);
+  const picker = document.getElementById(pickerId);
+  if (!container) return;
 
-  const modalTitle = document.getElementById('bookModalTitle');
-  const deleteBtn = document.getElementById('deleteBookBtn');
-  const bookIdInput = document.getElementById('bookIdInput');
-  const bookShelfInput = document.getElementById('bookShelfInput');
-  const bookReaderInput = document.getElementById('bookReaderInput');
+  container.querySelectorAll('.color-swatch').forEach(swatch => {
+    swatch.addEventListener('click', () => {
+      container.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+      swatch.classList.add('selected');
+      const color = swatch.getAttribute('data-color');
+      if (picker) picker.value = color;
+      if (onSelect) onSelect(color);
+    });
+  });
 
-  if (bookId) {
-    const book = appState.books.find(b => b.id === bookId);
-    if (!book) return;
+  if (picker) {
+    picker.addEventListener('input', (e) => {
+      const color = e.target.value;
+      container.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+      if (onSelect) onSelect(color);
+    });
+  }
+}
 
-    modalTitle.textContent = 'Editar Libro & Progreso';
-    deleteBtn.classList.remove('hidden');
+function addCollection(name) {
+  if (!name || !name.trim()) return;
+  const clean = name.trim();
+  if (!appState.collections.includes(clean)) {
+    appState.collections.push(clean);
+    localStorage.setItem(STORAGE_KEY_COLLECTIONS, JSON.stringify(appState.collections));
+  }
+  updateCollectionDropdowns(clean);
+}
 
-    bookIdInput.value = book.id;
-    document.getElementById('bookTitleInput').value = book.title;
-    document.getElementById('bookAuthorInput').value = book.author || '';
+function updateCollectionDropdowns(selectedVal = '') {
+  ['addBookCollectionSelect', 'editBookCollectionSelect'].forEach(selId => {
+    const sel = document.getElementById(selId);
+    if (!sel) return;
+    const current = selectedVal || sel.value;
+    sel.innerHTML = '<option value="">(Sin colección)</option>';
 
-    // Asignar lector del libro asegurando que esté en la lista
-    if (bookReaderInput) {
-      if (book.reader) {
-        let found = false;
-        for (let opt of bookReaderInput.options) {
-          if (opt.value === book.reader) {
-            found = true;
-            break;
-          }
-        }
-        if (!found) {
-          const opt = document.createElement('option');
-          opt.value = book.reader;
-          opt.textContent = `👤 ${book.reader}`;
-          bookReaderInput.appendChild(opt);
-        }
-        bookReaderInput.value = book.reader;
-      } else {
-        bookReaderInput.value = appState.readers[0];
-      }
+    appState.collections.forEach(col => {
+      const opt = document.createElement('option');
+      opt.value = col;
+      opt.textContent = `📚 ${col}`;
+      sel.appendChild(opt);
+    });
+
+    const newOpt = document.createElement('option');
+    newOpt.value = '__new__';
+    newOpt.textContent = '➕ Añadir Nueva Colección...';
+    sel.appendChild(newOpt);
+
+    if (current && appState.collections.includes(current)) {
+      sel.value = current;
     }
+  });
+}
 
-    if (bookShelfInput) {
-      bookShelfInput.value = book.shelfId;
-    }
-
-    document.getElementById('bookTotalPages').value = book.totalPages || 300;
-    document.getElementById('bookCurrentPage').value = book.currentPage || 0;
-    document.getElementById('bookRating').value = book.rating || '0';
-    document.getElementById('bookNotes').value = book.notes || '';
-
-    appState.selectedSpineColor = book.spineColor || '#9575cd';
+function handlePromptNewCollection(selectElem) {
+  const name = prompt('Nombre de la nueva Colección o Serie de libros:');
+  if (name && name.trim()) {
+    addCollection(name.trim());
+    selectElem.value = name.trim();
   } else {
-    modalTitle.textContent = 'Añadir Nuevo Libro';
-    deleteBtn.classList.add('hidden');
-    bookIdInput.value = '';
+    selectElem.value = '';
+  }
+}
 
-    // Asignar la repisa automáticamente desde la repisa abierta
-    const targetShelf = defaultShelfId || appState.activeShelfId || 'col-izq-1';
-    if (bookShelfInput) {
-      bookShelfInput.value = targetShelf;
-    }
+function closeBookModals() {
+  const backdrop = document.getElementById('bookModalBackdrop');
+  if (backdrop) backdrop.classList.remove('open');
+  document.getElementById('cardAddBook')?.classList.add('hidden');
+  document.getElementById('cardProgressBook')?.classList.add('hidden');
+  document.getElementById('cardEditBook')?.classList.add('hidden');
+  appState.currentActiveBookId = null;
+}
 
-    // Seleccionar por defecto el lector activo en la sesión (o el primero registrado)
-    if (bookReaderInput) {
-      const activeReader = (appState.activeReaderFilter && appState.activeReaderFilter !== 'all')
-        ? appState.activeReaderFilter
-        : (appState.readers[0] || 'Carolina Ornelas');
-      bookReaderInput.value = activeReader;
-    }
+// 1. Abrir Modal "Añadir Nuevo Libro"
+function openAddBookModal(defaultShelfId = null) {
+  updateReadersDropdowns();
+  updateCollectionDropdowns();
 
-    document.getElementById('bookTotalPages').value = 300;
-    document.getElementById('bookCurrentPage').value = 0;
-    appState.selectedSpineColor = '#9575cd';
+  const addCard = document.getElementById('cardAddBook');
+  const progCard = document.getElementById('cardProgressBook');
+  const editCard = document.getElementById('cardEditBook');
+
+  if (progCard) progCard.classList.add('hidden');
+  if (editCard) editCard.classList.add('hidden');
+  if (addCard) addCard.classList.remove('hidden');
+
+  const form = document.getElementById('addBookForm');
+  if (form) form.reset();
+
+  const shelfInput = document.getElementById('addBookShelfId') || document.getElementById('addBookShelfHidden');
+  if (shelfInput) {
+    shelfInput.value = defaultShelfId || appState.activeShelfId || 'col-izq-1';
   }
 
-  // Paleta de colores
-  document.querySelectorAll('.color-swatch').forEach(swatch => {
-    swatch.classList.toggle('selected', swatch.getAttribute('data-color') === appState.selectedSpineColor);
-  });
-  document.getElementById('customColorPicker').value = appState.selectedSpineColor;
+  const readerSelect = document.getElementById('addBookReader');
+  if (readerSelect) {
+    const activeReader = (appState.activeReaderFilter && appState.activeReaderFilter !== 'all')
+      ? appState.activeReaderFilter
+      : (appState.readers[0] || 'Carolina Ornelas');
+    readerSelect.value = activeReader;
+  }
 
-  updateFormProgressPreview();
-  document.getElementById('bookModalBackdrop').classList.add('open');
+  const pagesInput = document.getElementById('addBookTotalPages');
+  if (pagesInput) pagesInput.value = 300;
+  appState.selectedAddSpineColor = '#9575cd';
+
+  const addPalette = document.getElementById('addColorPalette');
+  if (addPalette) {
+    addPalette.querySelectorAll('.color-swatch').forEach(sw => {
+      sw.classList.toggle('selected', sw.getAttribute('data-color') === '#9575cd');
+    });
+  }
+  const customAddColor = document.getElementById('addCustomColorPicker');
+  if (customAddColor) customAddColor.value = '#9575cd';
+
+  const backdrop = document.getElementById('bookModalBackdrop');
+  if (backdrop) backdrop.classList.add('open');
 }
 
-function closeBookModal() {
-  document.getElementById('bookModalBackdrop').classList.remove('open');
+// 2. Abrir Modal "Progreso" (Al dar clic a un libro en la estantería)
+function openProgressModal(bookId) {
+  const book = appState.books.find(b => b.id === bookId);
+  if (!book) return;
+
+  appState.currentActiveBookId = book.id;
+
+  const addCard = document.getElementById('cardAddBook');
+  const progCard = document.getElementById('cardProgressBook');
+  const editCard = document.getElementById('cardEditBook');
+
+  if (addCard) addCard.classList.add('hidden');
+  if (editCard) editCard.classList.add('hidden');
+  if (progCard) progCard.classList.remove('hidden');
+
+  const idInput = document.getElementById('progressBookId');
+  if (idInput) idInput.value = book.id;
+
+  const subtitle = document.getElementById('progressBookSubtitle');
+  if (subtitle) {
+    subtitle.textContent = `${book.title}${book.author ? ' • ' + book.author : ''}`;
+  }
+
+  const totalPages = Math.max(1, Number(book.totalPages) || 300);
+  const curPage = Math.min(totalPages, Math.max(0, Number(book.currentPage) || 0));
+
+  const totInput = document.getElementById('progressTotalPages');
+  const curInput = document.getElementById('progressCurrentPage');
+  const ratingInput = document.getElementById('progressRating');
+  const notesInput = document.getElementById('progressNotes');
+
+  if (totInput) totInput.value = totalPages;
+  if (curInput) curInput.value = curPage;
+  if (ratingInput) ratingInput.value = book.rating || '0';
+  if (notesInput) notesInput.value = book.notes || '';
+
+  updateProgressModalPreview();
+
+  const backdrop = document.getElementById('bookModalBackdrop');
+  if (backdrop) backdrop.classList.add('open');
 }
 
-function updateFormProgressPreview() {
-  const cur = parseInt(document.getElementById('bookCurrentPage').value) || 0;
-  const tot = Math.max(1, parseInt(document.getElementById('bookTotalPages').value) || 1);
+function updateProgressModalPreview() {
+  const curInput = document.getElementById('progressCurrentPage');
+  const totInput = document.getElementById('progressTotalPages');
+  if (!curInput || !totInput) return;
+
+  const cur = parseInt(curInput.value) || 0;
+  const tot = Math.max(1, parseInt(totInput.value) || 1);
   const pct = Math.min(100, Math.max(0, Math.round((cur / tot) * 100)));
 
-  document.getElementById('calculatedPercent').textContent = `${pct}%`;
-  document.getElementById('progressBarFill').style.width = `${pct}%`;
+  const pctBadge = document.getElementById('progressCalculatedPercent');
+  const barFill = document.getElementById('progressProgressBarFill');
+  const statusLabel = document.getElementById('progressCalculatedStatus');
 
-  const statusLabel = document.getElementById('calculatedStatus');
+  if (pctBadge) pctBadge.textContent = `${pct}%`;
+  if (barFill) barFill.style.width = `${pct}%`;
   if (statusLabel) {
     if (pct >= 100) statusLabel.textContent = '🌟 ¡Completado!';
     else if (cur > 0) statusLabel.textContent = '📖 Leyendo';
@@ -2010,63 +2149,184 @@ function updateFormProgressPreview() {
   }
 }
 
-function handleBookFormSubmit(e) {
-  e.preventDefault();
+// 3. Abrir Modal "Editar Libro" (Desde el botón ✏️ Editar Libro dentro de Progreso)
+function openEditBookModal(bookId) {
+  const book = appState.books.find(b => b.id === bookId);
+  if (!book) return;
 
-  const id = document.getElementById('bookIdInput').value;
-  const title = document.getElementById('bookTitleInput').value.trim();
-  const author = document.getElementById('bookAuthorInput').value.trim();
-  const reader = document.getElementById('bookReaderInput')?.value || appState.readers[0] || 'Carolina Ornelas';
-  const shelfId = document.getElementById('bookShelfInput')?.value || appState.activeShelfId || 'col-izq-1';
-  const totalPages = Math.max(1, parseInt(document.getElementById('bookTotalPages').value) || 1);
-  const currentPage = Math.min(totalPages, Math.max(0, parseInt(document.getElementById('bookCurrentPage').value) || 0));
-  const rating = document.getElementById('bookRating').value;
-  const notes = document.getElementById('bookNotes').value.trim();
+  appState.currentActiveBookId = book.id;
 
-  if (id) {
-    const index = appState.books.findIndex(b => b.id === id);
-    if (index !== -1) {
-      appState.books[index] = {
-        ...appState.books[index],
-        title,
-        author,
-        reader,
-        shelfId,
-        totalPages,
-        currentPage,
-        rating,
-        notes,
-        spineColor: appState.selectedSpineColor
-      };
+  const addCard = document.getElementById('cardAddBook');
+  const progCard = document.getElementById('cardProgressBook');
+  const editCard = document.getElementById('cardEditBook');
+
+  if (addCard) addCard.classList.add('hidden');
+  if (progCard) progCard.classList.add('hidden');
+  if (editCard) editCard.classList.remove('hidden');
+
+  const idInput = document.getElementById('editBookId');
+  if (idInput) idInput.value = book.id;
+
+  const titleInput = document.getElementById('editBookTitle');
+  if (titleInput) titleInput.value = book.title || '';
+
+  const authorInput = document.getElementById('editBookAuthor');
+  if (authorInput) authorInput.value = book.author || '';
+
+  updateReadersDropdowns();
+  const readerSelect = document.getElementById('editBookReader');
+  if (readerSelect) {
+    if (book.reader && !appState.readers.includes(book.reader)) {
+      const opt = document.createElement('option');
+      opt.value = book.reader;
+      opt.textContent = `🌸 ${book.reader}`;
+      readerSelect.appendChild(opt);
     }
-  } else {
-    const newBook = {
-      id: 'book-' + Date.now(),
-      title,
-      author,
-      reader,
-      shelfId,
-      totalPages,
-      currentPage,
-      rating,
-      notes,
-      spineColor: appState.selectedSpineColor
-    };
-    appState.books.push(newBook);
+    readerSelect.value = book.reader || appState.readers[0] || 'Carolina Ornelas';
   }
 
-  saveData();
-  closeBookModal();
+  updateCollectionDropdowns(book.collection || '');
+  const colSelect = document.getElementById('editBookCollectionSelect');
+  if (colSelect) colSelect.value = book.collection || '';
+
+  appState.selectedEditSpineColor = book.spineColor || '#9575cd';
+  const editPalette = document.getElementById('editColorPalette');
+  if (editPalette) {
+    editPalette.querySelectorAll('.color-swatch').forEach(sw => {
+      sw.classList.toggle('selected', sw.getAttribute('data-color') === appState.selectedEditSpineColor);
+    });
+  }
+  const customEditColor = document.getElementById('editCustomColorPicker');
+  if (customEditColor) customEditColor.value = appState.selectedEditSpineColor;
+
+  const backdrop = document.getElementById('bookModalBackdrop');
+  if (backdrop) backdrop.classList.add('open');
 }
 
-function handleDeleteCurrentBook() {
-  const id = document.getElementById('bookIdInput').value;
+// Wrapper retrocompatible
+function openBookModal(bookId = null, defaultShelfId = null) {
+  if (bookId) {
+    openProgressModal(bookId);
+  } else {
+    openAddBookModal(defaultShelfId);
+  }
+}
+
+// Envío del Formulario Añadir Libro
+function handleAddBookFormSubmit(e) {
+  e.preventDefault();
+
+  const title = document.getElementById('addBookTitle').value.trim();
+  const reader = document.getElementById('addBookReader').value || appState.readers[0] || 'Carolina Ornelas';
+  const author = document.getElementById('addBookAuthor').value.trim();
+  const collection = document.getElementById('addBookCollectionSelect').value.trim();
+  const totalPages = Math.max(1, parseInt(document.getElementById('addBookTotalPages').value) || 300);
+  const shelfId = (document.getElementById('addBookShelfId') || document.getElementById('addBookShelfHidden'))?.value || appState.activeShelfId || 'col-izq-1';
+  const spineColor = appState.selectedAddSpineColor || '#9575cd';
+
+  const newBook = {
+    id: 'book-' + Date.now(),
+    title,
+    author,
+    reader,
+    collection,
+    shelfId,
+    totalPages,
+    currentPage: 0,
+    rating: '0',
+    notes: '',
+    spineColor
+  };
+
+  appState.books.push(newBook);
+  saveData();
+  closeBookModals();
+
+  if (appState.activeShelfId) {
+    renderSectionStage(appState.activeShelfId);
+  }
+}
+
+// Envío del Formulario Progreso
+function handleProgressFormSubmit(e) {
+  e.preventDefault();
+
+  const id = document.getElementById('progressBookId').value;
   if (!id) return;
 
-  if (confirm('¿Deseas eliminar este libro de la estantería?')) {
+  const index = appState.books.findIndex(b => b.id === id);
+  if (index === -1) return;
+
+  const totalPages = Math.max(1, parseInt(document.getElementById('progressTotalPages').value) || 1);
+  const currentPage = Math.min(totalPages, Math.max(0, parseInt(document.getElementById('progressCurrentPage').value) || 0));
+  const rating = document.getElementById('progressRating').value;
+  const notes = document.getElementById('progressNotes').value.trim();
+
+  appState.books[index] = {
+    ...appState.books[index],
+    totalPages,
+    currentPage,
+    rating,
+    notes
+  };
+
+  saveData();
+  closeBookModals();
+
+  if (appState.activeShelfId) {
+    renderSectionStage(appState.activeShelfId);
+  }
+}
+
+// Envío del Formulario Editar Libro
+function handleEditBookFormSubmit(e) {
+  e.preventDefault();
+
+  const id = document.getElementById('editBookId').value;
+  if (!id) return;
+
+  const index = appState.books.findIndex(b => b.id === id);
+  if (index === -1) return;
+
+  const title = document.getElementById('editBookTitle').value.trim();
+  const reader = document.getElementById('editBookReader').value || appState.readers[0] || 'Carolina Ornelas';
+  const author = document.getElementById('editBookAuthor').value.trim();
+  const collection = document.getElementById('editBookCollectionSelect').value.trim();
+  const spineColor = appState.selectedEditSpineColor || appState.books[index].spineColor || '#9575cd';
+
+  appState.books[index] = {
+    ...appState.books[index],
+    title,
+    reader,
+    author,
+    collection,
+    spineColor
+  };
+
+  saveData();
+  closeBookModals();
+
+  if (appState.activeShelfId) {
+    renderSectionStage(appState.activeShelfId);
+  }
+}
+
+// Eliminar libro desde Progreso
+function handleDeleteCurrentBook() {
+  const id = document.getElementById('progressBookId')?.value || appState.currentActiveBookId;
+  if (!id) return;
+
+  const book = appState.books.find(b => b.id === id);
+  const bookTitle = book ? `"${book.title}"` : 'este libro';
+
+  if (confirm(`¿Deseas eliminar ${bookTitle} de la estantería?`)) {
     appState.books = appState.books.filter(b => b.id !== id);
     saveData();
-    closeBookModal();
+    closeBookModals();
+
+    if (appState.activeShelfId) {
+      renderSectionStage(appState.activeShelfId);
+    }
   }
 }
 

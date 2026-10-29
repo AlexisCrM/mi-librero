@@ -152,7 +152,7 @@
         <h4>¡Tu librero aún no tiene libros registrados!</h4>
         <p>Haz clic en el botón <strong>+ Añadir Libro</strong> arriba o presiona directamente cualquier repisa de madera para colocar tu primer libro.</p>
       </div>
-      <button class="btn btn-ac-primary" onclick="openBookModal()">🌸 + Añadir Mi Primer Libro</button>
+      <button class="btn btn-ac-primary" onclick="openAddBookModal()">🌸 + Añadir Mi Primer Libro</button>
     </div>
   </section>
 
@@ -670,41 +670,93 @@
   </div>
 
   <!-- ================================================================= -->
-  <!-- MODAL PARA AGREGAR / EDITAR / ACTUALIZAR LECTURA DE UN LIBRO       -->
+  <!-- MODAL DE LIBROS: AÑADIR LIBRO / PROGRESO / EDITAR LIBRO           -->
   <!-- ================================================================= -->
   <div class="book-modal-backdrop" id="bookModalBackdrop">
-    <div class="book-modal">
+
+    <!-- 1. TARJETA AÑADIR NUEVO LIBRO (Foto 2 simplificada: Título, Lector, Autor, Colección) -->
+    <div class="book-modal" id="cardAddBook">
       <div class="book-modal-header">
         <div class="book-modal-title-wrap">
-          <span class="book-mascot-chip">🐿️📖</span>
-          <h3 id="bookModalTitle">Añadir Nuevo Libro</h3>
+          <span class="book-mascot-chip">🌸📖</span>
+          <h3>Añadir Nuevo Libro</h3>
         </div>
-        <button id="closeBookModalBtn" class="btn-close">✕</button>
+        <button id="closeAddBookBtn" class="btn-close" type="button" title="Cerrar (Esc)">✕</button>
       </div>
 
-      <form id="bookForm" class="book-form">
-        <input type="hidden" id="bookIdInput">
+      <form id="addBookForm" class="book-form">
+        <input type="hidden" id="addBookShelfId">
 
         <div class="form-row">
           <div class="form-group flex-2">
-            <label for="bookTitleInput">Título del Libro *</label>
-            <input type="text" id="bookTitleInput" required placeholder="Ej: Cien años de soledad, Harry Potter...">
+            <label for="addBookTitle">Título del Libro *</label>
+            <input type="text" id="addBookTitle" required placeholder="Ej: Cien años de soledad, Harry Potter...">
           </div>
           <div class="form-group flex-1">
-            <label for="bookReaderInput">Lector(a) *</label>
-            <select id="bookReaderInput" required>
+            <label for="addBookReader">¿Quién agrega el libro? *</label>
+            <select id="addBookReader" required>
               <option value="Carolina Ornelas">🌸 Carolina Ornelas</option>
             </select>
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="bookAuthorInput">Autor(a) / Saga</label>
-          <input type="text" id="bookAuthorInput" placeholder="Ej: Gabriel García Márquez, Taylor Jenkins Reid...">
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="addBookAuthor">Autor(a)</label>
+            <input type="text" id="addBookAuthor" placeholder="Ej: Gabriel García Márquez, Taylor Jenkins Reid...">
+          </div>
+          <div class="form-group flex-1">
+            <label for="addBookCollectionSelect">Colección (Opcional):</label>
+            <select id="addBookCollectionSelect">
+              <option value="">(Sin colección)</option>
+              <option value="__new__">➕ Añadir Nueva Colección...</option>
+            </select>
+          </div>
         </div>
 
-        <!-- Repisa oculta asignada automáticamente al interactuar con el librero -->
-        <input type="hidden" id="bookShelfInput">
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="addBookTotalPages">Total de Páginas *</label>
+            <input type="number" id="addBookTotalPages" min="1" value="300" required>
+          </div>
+          <div class="form-group flex-1">
+            <label>Color del Lomo:</label>
+            <div class="color-picker-palette" id="addColorPalette">
+              <span class="color-swatch selected" data-color="#9575cd" style="background:#9575cd;" title="Lavanda"></span>
+              <span class="color-swatch" data-color="#f48fb1" style="background:#f48fb1;" title="Rosa Pastel"></span>
+              <span class="color-swatch" data-color="#ec407a" style="background:#ec407a;" title="Rosa Fresa"></span>
+              <span class="color-swatch" data-color="#ba68c8" style="background:#ba68c8;" title="Orquídea"></span>
+              <span class="color-swatch" data-color="#4db6ac" style="background:#4db6ac;" title="Menta"></span>
+              <span class="color-swatch" data-color="#ffd54f" style="background:#ffd54f;" title="Miel"></span>
+              <span class="color-swatch" data-color="#ff8a65" style="background:#ff8a65;" title="Melocotón"></span>
+              <span class="color-swatch" data-color="#5c6bc0" style="background:#5c6bc0;" title="Azul"></span>
+              <input type="color" id="addCustomColorPicker" value="#9575cd" title="Color personalizado">
+            </div>
+          </div>
+        </div>
+
+        <div class="book-modal-footer">
+          <button type="button" id="cancelAddBookBtn" class="btn btn-ac-ghost">Cancelar</button>
+          <button type="submit" class="btn btn-ac-primary">🌸 Guardar Libro</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- 2. TARJETA PROGRESO (Al hacer clic en cualquier libro de la estantería - Foto 3) -->
+    <div class="book-modal hidden" id="cardProgressBook">
+      <div class="book-modal-header">
+        <div class="book-modal-title-wrap">
+          <span class="book-mascot-chip">🌸📊</span>
+          <div>
+            <h3>Progreso</h3>
+            <p class="modal-book-subtitle" id="progressBookSubtitle">Título del libro</p>
+          </div>
+        </div>
+        <button id="closeProgressBookBtn" class="btn-close" type="button" title="Cerrar (Esc)">✕</button>
+      </div>
+
+      <form id="progressBookForm" class="book-form">
+        <input type="hidden" id="progressBookId">
 
         <!-- Barra interactiva de Páginas y Porcentaje Dinámico -->
         <div class="reading-progress-card">
@@ -715,69 +767,117 @@
 
           <div class="progress-inputs-row">
             <div class="form-group page-input-group">
-              <label for="bookCurrentPage">Página Actual</label>
-              <input type="number" id="bookCurrentPage" min="0" value="0">
+              <label for="progressCurrentPage">Página Actual</label>
+              <input type="number" id="progressCurrentPage" min="0" value="0">
             </div>
             <div class="progress-slash">/</div>
             <div class="form-group page-input-group">
-              <label for="bookTotalPages">Total Páginas *</label>
-              <input type="number" id="bookTotalPages" min="1" value="300" required>
+              <label for="progressTotalPages">Total Páginas *</label>
+              <input type="number" id="progressTotalPages" min="1" value="300" required>
             </div>
             <div class="progress-preview-badge">
-              <span id="calculatedPercent">0%</span>
-              <small id="calculatedStatus">Por empezar</small>
+              <span id="progressCalculatedPercent">0%</span>
+              <small id="progressCalculatedStatus">Por empezar</small>
             </div>
           </div>
 
           <div class="progress-bar-container">
-            <div class="progress-bar-fill" id="progressBarFill" style="width: 0%;"></div>
+            <div class="progress-bar-fill" id="progressProgressBarFill" style="width: 0%;"></div>
           </div>
         </div>
 
-        <!-- Paleta de colores linda: Lavandas, Rosas, Menta y Clásicos -->
+        <div class="form-group">
+          <label for="progressRating">Calificación:</label>
+          <select id="progressRating">
+            <option value="0">Sin calificar aún</option>
+            <option value="5">⭐⭐⭐⭐⭐ (¡Amado completamente!)</option>
+            <option value="4">⭐⭐⭐⭐ (Muy bonito / Recomendado)</option>
+            <option value="3">⭐⭐⭐ (Bueno)</option>
+            <option value="2">⭐⭐ (Regular)</option>
+            <option value="1">⭐ (No me atrapó)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="progressNotes">Nota / Frase favorita / Citas:</label>
+          <textarea id="progressNotes" rows="3" placeholder="Citas memorables, recordatorios o impresiones de lectura..."></textarea>
+        </div>
+
+        <div class="book-modal-footer">
+          <button type="button" id="deleteBookFromProgressBtn" class="btn btn-danger-soft">🗑️ Eliminar Libro</button>
+          <div class="spacer"></div>
+          <!-- Botón Editar Libro (reemplaza al botón Cancelar) -->
+          <button type="button" id="openEditFromProgressBtn" class="btn btn-ac-secondary">✏️ Editar Libro</button>
+          <button type="submit" class="btn btn-ac-primary">🌸 Guardar Cambios</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- 3. TARJETA EDITAR LIBRO (Al dar clic en "Editar Libro" dentro de Progreso) -->
+    <div class="book-modal hidden" id="cardEditBook">
+      <div class="book-modal-header">
+        <div class="book-modal-title-wrap">
+          <span class="book-mascot-chip">🌸✏️</span>
+          <div>
+            <h3>Editar Libro</h3>
+            <p class="modal-book-subtitle">Modifica los datos del ejemplar</p>
+          </div>
+        </div>
+        <button id="closeEditBookBtn" class="btn-close" type="button" title="Cerrar (Esc)">✕</button>
+      </div>
+
+      <form id="editBookForm" class="book-form">
+        <input type="hidden" id="editBookId">
+
+        <div class="form-row">
+          <div class="form-group flex-2">
+            <label for="editBookTitle">Título del Libro *</label>
+            <input type="text" id="editBookTitle" required placeholder="Título del libro">
+          </div>
+          <div class="form-group flex-1">
+            <label for="editBookReader">Lector que hace el cambio *</label>
+            <select id="editBookReader" required>
+              <option value="Carolina Ornelas">🌸 Carolina Ornelas</option>
+            </select>
+          </div>
+        </div>
+
         <div class="form-row">
           <div class="form-group flex-1">
-            <label>Color del Lomo:</label>
-            <div class="color-picker-palette" id="colorPalette">
-              <!-- Tonos Lavanda y Rosas favoritos -->
-              <span class="color-swatch selected" data-color="#9575cd" style="background:#9575cd;" title="Lavanda"></span>
-              <span class="color-swatch" data-color="#f48fb1" style="background:#f48fb1;" title="Rosa Pastel"></span>
-              <span class="color-swatch" data-color="#ec407a" style="background:#ec407a;" title="Rosa Fresa"></span>
-              <span class="color-swatch" data-color="#ba68c8" style="background:#ba68c8;" title="Orquídea"></span>
-              <span class="color-swatch" data-color="#4db6ac" style="background:#4db6ac;" title="Menta Animal Crossing"></span>
-              <span class="color-swatch" data-color="#ffd54f" style="background:#ffd54f;" title="Miel Cálida"></span>
-              <span class="color-swatch" data-color="#ff8a65" style="background:#ff8a65;" title="Melocotón"></span>
-              <span class="color-swatch" data-color="#5c6bc0" style="background:#5c6bc0;" title="Azul Noche"></span>
-              <input type="color" id="customColorPicker" value="#9575cd" title="Color personalizado">
-            </div>
+            <label for="editBookAuthor">Autor(a)</label>
+            <input type="text" id="editBookAuthor" placeholder="Autor o escritora...">
           </div>
-
           <div class="form-group flex-1">
-            <label for="bookRating">Calificación:</label>
-            <select id="bookRating">
-              <option value="0">Sin calificar aún</option>
-              <option value="5">⭐⭐⭐⭐⭐ (¡Amado completamente!)</option>
-              <option value="4">⭐⭐⭐⭐ (Muy bonito / Recomendado)</option>
-              <option value="3">⭐⭐⭐ (Bueno)</option>
-              <option value="2">⭐⭐ (Regular)</option>
-              <option value="1">⭐ (No me atrapó)</option>
+            <label for="editBookCollectionSelect">Colección:</label>
+            <select id="editBookCollectionSelect">
+              <option value="">(Sin colección)</option>
+              <option value="__new__">➕ Añadir Nueva Colección...</option>
             </select>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="bookNotes">Notas / Frases favoritas / Citas:</label>
-          <textarea id="bookNotes" rows="2" placeholder="Citas memorables, recordatorios o impresiones de lectura..."></textarea>
+          <label>Color del Libro / Lomo:</label>
+          <div class="color-picker-palette" id="editColorPalette">
+            <span class="color-swatch selected" data-color="#9575cd" style="background:#9575cd;" title="Lavanda"></span>
+            <span class="color-swatch" data-color="#f48fb1" style="background:#f48fb1;" title="Rosa Pastel"></span>
+            <span class="color-swatch" data-color="#ec407a" style="background:#ec407a;" title="Rosa Fresa"></span>
+            <span class="color-swatch" data-color="#ba68c8" style="background:#ba68c8;" title="Orquídea"></span>
+            <span class="color-swatch" data-color="#4db6ac" style="background:#4db6ac;" title="Menta"></span>
+            <span class="color-swatch" data-color="#ffd54f" style="background:#ffd54f;" title="Miel"></span>
+            <span class="color-swatch" data-color="#ff8a65" style="background:#ff8a65;" title="Melocotón"></span>
+            <span class="color-swatch" data-color="#5c6bc0" style="background:#5c6bc0;" title="Azul"></span>
+            <input type="color" id="editCustomColorPicker" value="#9575cd" title="Color personalizado">
+          </div>
         </div>
 
         <div class="book-modal-footer">
-          <button type="button" id="deleteBookBtn" class="btn btn-danger hidden">🗑️ Eliminar Libro</button>
-          <div class="spacer"></div>
-          <button type="button" id="cancelBookBtn" class="btn btn-ac-ghost">Cancelar</button>
+          <button type="button" id="backToProgressBtn" class="btn btn-ac-ghost">← Volver a Progreso</button>
           <button type="submit" class="btn btn-ac-primary">🌸 Guardar Libro</button>
         </div>
       </form>
     </div>
+
   </div>
 
   <!-- ================================================================= -->

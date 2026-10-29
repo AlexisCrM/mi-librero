@@ -2639,6 +2639,36 @@ body.ac-theme {
   gap: 0.6rem;
 }
 
+.modal-book-subtitle {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #7e22ce;
+  margin: 2px 0 0 0;
+  line-height: 1.3;
+}
+
+.btn-danger-soft {
+  background: #fff1f2;
+  color: #e11d48;
+  border: 1.5px solid #fecdd3;
+  border-radius: var(--border-radius-pill);
+  padding: 0.55rem 1.1rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-danger-soft:hover {
+  background: #ffe4e6;
+  border-color: #fda4af;
+  transform: translateY(-1px);
+}
+
 .book-mascot-chip {
   font-size: 1.5rem;
 }
