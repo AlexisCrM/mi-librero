@@ -3117,21 +3117,23 @@ function renderSquirrelUI() {
 
   // Expresión y Estado de Sueño
   const sleepIcon = document.getElementById('sleepBtnIcon');
-  const sleepLabel = document.getElementById('sleepBtnLabel');
+  const sleepBtn = document.getElementById('benchBtnSleep');
   const zzz = document.getElementById('mascotSleepZzz');
 
   if (s.isSleeping) {
     setSquirrelExpression('sleeping');
     setSquirrelHeldItem('none');
     if (sleepIcon) sleepIcon.textContent = '☀️';
-    if (sleepLabel) sleepLabel.textContent = 'Despertar';
-    if (zzz) zzz.style.display = 'block';
+    if (sleepBtn) sleepBtn.title = 'Despertar a Nuez ☀️';
+    if (zzz) zzz.style.display = 'flex';
+    if (stage) stage.classList.add('is-sleeping');
   } else {
     setSquirrelExpression('normal');
     setSquirrelHeldItem('book');
     if (sleepIcon) sleepIcon.textContent = '🌙';
-    if (sleepLabel) sleepLabel.textContent = 'Dormir';
+    if (sleepBtn) sleepBtn.title = 'Dormir a Nuez 🌙';
     if (zzz) zzz.style.display = 'none';
+    if (stage) stage.classList.remove('is-sleeping');
   }
 }
 
@@ -3145,7 +3147,7 @@ function handlePetSquirrel(e) {
     s.isSleeping = false;
     setSquirrelExpression('yawn');
     playTamaSound('chirp');
-    showBubbleDialogue("Mmm... ¡Bostecito! ¡Qué lindo despertar con tus caricias! ☀️🌸");
+    showBubbleDialogue("Mmm... ¡Bostecito! ¡Qué lindo despertar con tus caricias!");
     saveActiveSquirrel();
 
     setTimeout(() => {
@@ -3305,12 +3307,12 @@ function handleToggleSleep() {
     setSquirrelHeldItem('none');
     setSquirrelExpression('sleeping');
     playTamaSound('snore');
-    showBubbleDialogue("Zzz... Buenas noches, soñaré con cuentos y aventuras... 🌙💤");
+    showBubbleDialogue("Zzz... Buenas noches, soñaré con cuentos y mágicas aventuras...");
     s.energy = Math.min(100, (s.energy || 0) + 25);
   } else {
     setSquirrelExpression('yawn');
     playTamaSound('chirp');
-    showBubbleDialogue("¡Buenos días! ¡Qué bien descansé! ¿Qué vamos a leer hoy? ☀️✨");
+    showBubbleDialogue("¡Buenos días! ¡Qué bien descansé! ¿Qué vamos a leer hoy?");
 
     setTimeout(() => {
       setSquirrelHeldItem('book');
@@ -3322,6 +3324,50 @@ function handleToggleSleep() {
   saveActiveSquirrel();
   renderSquirrelUI();
 }
+
+// ===================================================================
+// MANEJADORES DE ACCIONES EN LA BANCA GRIS (Solo representadas por Emojis)
+// ===================================================================
+function handleBenchFeed() {
+  if (currentNookMode !== 'tamagotchi') {
+    switchNookMode('tamagotchi');
+  }
+  openSnackMenu();
+}
+
+function handleBenchPet(event) {
+  if (currentNookMode !== 'tamagotchi') {
+    switchNookMode('tamagotchi');
+  }
+  handlePetSquirrel(event);
+}
+
+function handleBenchToggleSleep() {
+  if (currentNookMode !== 'tamagotchi') {
+    switchNookMode('tamagotchi');
+  }
+  handleToggleSleep();
+}
+
+function handleBenchWardrobe() {
+  if (currentNookMode !== 'tamagotchi') {
+    switchNookMode('tamagotchi');
+  }
+  openWardrobeModal();
+}
+
+function handleBenchPlay() {
+  if (currentNookMode !== 'tamagotchi') {
+    switchNookMode('tamagotchi');
+  }
+  startAcornMiniGame();
+}
+
+window.handleBenchFeed = handleBenchFeed;
+window.handleBenchPet = handleBenchPet;
+window.handleBenchToggleSleep = handleBenchToggleSleep;
+window.handleBenchWardrobe = handleBenchWardrobe;
+window.handleBenchPlay = handleBenchPlay;
 
 // Selector de Ambientes
 function toggleRoomSelectorModal(force) {

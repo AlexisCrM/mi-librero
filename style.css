@@ -1630,11 +1630,74 @@ body.ac-theme {
     inset 0 -3px 6px rgba(0,0,0,0.45);
   display: flex;
   align-items: center;
-  justify-content: space-around;
-  padding: 0 2.5rem;
+  justify-content: center;
+  padding: 0 1rem;
   position: relative;
   border: 1.5px solid #6b7382;
   border-bottom: none;
+}
+
+/* Tira de Botones de Acción Estilo Animal Crossing (Solo Emojis, según petición) */
+.bench-actions-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  height: 100%;
+  z-index: 5;
+  position: relative;
+}
+
+.btn-bench-action {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  background: radial-gradient(circle at 35% 30%, #ffffff 0%, #f1f3f7 55%, #cbd5e1 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 
+    0 3px 6px rgba(0, 0, 0, 0.4),
+    inset 0 1px 2px rgba(255, 255, 255, 0.95),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.2);
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  padding: 0;
+  user-select: none;
+  position: relative;
+  outline: none;
+}
+
+.bench-action-icon {
+  font-size: 1.15rem;
+  line-height: 1;
+  display: inline-block;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.25));
+}
+
+.btn-bench-action:hover {
+  transform: translateY(-2px) scale(1.14);
+  border-color: #f472b6;
+  background: radial-gradient(circle at 35% 30%, #ffffff 0%, #fef3c7 60%, #fde68a 100%);
+  box-shadow: 
+    0 5px 12px rgba(0, 0, 0, 0.45),
+    0 0 12px rgba(244, 114, 182, 0.6),
+    inset 0 1px 2px #ffffff;
+}
+
+.btn-bench-action:active {
+  transform: translateY(2px) scale(0.94);
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.35),
+    inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.btn-bench-action:hover .bench-action-icon {
+  transform: scale(1.15);
 }
 
 /* Pespuntes y botones de capitoné acolchados */
@@ -3331,95 +3394,125 @@ body.ac-theme {
   pointer-events: none;
 }
 
-/* Chimenea cálida de piedra en la casita */
+/* Chimenea rústica de piedra estilo Animal Crossing (100% Vectorial pura en SVG, sin emojis) */
 .cozy-room-fireplace {
   position: absolute;
-  right: 18px;
-  bottom: 38px;
-  width: 65px;
-  height: 82px;
-  background: linear-gradient(180deg, #78350f 0%, #451a03 100%);
-  border-radius: 12px 12px 4px 4px;
-  border: 3px solid #92400e;
-  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8), 0 4px 12px rgba(0, 0, 0, 0.4);
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  padding-bottom: 6px;
-}
-
-.fireplace-mantel {
-  position: absolute;
-  top: -6px;
+  right: 14px;
+  bottom: 22px;
   width: 76px;
-  height: 10px;
-  background: #a16207;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  height: 95px;
+  z-index: 3;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
 }
 
-.fireplace-hearth {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.ac-fireplace-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
-.hearth-logs {
-  font-size: 1.5rem;
-  filter: brightness(0.9);
+/* Animaciones vivas de la chimenea */
+.ac-fireplace-svg .ac-flame-main {
+  transform-origin: 40px 85px;
+  animation: acFireFlickerMain 0.7s infinite alternate ease-in-out;
 }
 
-.hearth-flames {
-  position: absolute;
-  top: -12px;
-  font-size: 1.6rem;
-  animation: flameFlicker 0.4s infinite alternate ease-in-out;
-  filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.9));
+.ac-fireplace-svg .ac-flame-core {
+  transform-origin: 40px 84px;
+  animation: acFireFlickerCore 0.45s infinite alternate ease-in-out;
 }
 
-@keyframes flameFlicker {
-  0% { transform: scale(0.92) rotate(-2deg); opacity: 0.9; }
-  100% { transform: scale(1.08) rotate(3deg); opacity: 1; }
+.ac-fireplace-svg .ac-flame-tongue.f-left {
+  transform-origin: 34px 82px;
+  animation: acFlameTongueL 0.6s infinite alternate ease-in-out;
 }
 
-/* Mesita con libros y candil a la izquierda */
+.ac-fireplace-svg .ac-flame-tongue.f-right {
+  transform-origin: 45px 82px;
+  animation: acFlameTongueR 0.55s infinite alternate ease-in-out;
+}
+
+.ac-hearth-glow {
+  animation: acHearthGlowPulse 1.6s infinite alternate ease-in-out;
+}
+
+.ac-ember-dot.eb1 { animation: acEmberRise 1.8s infinite ease-out; }
+.ac-ember-dot.eb2 { animation: acEmberRise 2.2s infinite ease-out 0.6s; }
+.ac-ember-dot.eb3 { animation: acEmberRise 1.5s infinite ease-out 1.1s; }
+
+@keyframes acFireFlickerMain {
+  0% { transform: scale(0.96, 0.94) rotate(-2deg); }
+  50% { transform: scale(1.04, 1.06) rotate(1deg); }
+  100% { transform: scale(0.98, 1.02) rotate(-1deg); }
+}
+
+@keyframes acFireFlickerCore {
+  0% { transform: scale(0.92, 0.95); opacity: 0.9; }
+  100% { transform: scale(1.08, 1.05); opacity: 1; }
+}
+
+@keyframes acFlameTongueL {
+  0% { transform: scale(0.85, 0.9) rotate(-4deg); opacity: 0.8; }
+  100% { transform: scale(1.1, 1.12) rotate(3deg); opacity: 1; }
+}
+
+@keyframes acFlameTongueR {
+  0% { transform: scale(1.08, 1.1) rotate(2deg); opacity: 1; }
+  100% { transform: scale(0.88, 0.92) rotate(-3deg); opacity: 0.85; }
+}
+
+@keyframes acHearthGlowPulse {
+  0% { opacity: 0.75; transform: scale(0.96); }
+  100% { opacity: 1; transform: scale(1.04); }
+}
+
+@keyframes acEmberRise {
+  0% { transform: translateY(0) scale(0.8); opacity: 0; }
+  25% { opacity: 1; }
+  100% { transform: translateY(-26px) translateX(6px) scale(0.3); opacity: 0; }
+}
+
+/* Mesita auxiliar con lámpara, té y libros estilo Animal Crossing (100% Vectorial pura en SVG, sin emojis) */
 .cozy-room-table {
   position: absolute;
-  left: 18px;
-  bottom: 40px;
-  width: 58px;
-  height: 58px;
-  background: linear-gradient(180deg, #92400e 0%, #713f12 100%);
-  border-radius: 6px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-  padding: 4px 2px;
+  left: 14px;
+  bottom: 22px;
+  width: 72px;
+  height: 95px;
+  z-index: 3;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
 }
 
-.table-lamp {
-  font-size: 1.35rem;
-  filter: drop-shadow(0 0 8px rgba(254, 240, 138, 0.9));
-  animation: lampGlow 2s infinite alternate ease-in-out;
+.ac-nightstand-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
-@keyframes lampGlow {
-  0% { filter: drop-shadow(0 0 6px rgba(254, 240, 138, 0.7)); }
-  100% { filter: drop-shadow(0 0 12px rgba(254, 240, 138, 1)); }
+.ac-lamp-glow {
+  transform-origin: 14px 16px;
+  animation: acLampGlowPulse 2.8s infinite alternate ease-in-out;
 }
 
-.table-tea {
-  font-size: 1.05rem;
+@keyframes acLampGlowPulse {
+  0% { opacity: 0.7; transform: scale(0.94); }
+  100% { opacity: 0.95; transform: scale(1.06); }
 }
 
-.table-books {
-  font-size: 0.95rem;
+.ac-steam-wisp.w1 {
+  animation: acSteamDrift 2.2s infinite ease-out;
+}
+
+.ac-steam-wisp.w2 {
+  animation: acSteamDrift 2.5s infinite ease-out 0.8s;
+}
+
+@keyframes acSteamDrift {
+  0% { transform: translateY(0) scaleX(0.8); opacity: 0; }
+  30% { opacity: 0.75; }
+  100% { transform: translateY(-8px) scaleX(1.3) translateX(2px); opacity: 0; }
 }
 
 /* ARDILLITA VECTORIAL ANIMADA ("Nuez") */
@@ -3601,20 +3694,15 @@ body.ac-theme {
   border-top: 3px solid #6b4324;
 }
 
-/* Chimenea animada en la pared derecha de la casita */
-.tamagotchi-stage[data-room="cottage_room"] .stage-room-bg::after {
-  content: '🪵🔥';
-  position: absolute;
-  right: 25px;
-  bottom: 45px;
-  font-size: 2.2rem;
-  filter: drop-shadow(0 0 12px rgba(255, 120, 20, 0.85));
-  animation: fireplaceGlow 1.8s infinite alternate ease-in-out;
+/* Visibilidad de muebles de la casita */
+.tamagotchi-stage[data-room="cottage_room"] .cozy-room-fireplace,
+.tamagotchi-stage[data-room="cottage_room"] .cozy-room-table {
+  display: block;
 }
 
-@keyframes fireplaceGlow {
-  0% { transform: scale(0.97); filter: drop-shadow(0 0 8px rgba(255, 100, 20, 0.7)); }
-  100% { transform: scale(1.05); filter: drop-shadow(0 0 16px rgba(255, 160, 40, 0.95)); }
+.tamagotchi-stage:not([data-room="cottage_room"]) .cozy-room-fireplace,
+.tamagotchi-stage:not([data-room="cottage_room"]) .cozy-room-table {
+  display: none;
 }
 
 /* Escenario 2: Jardín Floral del Arroyo */
@@ -3623,32 +3711,14 @@ body.ac-theme {
   filter: brightness(1.02) saturate(1.08);
 }
 
-/* Escenario 3: Rincón del Té & Lluvia */
+/* Escenario 3: Rincón del Té & Lluvia (Diseño limpio y moderno, sin emojis) */
 .tamagotchi-stage[data-room="tea_nook"] .stage-room-bg {
   background: 
-    radial-gradient(circle at 25% 75%, rgba(255, 215, 150, 0.3) 0%, transparent 45%),
+    radial-gradient(circle at 25% 75%, rgba(255, 215, 150, 0.25) 0%, transparent 45%),
     linear-gradient(180deg, #2b3a4a 0%, #1f2c38 60%, #18212b 100%);
 }
 
-.tamagotchi-stage[data-room="tea_nook"] .stage-room-bg::before {
-  content: '🪟🌧️';
-  position: absolute;
-  left: 20px;
-  top: 40px;
-  font-size: 2.8rem;
-  opacity: 0.75;
-}
-
-.tamagotchi-stage[data-room="tea_nook"] .stage-room-bg::after {
-  content: '🫖✨';
-  position: absolute;
-  left: 35px;
-  bottom: 45px;
-  font-size: 1.8rem;
-  filter: drop-shadow(0 0 8px rgba(255, 220, 140, 0.8));
-}
-
-/* Escenario 4: Ático Estrellado con Luciérnagas */
+/* Escenario 4: Ático Estrellado con Luna Menguante Vectorial (Sin emojis) */
 .tamagotchi-stage[data-room="starlit_roof"] .stage-room-bg {
   background: 
     radial-gradient(circle at 50% 20%, rgba(130, 110, 220, 0.28) 0%, transparent 60%),
@@ -3656,12 +3726,15 @@ body.ac-theme {
 }
 
 .tamagotchi-stage[data-room="starlit_roof"] .stage-room-bg::before {
-  content: '🌙';
+  content: '';
   position: absolute;
-  right: 40px;
-  top: 35px;
-  font-size: 2.4rem;
-  filter: drop-shadow(0 0 15px rgba(255, 245, 180, 0.85));
+  right: 42px;
+  top: 36px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  box-shadow: 6px 6px 0 0 #fef08a;
+  filter: drop-shadow(0 0 12px rgba(254, 240, 138, 0.85));
 }
 
 /* Capa de partículas ambientales flotantes */
@@ -3964,74 +4037,112 @@ body.ac-theme {
   transform: rotate(-6deg) translateY(4px);
 }
 
-.mascot-sleep-zzz {
+/* Animación de Sueño Estilo Animal Crossing (100% Vectorial, tipografía y estrellas, sin emojis) */
+.mascot-sleep-zzz.ac-sleep-dream {
   position: absolute;
-  top: -12px;
-  right: 15px;
-  font-size: 1.3rem;
+  top: -24px;
+  right: 18px;
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  pointer-events: none;
+  z-index: 15;
+}
+
+.ac-z {
+  font-family: 'Fredoka', 'Quicksand', 'Nunito', system-ui, sans-serif;
   font-weight: 800;
-  color: #a78bfa;
+  color: #c084fc;
+  text-shadow: 
+    0 0 6px rgba(192, 132, 252, 0.9),
+    0 2px 4px rgba(45, 20, 8, 0.5),
+    -1px -1px 0 #ffffff,
+    1px -1px 0 #ffffff,
+    -1px 1px 0 #ffffff,
+    1px 1px 0 #ffffff;
+  display: inline-block;
+  opacity: 0;
+  transform: translate(0, 0) scale(0.6);
+}
+
+.ac-z.z1 {
+  font-size: 1.1rem;
+  animation: acSleepFloat 2.4s infinite ease-out;
+  animation-delay: 0s;
+}
+
+.ac-z.z2 {
+  font-size: 1.35rem;
+  color: #a855f7;
+  animation: acSleepFloat 2.4s infinite ease-out;
+  animation-delay: 0.7s;
+}
+
+.ac-z.z3 {
+  font-size: 1.65rem;
+  color: #9333ea;
+  animation: acSleepFloat 2.4s infinite ease-out;
+  animation-delay: 1.4s;
+}
+
+.ac-dream-star {
+  position: absolute;
   opacity: 0;
   pointer-events: none;
 }
 
-.mascot-interactive-figure.sleeping .mascot-sleep-zzz {
-  opacity: 1;
-  animation: zzzDrift 2.2s infinite ease-out;
+.ac-dream-star.s1 {
+  top: -6px;
+  right: -8px;
+  animation: acSparkleFloat 2s infinite ease-in-out;
+  animation-delay: 0.3s;
 }
 
-@keyframes zzzDrift {
-  0% { transform: translate(0, 0) scale(0.6); opacity: 0; }
-  50% { opacity: 0.95; }
-  100% { transform: translate(18px, -24px) scale(1.3); opacity: 0; }
+.ac-dream-star.s2 {
+  bottom: 2px;
+  left: -8px;
+  animation: acSparkleFloat 2.2s infinite ease-in-out;
+  animation-delay: 1.1s;
 }
 
-/* Barra de Herramientas Inferior */
-.tamagotchi-toolbar {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 6px 10px 10px;
+@keyframes acSleepFloat {
+  0% {
+    opacity: 0;
+    transform: translate(0, 4px) scale(0.5);
+  }
+  25% {
+    opacity: 0.95;
+    transform: translate(4px, -10px) scale(0.85);
+  }
+  65% {
+    opacity: 0.9;
+    transform: translate(12px, -24px) scale(1.15) rotate(8deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(20px, -40px) scale(1.35) rotate(14deg);
+  }
 }
 
-.btn-tama-action {
-  border: none;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(8px);
-  padding: 6px 10px;
-  border-radius: 18px;
-  font-family: inherit;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  border: 1.5px solid rgba(220, 195, 165, 0.7);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+@keyframes acSparkleFloat {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0.5) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2) rotate(45deg);
+  }
 }
 
-.btn-tama-action:hover {
-  background: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
-  border-color: #d946ef;
+/* Ambiente Nocturno / Sueño en el Escenario de Nuez */
+.tamagotchi-stage.is-sleeping .stage-room-bg {
+  filter: brightness(0.82) hue-rotate(-8deg);
+  transition: filter 1s ease;
 }
 
-.btn-tama-action:active {
-  transform: scale(0.95);
-}
-
-.tama-btn-icon {
-  font-size: 1rem;
-}
-
-.tama-btn-label {
-  font-size: 0.76rem;
-  font-weight: 800;
-  color: #5c3a21;
+.tamagotchi-stage.is-sleeping .cozy-room-fireplace {
+  filter: drop-shadow(0 0 16px rgba(251, 146, 60, 0.85));
 }
 
 /* Menús Emergentes Flotantes (Snacks, Ambientes, Armario) */

@@ -339,22 +339,141 @@
                   <!-- Tapete tejido acogedor en el piso donde se sienta Nuez -->
                   <div class="cozy-room-rug"></div>
 
-                  <!-- Chimenea de piedra cálida en la casita -->
+                  <!-- Chimenea de piedra cálida estilo Animal Crossing (100% Vectorial pura en SVG, sin emojis) -->
                   <div class="cozy-room-fireplace">
-                    <div class="fireplace-mantel"></div>
-                    <div class="fireplace-hearth">
-                      <div class="hearth-logs">🪵</div>
-                      <div class="hearth-flames">🔥</div>
-                      <div class="hearth-ember e1"></div>
-                      <div class="hearth-ember e2"></div>
-                    </div>
+                    <svg class="ac-fireplace-svg" viewBox="0 0 80 100" width="80" height="100" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <radialGradient id="hearthGlowGrad" cx="50%" cy="80%" r="60%">
+                          <stop offset="0%" stop-color="#ffedd5" stop-opacity="0.9" />
+                          <stop offset="40%" stop-color="#fb923c" stop-opacity="0.75" />
+                          <stop offset="70%" stop-color="#b45309" stop-opacity="0.3" />
+                          <stop offset="100%" stop-color="#3b1d0c" stop-opacity="0" />
+                        </radialGradient>
+                        <linearGradient id="flameOuterGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+                          <stop offset="0%" stop-color="#ea580c" />
+                          <stop offset="60%" stop-color="#f97316" />
+                          <stop offset="100%" stop-color="#fdba74" />
+                        </linearGradient>
+                        <linearGradient id="flameInnerGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+                          <stop offset="0%" stop-color="#f59e0b" />
+                          <stop offset="50%" stop-color="#fde047" />
+                          <stop offset="100%" stop-color="#ffffff" />
+                        </linearGradient>
+                        <linearGradient id="logBarkGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stop-color="#451a03" />
+                          <stop offset="50%" stop-color="#78350f" />
+                          <stop offset="100%" stop-color="#3b1d0c" />
+                        </linearGradient>
+                        <radialGradient id="logCoreGrad" cx="50%" cy="50%" r="50%">
+                          <stop offset="0%" stop-color="#fde68a" />
+                          <stop offset="65%" stop-color="#d97706" />
+                          <stop offset="100%" stop-color="#78350f" />
+                        </radialGradient>
+                      </defs>
+
+                      <ellipse cx="40" cy="95" rx="34" ry="5" fill="rgba(20, 10, 5, 0.4)" />
+                      <path d="M 10 20 L 70 20 L 68 94 L 12 94 Z" fill="#6d3b19" stroke="#4a240d" stroke-width="2.5" />
+                      <rect x="16" y="24" width="14" height="6" rx="2" fill="#85461e" />
+                      <rect x="34" y="24" width="18" height="6" rx="2" fill="#85461e" />
+                      <rect x="56" y="24" width="10" height="6" rx="2" fill="#85461e" />
+                      <rect x="13" y="33" width="18" height="6" rx="2" fill="#582a10" />
+                      <rect x="35" y="33" width="15" height="6" rx="2" fill="#85461e" />
+                      <rect x="54" y="33" width="14" height="6" rx="2" fill="#582a10" />
+                      <rect x="6" y="12" width="68" height="9" rx="3" fill="#a16207" stroke="#713f12" stroke-width="2" />
+                      <rect x="8" y="13" width="64" height="3" rx="1.5" fill="#ca8a04" opacity="0.7" />
+                      <path d="M 18 94 L 18 52 C 18 42, 62 42, 62 52 L 62 94 Z" fill="#1c0a02" stroke="#451a03" stroke-width="2" />
+                      <path d="M 18 94 L 18 52 C 18 42, 62 42, 62 52 L 62 94 Z" fill="url(#hearthGlowGrad)" class="ac-hearth-glow" />
+
+                      <!-- Leños cruzados -->
+                      <g transform="translate(40, 84) rotate(-16) translate(-40, -84)">
+                        <rect x="22" y="80" width="36" height="8" rx="4" fill="url(#logBarkGrad)" />
+                        <ellipse cx="23" cy="84" rx="3.5" ry="4" fill="url(#logCoreGrad)" stroke="#451a03" stroke-width="0.8" />
+                        <circle cx="23" cy="84" r="1.5" fill="none" stroke="#78350f" stroke-width="0.7" />
+                      </g>
+                      <g transform="translate(40, 85) rotate(14) translate(-40, -85)">
+                        <rect x="24" y="81" width="34" height="8" rx="4" fill="url(#logBarkGrad)" />
+                        <ellipse cx="57" cy="85" rx="3.5" ry="4" fill="url(#logCoreGrad)" stroke="#451a03" stroke-width="0.8" />
+                        <circle cx="57" cy="85" r="1.5" fill="none" stroke="#78350f" stroke-width="0.7" />
+                      </g>
+
+                      <!-- Llamas animadas vivas -->
+                      <g class="ac-fire-group">
+                        <path class="ac-flame-tongue f-left" d="M 31 82 C 26 74, 30 64, 34 58 C 36 65, 39 70, 37 82 Z" fill="url(#flameOuterGrad)" />
+                        <path class="ac-flame-tongue f-right" d="M 43 82 C 41 72, 45 66, 47 60 C 51 66, 54 74, 49 82 Z" fill="url(#flameOuterGrad)" />
+                        <path class="ac-flame-main" d="M 28 85 C 26 72, 33 54, 40 44 C 47 54, 54 72, 52 85 C 47 88, 33 88, 28 85 Z" fill="url(#flameOuterGrad)" />
+                        <path class="ac-flame-core" d="M 33 84 C 32 75, 36 62, 40 54 C 44 62, 48 75, 47 84 C 44 86, 36 86, 33 84 Z" fill="url(#flameInnerGrad)" />
+                        <ellipse cx="40" cy="74" rx="3.5" ry="6" fill="#ffffff" opacity="0.85" />
+                      </g>
+
+                      <!-- Brasitas flotantes -->
+                      <circle cx="36" cy="50" r="1.4" fill="#fde047" class="ac-ember-dot eb1" />
+                      <circle cx="44" cy="46" r="1.2" fill="#fdba74" class="ac-ember-dot eb2" />
+                      <circle cx="39" cy="38" r="1.0" fill="#fef08a" class="ac-ember-dot eb3" />
+                    </svg>
                   </div>
 
-                  <!-- Mesita auxiliar de madera con candil y libros -->
+                  <!-- Mesita auxiliar de madera con candil y libros estilo Animal Crossing (100% Vectorial pura en SVG, sin emojis) -->
                   <div class="cozy-room-table">
-                    <div class="table-lamp">🏮</div>
-                    <div class="table-tea">🫖</div>
-                    <div class="table-books">📚</div>
+                    <svg class="ac-nightstand-svg" viewBox="0 0 74 100" width="74" height="100" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <radialGradient id="lampLightCone" cx="50%" cy="30%" r="65%">
+                          <stop offset="0%" stop-color="#fef9c3" stop-opacity="0.95" />
+                          <stop offset="35%" stop-color="#fde047" stop-opacity="0.5" />
+                          <stop offset="70%" stop-color="#f59e0b" stop-opacity="0.15" />
+                          <stop offset="100%" stop-color="#b45309" stop-opacity="0" />
+                        </radialGradient>
+                        <linearGradient id="tableWoodGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stop-color="#b45309" />
+                          <stop offset="40%" stop-color="#92400e" />
+                          <stop offset="100%" stop-color="#78350f" />
+                        </linearGradient>
+                        <linearGradient id="lampShadeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stop-color="#fffbeb" />
+                          <stop offset="50%" stop-color="#fef3c7" />
+                          <stop offset="100%" stop-color="#fde68a" />
+                        </linearGradient>
+                      </defs>
+
+                      <ellipse cx="37" cy="95" rx="28" ry="4" fill="rgba(20, 10, 5, 0.35)" />
+                      <path d="M 16 75 L 14 94 L 18 94 L 20 75 Z" fill="#602905" />
+                      <path d="M 54 75 L 56 94 L 60 94 L 58 75 Z" fill="#602905" />
+                      <rect x="12" y="52" width="50" height="26" rx="4" fill="url(#tableWoodGrad)" stroke="#582405" stroke-width="1.8" />
+                      <rect x="16" y="56" width="42" height="18" rx="2" fill="#a16207" stroke="#713f12" stroke-width="1" />
+                      <circle cx="37" cy="65" r="2.8" fill="#fde047" stroke="#b45309" stroke-width="0.8" />
+                      <circle cx="36" cy="64" r="0.8" fill="#ffffff" />
+                      <rect x="8" y="46" width="58" height="7" rx="3" fill="#ca8a04" stroke="#78350f" stroke-width="1.6" />
+                      <line x1="10" y1="48" x2="64" y2="48" stroke="#fef08a" stroke-width="1.2" opacity="0.6" stroke-linecap="round" />
+
+                      <!-- Libritos apilados -->
+                      <g class="ac-mini-books" transform="translate(42, 34)">
+                        <rect x="0" y="8" width="20" height="5" rx="1.5" fill="#10b981" stroke="#047857" stroke-width="0.8" />
+                        <rect x="16" y="9" width="3" height="3" fill="#fafaf9" />
+                        <rect x="1" y="4" width="18" height="4.5" rx="1.5" fill="#f43f5e" stroke="#be123c" stroke-width="0.8" />
+                        <rect x="15" y="5" width="3" height="2.5" fill="#fafaf9" />
+                        <rect x="2" y="0" width="16" height="4.5" rx="1.5" fill="#38bdf8" stroke="#0284c7" stroke-width="0.8" />
+                        <rect x="14" y="1" width="3" height="2.5" fill="#fafaf9" />
+                      </g>
+
+                      <!-- Taza de té con vapor aromático -->
+                      <g class="ac-mini-teacup" transform="translate(13, 36)">
+                        <ellipse cx="9" cy="10" rx="8" ry="2" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="0.8" />
+                        <path d="M 4 2 L 14 2 C 14 2, 13 8, 9 8 C 5 8, 4 2, 4 2 Z" fill="#e9d5ff" stroke="#a855f7" stroke-width="0.8" />
+                        <path d="M 13 3 C 16 3, 16 6, 13 7" fill="none" stroke="#a855f7" stroke-width="0.8" stroke-linecap="round" />
+                        <ellipse cx="9" cy="2.5" rx="4.5" ry="1.2" fill="#818cf8" />
+                        <path d="M 8 0 Q 7 -4 9 -7" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="1.2" stroke-linecap="round" class="ac-steam-wisp w1" />
+                        <path d="M 11 -1 Q 12 -5 10 -8" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="1.2" stroke-linecap="round" class="ac-steam-wisp w2" />
+                      </g>
+
+                      <!-- Lámpara acogedora -->
+                      <g class="ac-reading-lamp" transform="translate(20, 10)">
+                        <circle cx="14" cy="16" r="22" fill="url(#lampLightCone)" class="ac-lamp-glow" />
+                        <ellipse cx="14" cy="36" rx="6" ry="2" fill="#ca8a04" stroke="#854d0e" stroke-width="0.8" />
+                        <line x1="14" y1="36" x2="14" y2="20" stroke="#eab308" stroke-width="1.8" stroke-linecap="round" />
+                        <path d="M 9 22 L 6 15 C 6 13, 22 13, 22 15 L 19 22 Z" fill="url(#lampShadeGrad)" stroke="#ca8a04" stroke-width="1" />
+                        <circle cx="14" cy="13" r="1.5" fill="#fde047" stroke="#ca8a04" stroke-width="0.6" />
+                        <ellipse cx="14" cy="22" rx="5" ry="1.4" fill="#ffffff" opacity="0.9" />
+                      </g>
+                    </svg>
                   </div>
                 </div>
                 <div class="stage-particles-layer" id="stageParticlesLayer"></div>
@@ -653,38 +772,20 @@
                         </g>
                       </svg>
 
-                      <!-- Efectos visuales de amor y sueño -->
-                      <div class="mascot-sleep-zzz" id="mascotSleepZzz">💤</div>
+                      <!-- Efectos visuales de sueño estilo Animal Crossing (100% Vectorial, tipografía y estrellas, sin emojis) -->
+                      <div class="mascot-sleep-zzz ac-sleep-dream" id="mascotSleepZzz" style="display: none;">
+                        <span class="ac-z z1">z</span>
+                        <span class="ac-z z2">z</span>
+                        <span class="ac-z z3">Z</span>
+                        <span class="ac-dream-star s1">
+                          <svg viewBox="0 0 24 24" width="10" height="10"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#fde047"/></svg>
+                        </span>
+                        <span class="ac-dream-star s2">
+                          <svg viewBox="0 0 24 24" width="8" height="8"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#e9d5ff"/></svg>
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-
-                <!-- Barra Inferior de Acciones / Herramientas -->
-                <div class="tamagotchi-toolbar">
-                  <button type="button" class="btn-tama-action" onclick="openSnackMenu()" title="Darle de comer a Nuez">
-                    <span class="tama-btn-icon">🌰</span>
-                    <span class="tama-btn-label">Alimentar</span>
-                  </button>
-
-                  <button type="button" class="btn-tama-action" onclick="handlePetSquirrel(event)" title="Acariciar y mimar">
-                    <span class="tama-btn-icon">💕</span>
-                    <span class="tama-btn-label">Acariciar</span>
-                  </button>
-
-                  <button type="button" class="btn-tama-action" id="btnToggleSleep" onclick="handleToggleSleep()" title="Dormir / Despertar">
-                    <span class="tama-btn-icon" id="sleepBtnIcon">🌙</span>
-                    <span class="tama-btn-label" id="sleepBtnLabel">Dormir</span>
-                  </button>
-
-                  <button type="button" class="btn-tama-action" onclick="openWardrobeModal()" title="Guardarropa y accesorios">
-                    <span class="tama-btn-icon">👗</span>
-                    <span class="tama-btn-label">Armario</span>
-                  </button>
-
-                  <button type="button" class="btn-tama-action" onclick="startAcornMiniGame()" title="Minijuego: Lluvia de Bellotas">
-                    <span class="tama-btn-icon">🎮</span>
-                    <span class="tama-btn-label">Jugar</span>
-                  </button>
                 </div>
 
                 <!-- Menú Desplegable Flotante de Snacks -->
@@ -806,14 +907,33 @@
           </div>
           
           <!-- BANCA CON COLCHONETA GRIS REALISTA (SIN EMOJIS, como lo pidió el usuario y la foto real) -->
-          <div class="reading-bench">
+          <!-- BANCA CON COLCHONETA GRIS REALISTA (Con botones de acción representados solo por emojis táctiles estilo Animal Crossing) -->
+          <div class="reading-bench" id="readingBench">
             <div class="bench-cushion gray-mattress">
-              <div class="cushion-tuft t1"></div>
-              <div class="cushion-tuft t2"></div>
-              <div class="cushion-tuft t3"></div>
-              <div class="cushion-tuft t4"></div>
-              <div class="cushion-tuft t5"></div>
-              <div class="cushion-tuft t6"></div>
+              <!-- Botones de Acción de Nuez (Solo representados por emojis, ubicados en la colchoneta gris) -->
+              <div class="bench-actions-strip" id="benchActionsStrip">
+                <button type="button" class="btn-bench-action" id="benchBtnFeed" onclick="handleBenchFeed()" title="Alimentar a Nuez 🌰">
+                  <span class="bench-action-icon">🌰</span>
+                </button>
+
+                <button type="button" class="btn-bench-action" id="benchBtnPet" onclick="handleBenchPet(event)" title="Acariciar y mimar 💕">
+                  <span class="bench-action-icon">💕</span>
+                </button>
+
+                <button type="button" class="btn-bench-action" id="benchBtnSleep" onclick="handleBenchToggleSleep()" title="Dormir / Despertar">
+                  <span class="bench-action-icon" id="sleepBtnIcon">🌙</span>
+                </button>
+
+                <button type="button" class="btn-bench-action" id="benchBtnWardrobe" onclick="handleBenchWardrobe()" title="Guardarropa y accesorios 👗">
+                  <span class="bench-action-icon">👗</span>
+                </button>
+
+                <button type="button" class="btn-bench-action" id="benchBtnPlay" onclick="handleBenchPlay()" title="Minijuego: Lluvia de Bellotas 🎮">
+                  <span class="bench-action-icon">🎮</span>
+                </button>
+              </div>
+
+              <!-- Pespunte superior de la colchoneta -->
               <div class="cushion-piping"></div>
             </div>
             <div class="bench-base"></div>
