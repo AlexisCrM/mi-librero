@@ -336,6 +336,96 @@
               <div class="tamagotchi-stage" id="tamagotchiStage" data-room="cottage_room">
                 <!-- Capa de Ambiente Decorativo y Efectos Ambientales (Lluvia, Chispitas, Estrellas) -->
                 <div class="stage-room-bg" id="stageRoomBg">
+                  <!-- Paredes y detalles rústicos de la cabaña (Ventana exterior con estrellas, luces de hadas y lavanda colgada) -->
+                  <div class="cabin-decor-layer">
+                    <!-- Ventana exterior con cielo crepuscular y estrellas -->
+                    <div class="cabin-window-back">
+                      <div class="cabin-window-sky">
+                        <span class="cabin-star cs1">✦</span>
+                        <span class="cabin-star cs2">✦</span>
+                        <span class="cabin-moon">🌙</span>
+                        <div class="cabin-pine-silhouette"></div>
+                      </div>
+                      <div class="cabin-window-frame"></div>
+                      <div class="cabin-curtain left"></div>
+                      <div class="cabin-curtain right"></div>
+                    </div>
+
+                    <!-- Guirnalda de luces cálidas de hadas -->
+                    <div class="cabin-fairy-lights">
+                      <span class="fairy-light fl1"></span>
+                      <span class="fairy-light fl2"></span>
+                      <span class="fairy-light fl3"></span>
+                      <span class="fairy-light fl4"></span>
+                      <span class="fairy-light fl5"></span>
+                      <span class="fairy-light fl6"></span>
+                    </div>
+
+                    <!-- Repisa con ramitos de lavanda secándose -->
+                    <div class="cabin-wall-shelf">
+                      <span class="shelf-lavender-bunch" title="Ramitos de lavanda secándose">🪻</span>
+                      <span class="shelf-acorn-jar" title="Frasco de bellotas cosechadas">🏺</span>
+                    </div>
+                  </div>
+
+                  <!-- Cama de Cabaña de Madera de Nuez (Estilo Animal Crossing) -->
+                  <div class="cozy-room-bed" id="cozyRoomBed">
+                    <svg class="ac-cabin-bed-svg" viewBox="0 0 110 75" width="110" height="75" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <linearGradient id="bedWoodGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stop-color="#92400e" />
+                          <stop offset="60%" stop-color="#78350f" />
+                          <stop offset="100%" stop-color="#451a03" />
+                        </linearGradient>
+                        <linearGradient id="bedQuiltGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#e9d5ff" />
+                          <stop offset="50%" stop-color="#d8b4fe" />
+                          <stop offset="100%" stop-color="#c084fc" />
+                        </linearGradient>
+                        <radialGradient id="pillowGrad" cx="40%" cy="35%" r="60%">
+                          <stop offset="0%" stop-color="#ffffff" />
+                          <stop offset="70%" stop-color="#f5f3ff" />
+                          <stop offset="100%" stop-color="#ede9fe" />
+                        </radialGradient>
+                      </defs>
+
+                      <!-- Sombra base en el piso -->
+                      <ellipse cx="55" cy="71" rx="50" ry="4" fill="rgba(25, 12, 5, 0.4)" />
+
+                      <!-- Cabecero de madera rústica tallada -->
+                      <rect x="10" y="16" width="90" height="30" rx="4" fill="url(#bedWoodGrad)" stroke="#451a03" stroke-width="1.8" />
+                      <line x1="16" y1="26" x2="94" y2="26" stroke="#ca8a04" stroke-width="1.2" opacity="0.6" stroke-linecap="round" />
+                      
+                      <!-- Postes torneados de la cabecera -->
+                      <rect x="6" y="8" width="9" height="58" rx="3" fill="#78350f" stroke="#451a03" stroke-width="1.5" />
+                      <circle cx="10.5" cy="8" r="3.5" fill="#ca8a04" stroke="#78350f" stroke-width="1" />
+                      <rect x="95" y="8" width="9" height="58" rx="3" fill="#78350f" stroke="#451a03" stroke-width="1.5" />
+                      <circle cx="99.5" cy="8" r="3.5" fill="#ca8a04" stroke="#78350f" stroke-width="1" />
+
+                      <!-- Almohada súper acolchada y esponjosa -->
+                      <rect x="22" y="24" width="46" height="18" rx="9" fill="url(#pillowGrad)" stroke="#ddd6fe" stroke-width="1.2" />
+                      <ellipse cx="45" cy="33" rx="16" ry="4" fill="#e0e7ff" opacity="0.3" />
+
+                      <!-- Colchón y sábana base -->
+                      <rect x="14" y="38" width="82" height="26" rx="4" fill="#faf5ff" stroke="#e2e8f0" stroke-width="1.2" />
+
+                      <!-- Edredón nórdico acolchado de lavanda y cuadros -->
+                      <g class="bed-quilt-group">
+                        <path d="M 14 42 C 14 38, 96 38, 96 42 L 96 66 C 96 69, 14 69, 14 66 Z" fill="url(#bedQuiltGrad)" stroke="#a855f7" stroke-width="1.5" />
+                        <!-- Doblez de la sábana blanca con encaje -->
+                        <path d="M 14 42 Q 55 45 96 42 L 96 46 Q 55 49 14 46 Z" fill="#ffffff" stroke="#e9d5ff" stroke-width="1" />
+                        <!-- Patrón acolchado en rombos -->
+                        <path d="M 25 46 L 55 64 L 85 46" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.2" stroke-linecap="round" />
+                        <path d="M 40 46 L 70 64" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.2" stroke-linecap="round" />
+                      </g>
+
+                      <!-- Pies de cama -->
+                      <rect x="12" y="52" width="86" height="16" rx="3" fill="url(#bedWoodGrad)" stroke="#451a03" stroke-width="1.5" />
+                      <rect x="8" y="44" width="8" height="27" rx="2.5" fill="#78350f" stroke="#451a03" stroke-width="1.2" />
+                      <rect x="94" y="44" width="8" height="27" rx="2.5" fill="#78350f" stroke="#451a03" stroke-width="1.2" />
+                    </svg>
+                  </div>
+
                   <!-- Tapete tejido acogedor en el piso donde se sienta Nuez -->
                   <div class="cozy-room-rug"></div>
 
@@ -606,6 +696,20 @@
                             <path d="M 74 100 C 66 125, 82 142, 120 142 C 158 142, 174 125, 166 100 C 160 68, 80 68, 74 100 Z" fill="url(#nuezFurGrad)" filter="url(#nuezSoftShadow)" />
                             <path d="M 116 70 C 114 62, 120 58, 123 64 C 126 59, 131 62, 128 70 Z" fill="#f5a356" />
 
+                            <!-- Mechones esponjosos en las orejas -->
+                            <path d="M 82 72 Q 86 64 88 74 Q 92 66 94 76" fill="none" stroke="#fff1db" stroke-width="2.2" stroke-linecap="round" />
+                            <path d="M 158 72 Q 154 64 152 74 Q 148 66 146 76" fill="none" stroke="#fff1db" stroke-width="2.2" stroke-linecap="round" />
+
+                            <!-- Bigotitos Adorables de Nuez -->
+                            <g class="nuez-whiskers" stroke="#3b1d0c" stroke-width="1.8" stroke-linecap="round" opacity="0.8">
+                              <line x1="68" y1="112" x2="48" y2="108" />
+                              <line x1="68" y1="117" x2="46" y2="117" />
+                              <line x1="68" y1="122" x2="50" y2="125" />
+                              <line x1="172" y1="112" x2="192" y2="108" />
+                              <line x1="172" y1="117" x2="194" y2="117" />
+                              <line x1="172" y1="122" x2="190" y2="125" />
+                            </g>
+
                             <!-- Mejillas con Rubor -->
                             <ellipse id="blushL" class="nuez-blush-spot" cx="88" cy="116" rx="14" ry="8" fill="url(#nuezBlushGrad)" />
                             <ellipse id="blushR" class="nuez-blush-spot" cx="152" cy="116" rx="14" ry="8" fill="url(#nuezBlushGrad)" />
@@ -684,7 +788,7 @@
                             <ellipse id="pawR" class="nuez-paw paw-right" cx="145" cy="155" rx="11" ry="8" fill="#cf7729" />
                           </g>
 
-                          <!-- 6. OBJETO SOSTENIDO EN MANITAS (Librito, Bellota, Té o Muffin) -->
+                          <!-- 6. OBJETO SOSTENIDO EN MANITAS (Comidas y Bebidas Animadas) -->
                           <g id="nuezHeldItem" class="nuez-held-item-group" transform="translate(100, 140)">
                             <!-- Mini Libro Morado (Defecto) -->
                             <g id="itemBook" class="held-object item-book">
@@ -700,50 +804,142 @@
                               <path d="M 10 10 C 10 24, 30 24, 30 10 Z" fill="#b45309" />
                               <circle cx="16" cy="14" r="2" fill="#fde68a" opacity="0.6" />
                             </g>
-                            <!-- Té de Lavanda -->
+                            <!-- Nuez Dorada Brillante -->
+                            <g id="itemGoldNut" class="held-object item-goldnut" style="display: none;">
+                              <ellipse cx="20" cy="14" rx="14" ry="12" fill="#eab308" stroke="#ca8a04" stroke-width="1.5" />
+                              <path d="M 14 6 Q 20 2 26 6" stroke="#fef08a" stroke-width="2" fill="none" stroke-linecap="round" />
+                              <circle cx="16" cy="11" r="2.5" fill="#ffffff" opacity="0.8" />
+                              <text x="24" y="8" font-size="8" fill="#fde047">✨</text>
+                            </g>
+                            <!-- Té de Lavanda & Miel -->
                             <g id="itemTea" class="held-object item-tea" style="display: none;">
                               <ellipse cx="20" cy="18" rx="14" ry="8" fill="#ffffff" stroke="#e2e8f0" stroke-width="2" />
-                              <ellipse cx="20" cy="17" rx="11" ry="6" fill="#818cf8" />
-                              <path d="M 17 10 Q 15 5 18 2" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.8" stroke-linecap="round" />
-                              <path d="M 23 11 Q 25 6 22 3" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.8" stroke-linecap="round" />
+                              <ellipse cx="20" cy="17" rx="11" ry="6" fill="#a855f7" />
+                              <!-- Hilillo de vapor violeta -->
+                              <path d="M 17 10 Q 14 5 18 1" fill="none" stroke="rgba(216,180,254,0.9)" stroke-width="2" stroke-linecap="round" class="ac-steam-wisp" />
+                              <path d="M 23 11 Q 26 6 22 2" fill="none" stroke="rgba(216,180,254,0.9)" stroke-width="2" stroke-linecap="round" class="ac-steam-wisp" />
+                              <!-- Mini florecita de lavanda en el borde -->
+                              <circle cx="9" cy="14" r="2.5" fill="#c084fc" />
                             </g>
-                            <!-- Muffin Frutal -->
-                            <g id="itemMuffin" class="held-object item-muffin" style="display: none;">
-                              <path d="M 12 12 L 15 24 L 25 24 L 28 12 Z" fill="#fed7aa" />
-                              <ellipse cx="20" cy="12" rx="12" ry="8" fill="#ec4899" />
-                              <circle cx="20" cy="8" r="3" fill="#dc2626" />
+                            <!-- Café de El Alpiste (Brewster) -->
+                            <g id="itemCoffee" class="held-object item-coffee" style="display: none;">
+                              <rect x="8" y="8" width="24" height="18" rx="4" fill="#047857" stroke="#065f46" stroke-width="1.5" />
+                              <ellipse cx="20" cy="8" rx="12" ry="3.5" fill="#451a03" />
+                              <!-- Logo palomita blanca de Brewster -->
+                              <circle cx="20" cy="17" r="3.5" fill="#ffffff" />
+                              <path d="M 18 17 Q 20 15 22 17" stroke="#047857" stroke-width="1" fill="none" />
+                              <!-- Vapor -->
+                              <path d="M 20 4 Q 18 0 20 -4" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="1.5" stroke-linecap="round" class="ac-steam-wisp" />
+                            </g>
+                            <!-- Pastelito de Zarzamora & Lavanda -->
+                            <g id="itemBlackberryCake" class="held-object item-cake" style="display: none;">
+                              <path d="M 10 14 L 14 24 L 26 24 L 30 14 Z" fill="#fed7aa" stroke="#f97316" stroke-width="1" />
+                              <ellipse cx="20" cy="13" rx="13" ry="8" fill="#9333ea" />
+                              <ellipse cx="20" cy="10" rx="9" ry="5" fill="#c084fc" />
+                              <circle cx="20" cy="6" r="3.5" fill="#3b0764" />
+                            </g>
+                            <!-- Galletitas de Animal Crossing -->
+                            <g id="itemCookies" class="held-object item-cookies" style="display: none;">
+                              <path d="M 8 16 C 8 8, 24 8, 24 16 C 24 22, 16 26, 8 16 Z" fill="#fde68a" stroke="#d97706" stroke-width="1.2" />
+                              <!-- Mordisquito en la galleta -->
+                              <circle cx="24" cy="14" r="3" fill="#cf7729" />
+                              <circle cx="15" cy="15" r="1.5" fill="#78350f" />
+                            </g>
+                            <!-- Macarons 'Lavender Haze' de Taylor -->
+                            <g id="itemMacarons" class="held-object item-macarons" style="display: none;">
+                              <ellipse cx="20" cy="20" rx="12" ry="5" fill="#e9d5ff" stroke="#a855f7" stroke-width="1" />
+                              <rect x="10" y="17" width="20" height="3" fill="#faf5ff" />
+                              <ellipse cx="20" cy="14" rx="12" ry="5" fill="#d8b4fe" stroke="#a855f7" stroke-width="1" />
+                              <text x="25" y="11" font-size="7" fill="#fde047">★</text>
+                            </g>
+                            <!-- Banquete Supremo del Bosque -->
+                            <g id="itemFeast" class="held-object item-feast" style="display: none;">
+                              <rect x="6" y="12" width="28" height="15" rx="3" fill="#b45309" stroke="#78350f" stroke-width="1.2" />
+                              <ellipse cx="14" cy="11" r="4" fill="#ef4444" />
+                              <ellipse cx="22" cy="10" r="4.5" fill="#8b5cf6" />
+                              <ellipse cx="27" cy="12" r="3.5" fill="#f59e0b" />
                             </g>
                           </g>
 
-                          <!-- 7. ACCESORIOS SVG (Guardarropa dinámico) -->
-                          <!-- Sombrero: Corona de Lavanda -->
+                          <!-- 7. ACCESORIOS SVG (Guardarropa dinámico temático) -->
+                          <!-- ============ SOMBREROS ============ -->
+                          <!-- Corona de Lavanda -->
                           <g id="svgHatLavender" class="svg-accessory-hat hat-lavender" style="display: none;">
                             <path d="M 85 76 Q 120 62 155 76" fill="none" stroke="#22c55e" stroke-width="3.5" stroke-linecap="round" />
                             <circle cx="95" cy="71" r="5" fill="#c084fc" />
                             <circle cx="110" cy="66" r="5.5" fill="#f472b6" />
                             <circle cx="125" cy="65" r="5.5" fill="#c084fc" />
                             <circle cx="140" cy="69" r="5" fill="#f472b6" />
-                            <circle cx="110" cy="66" r="2" fill="#fef08a" />
-                            <circle cx="125" cy="65" r="2" fill="#fef08a" />
                           </g>
-                          <!-- Sombrero: Boina Francesa -->
+                          <!-- Boina Francesa -->
                           <g id="svgHatBeret" class="svg-accessory-hat hat-beret" style="display: none;">
                             <ellipse cx="116" cy="62" rx="34" ry="14" fill="#be123c" transform="rotate(-8 116 62)" filter="url(#nuezSoftShadow)" />
                             <circle cx="106" cy="50" r="3.5" fill="#881337" />
                           </g>
-                          <!-- Sombrero: Gorro de Lana -->
+                          <!-- Gorro de Lana -->
                           <g id="svgHatBeanie" class="svg-accessory-hat hat-beanie" style="display: none;">
                             <path d="M 88 74 C 86 44, 154 44, 152 74 Z" fill="#0284c7" filter="url(#nuezSoftShadow)" />
                             <rect x="86" y="70" width="68" height="8" rx="3" fill="#0369a1" />
                             <circle cx="120" cy="42" r="7.5" fill="#f0f9ff" />
                           </g>
-                          <!-- Sombrero: Gorrito Nocturno Estrellado -->
+                          <!-- Gorrito Nocturno Estrellado -->
                           <g id="svgHatNightcap" class="svg-accessory-hat hat-nightcap" style="display: none;">
                             <path d="M 86 74 C 95 40, 160 30, 175 60 C 180 72, 175 85, 175 88 Z" fill="#4338ca" filter="url(#nuezSoftShadow)" />
                             <circle cx="175" cy="90" r="6" fill="#fde047" />
                             <text x="110" y="58" font-size="9" fill="#fef08a">⭐</text>
                           </g>
+                          <!-- Boina Roja Taylor Swift (Red TV) -->
+                          <g id="svgHatTaylorRed" class="svg-accessory-hat hat-taylor-red" style="display: none;">
+                            <ellipse cx="116" cy="60" rx="36" ry="15" fill="#991b1b" stroke="#7f1d1d" stroke-width="1.5" transform="rotate(-6 116 60)" filter="url(#nuezSoftShadow)" />
+                            <circle cx="108" cy="48" r="4" fill="#b91c1c" />
+                            <!-- Cinta dorada vintage con broche de guitarra -->
+                            <path d="M 90 66 Q 116 56 142 63" stroke="#f59e0b" stroke-width="2.5" fill="none" />
+                            <polygon points="135,60 142,63 135,66" fill="#fde047" />
+                          </g>
+                          <!-- Boina Velvet Noir (Dove Cameron) -->
+                          <g id="svgHatDoveNoir" class="svg-accessory-hat hat-dove-noir" style="display: none;">
+                            <ellipse cx="116" cy="60" rx="35" ry="14" fill="#18181b" stroke="#27272a" stroke-width="1.5" transform="rotate(-8 116 60)" filter="url(#nuezSoftShadow)" />
+                            <!-- Mini rosa gótica oscura -->
+                            <circle cx="140" cy="62" r="5" fill="#831843" />
+                            <circle cx="140" cy="62" r="2.5" fill="#db2777" />
+                          </g>
+                          <!-- Capucha de Ardillita Extra Peluda -->
+                          <g id="svgHatSquirrelEars" class="svg-accessory-hat hat-squirrel-ears" style="display: none;">
+                            <path d="M 80 80 C 76 46, 164 46, 160 80 Z" fill="#b45309" stroke="#78350f" stroke-width="2" />
+                            <ellipse cx="78" cy="48" rx="10" ry="14" fill="#b45309" stroke="#78350f" stroke-width="1.5" transform="rotate(-15 78 48)" />
+                            <ellipse cx="78" cy="48" rx="6" ry="9" fill="#fbcfe8" transform="rotate(-15 78 48)" />
+                            <ellipse cx="162" cy="48" rx="10" ry="14" fill="#b45309" stroke="#78350f" stroke-width="1.5" transform="rotate(15 162 48)" />
+                            <ellipse cx="162" cy="48" rx="6" ry="9" fill="#fbcfe8" transform="rotate(15 162 48)" />
+                          </g>
+                          <!-- Gorra Nook Inc. (Animal Crossing) -->
+                          <g id="svgHatNookInc" class="svg-accessory-hat hat-nook-inc" style="display: none;">
+                            <path d="M 85 75 C 85 45, 155 45, 155 75 Z" fill="#0d9488" stroke="#0f766e" stroke-width="2" filter="url(#nuezSoftShadow)" />
+                            <ellipse cx="120" cy="74" rx="38" ry="8" fill="#115e59" />
+                            <!-- Hoja icónica blanca de Tom Nook -->
+                            <path d="M 116 58 C 114 52, 126 52, 124 58 C 124 64, 116 64, 116 58 Z" fill="#ffffff" />
+                            <path d="M 116 58 L 124 58" stroke="#0d9488" stroke-width="0.8" />
+                          </g>
+                          <!-- Lazo Amarillo de Canela (Isabelle) -->
+                          <g id="svgHatIsabelleRibbon" class="svg-accessory-hat hat-isabelle-ribbon" style="display: none;">
+                            <!-- Copete peludo amarillo -->
+                            <ellipse cx="120" cy="62" rx="14" ry="10" fill="#fde047" stroke="#eab308" stroke-width="1.5" />
+                            <!-- Lazo rojo con cascabel -->
+                            <ellipse cx="112" cy="56" rx="7" ry="5" fill="#dc2626" transform="rotate(-20 112 56)" />
+                            <ellipse cx="128" cy="56" rx="7" ry="5" fill="#dc2626" transform="rotate(20 128 56)" />
+                            <circle cx="120" cy="56" r="4" fill="#f59e0b" stroke="#78350f" stroke-width="0.8" />
+                          </g>
+                          <!-- Corona Real Dorada (Animal Crossing Royal Crown) -->
+                          <g id="svgHatRoyalCrown" class="svg-accessory-hat hat-royal-crown" style="display: none;">
+                            <ellipse cx="120" cy="54" rx="20" ry="16" fill="#991b1b" />
+                            <path d="M 98 62 L 98 48 L 108 55 L 120 44 L 132 55 L 142 48 L 142 62 Z" fill="#facc15" stroke="#ca8a04" stroke-width="1.5" filter="url(#nuezSoftShadow)" />
+                            <circle cx="98" cy="46" r="3" fill="#ffffff" stroke="#ca8a04" stroke-width="0.8" />
+                            <circle cx="120" cy="42" r="3.5" fill="#3b82f6" stroke="#ca8a04" stroke-width="0.8" />
+                            <circle cx="142" cy="46" r="3" fill="#ffffff" stroke="#ca8a04" stroke-width="0.8" />
+                            <circle cx="110" cy="58" r="2.2" fill="#ef4444" />
+                            <circle cx="130" cy="58" r="2.2" fill="#10b981" />
+                          </g>
 
+                          <!-- ============ LENTES Y ACCESORIOS FACIALES ============ -->
                           <!-- Lentes Dorados Redondos -->
                           <g id="svgGlassesRound" class="svg-accessory-glasses glasses-round" style="display: none;">
                             <circle cx="98" cy="100" r="14" fill="rgba(255,255,255,0.22)" stroke="#eab308" stroke-width="2.5" />
@@ -752,22 +948,108 @@
                             <path d="M 84 97 L 76 94" stroke="#eab308" stroke-width="2" stroke-linecap="round" />
                             <path d="M 156 97 L 164 94" stroke="#eab308" stroke-width="2" stroke-linecap="round" />
                           </g>
+                          <!-- Gafas de Pasta Lavanda -->
+                          <g id="svgGlassesLavender" class="svg-accessory-glasses glasses-lavender" style="display: none;">
+                            <rect x="84" y="88" width="28" height="22" rx="6" fill="rgba(233,213,255,0.25)" stroke="#a855f7" stroke-width="2.8" />
+                            <rect x="128" y="88" width="28" height="22" rx="6" fill="rgba(233,213,255,0.25)" stroke="#a855f7" stroke-width="2.8" />
+                            <line x1="112" y1="98" x2="128" y2="98" stroke="#a855f7" stroke-width="2.8" />
+                          </g>
+                          <!-- Gafas de Sol de Corazón '22' (Taylor Swift) -->
+                          <g id="svgGlassesTaylorHeart" class="svg-accessory-glasses glasses-taylor-heart" style="display: none;">
+                            <path d="M 86 98 C 86 90, 98 88, 98 95 C 98 88, 110 90, 110 98 C 110 108, 98 114, 98 116 C 98 114, 86 108, 86 98 Z" fill="#ef4444" stroke="#b91c1c" stroke-width="2.5" filter="url(#nuezSoftShadow)" />
+                            <path d="M 130 98 C 130 90, 142 88, 142 95 C 142 88, 154 90, 154 98 C 154 108, 142 114, 142 116 C 142 114, 130 108, 130 98 Z" fill="#ef4444" stroke="#b91c1c" stroke-width="2.5" filter="url(#nuezSoftShadow)" />
+                            <line x1="110" y1="98" x2="130" y2="98" stroke="#ef4444" stroke-width="3" />
+                            <!-- Brillo blanco en los lentes -->
+                            <line x1="91" y1="95" x2="95" y2="92" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
+                            <line x1="135" y1="95" x2="139" y2="92" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
+                          </g>
+                          <!-- Gafas Ovaladas Retro (Dove Cameron) -->
+                          <g id="svgGlassesDoveRetro" class="svg-accessory-glasses glasses-dove-retro" style="display: none;">
+                            <ellipse cx="98" cy="100" rx="15" ry="8" fill="#18181b" stroke="#71717a" stroke-width="2" />
+                            <ellipse cx="142" cy="100" rx="15" ry="8" fill="#18181b" stroke="#71717a" stroke-width="2" />
+                            <line x1="113" y1="100" x2="127" y2="100" stroke="#71717a" stroke-width="2" />
+                          </g>
+                          <!-- Gafas de Brewster (Animal Crossing) -->
+                          <g id="svgGlassesBrewster" class="svg-accessory-glasses glasses-brewster" style="display: none;">
+                            <rect x="85" y="90" width="26" height="20" rx="4" fill="rgba(255,255,255,0.2)" stroke="#1c1917" stroke-width="3.5" />
+                            <rect x="129" y="90" width="26" height="20" rx="4" fill="rgba(255,255,255,0.2)" stroke="#1c1917" stroke-width="3.5" />
+                            <line x1="111" y1="98" x2="129" y2="98" stroke="#1c1917" stroke-width="3.5" />
+                            <!-- Pequeño bigotito característico de Brewster -->
+                            <path d="M 112 114 Q 120 111 128 114 Q 120 117 112 114 Z" fill="#1c1917" />
+                          </g>
+                          <!-- Monóculo de Detective del Bosque -->
+                          <g id="svgGlassesMonocle" class="svg-accessory-glasses glasses-monocle" style="display: none;">
+                            <circle cx="142" cy="100" r="14" fill="rgba(255,255,255,0.3)" stroke="#eab308" stroke-width="3" />
+                            <!-- Cadenita dorada que cuelga -->
+                            <path d="M 156 102 Q 165 120 152 140" fill="none" stroke="#ca8a04" stroke-width="1.4" stroke-dasharray="2,2" />
+                          </g>
 
-                          <!-- Ropa: Cardigan Tejido -->
+                          <!-- ============ ROPITA ============ -->
+                          <!-- Cardigan de Taylor Swift -->
                           <g id="svgClothesCardigan" class="svg-accessory-clothes clothes-cardigan" style="display: none;">
                             <path d="M 76 135 C 72 155, 76 182, 96 184 L 98 135 Z" fill="#fafaf9" stroke="#e7e5e4" stroke-width="1.5" />
                             <path d="M 164 135 C 168 155, 164 182, 144 184 L 142 135 Z" fill="#fafaf9" stroke="#e7e5e4" stroke-width="1.5" />
                             <path d="M 94 135 L 120 162 L 146 135" fill="none" stroke="#44403c" stroke-width="3" stroke-linecap="round" />
+                            <circle cx="120" cy="166" r="1.8" fill="#292524" />
+                            <circle cx="120" cy="174" r="1.8" fill="#292524" />
+                            <!-- Estrellitas folclóricas bordadas en las mangas -->
                             <text x="76" y="156" font-size="8" fill="#78716c">★</text>
                             <text x="156" y="156" font-size="8" fill="#78716c">★</text>
                           </g>
-
-                          <!-- Ropa: Pijama de Estrellitas -->
+                          <!-- Pijama de Estrellitas -->
                           <g id="svgClothesPajamas" class="svg-accessory-clothes clothes-pajamas" style="display: none;">
                             <path d="M 74 135 C 68 165, 78 190, 120 190 C 162 190, 172 165, 166 135 Z" fill="#a5b4fc" opacity="0.9" />
                             <text x="96" y="155" font-size="8" fill="#ffffff">✨</text>
                             <text x="135" y="168" font-size="8" fill="#ffffff">⭐</text>
                             <text x="115" y="178" font-size="8" fill="#ffffff">✨</text>
+                          </g>
+                          <!-- Vestido Campestre de Lavanda -->
+                          <g id="svgClothesLavenderDress" class="svg-accessory-clothes clothes-lavender-dress" style="display: none;">
+                            <path d="M 76 138 C 70 168, 76 192, 120 192 C 164 192, 170 168, 164 138 Z" fill="#c084fc" stroke="#9333ea" stroke-width="1.5" />
+                            <path d="M 92 142 L 120 168 L 148 142" fill="none" stroke="#ffffff" stroke-width="2.5" />
+                            <!-- Florecitas bordadas en el ruedo -->
+                            <circle cx="100" cy="184" r="2.5" fill="#fbcfe8" />
+                            <circle cx="120" cy="185" r="2.5" fill="#fef08a" />
+                            <circle cx="140" cy="184" r="2.5" fill="#fbcfe8" />
+                          </g>
+                          <!-- Vestido 'Lavender Haze' de Satín (Taylor Swift) -->
+                          <g id="svgClothesTaylorLavender" class="svg-accessory-clothes clothes-taylor-lavender" style="display: none;">
+                            <path d="M 74 136 C 68 168, 76 195, 120 195 C 164 195, 172 168, 166 136 Z" fill="#8b5cf6" stroke="#6d28d9" stroke-width="1.8" filter="url(#nuezSoftShadow)" />
+                            <!-- Brillo de satín -->
+                            <path d="M 90 145 Q 120 160 110 190" stroke="rgba(255,255,255,0.4)" stroke-width="3" fill="none" />
+                            <text x="135" y="165" font-size="8" fill="#fde047">✨</text>
+                            <text x="105" y="178" font-size="8" fill="#fde047">✨</text>
+                          </g>
+                          <!-- Chaqueta 'Boyfriend' de Cuero (Dove Cameron) -->
+                          <g id="svgClothesDoveJacket" class="svg-accessory-clothes clothes-dove-jacket" style="display: none;">
+                            <path d="M 74 136 C 70 160, 75 186, 96 186 L 98 136 Z" fill="#18181b" stroke="#27272a" stroke-width="1.8" />
+                            <path d="M 166 136 C 170 160, 165 186, 144 186 L 142 136 Z" fill="#18181b" stroke="#27272a" stroke-width="1.8" />
+                            <!-- Solapas cruzadas con tachitas plateadas y cremallera rosa -->
+                            <path d="M 92 136 L 120 168 L 148 136" fill="none" stroke="#ec4899" stroke-width="2.5" />
+                            <circle cx="86" cy="146" r="1.5" fill="#e4e4e7" />
+                            <circle cx="154" cy="146" r="1.5" fill="#e4e4e7" />
+                          </g>
+                          <!-- Chaleco de Exploradora con Bellota -->
+                          <g id="svgClothesSquirrelScout" class="svg-accessory-clothes clothes-squirrel-scout" style="display: none;">
+                            <path d="M 78 138 C 74 165, 80 188, 120 188 C 160 188, 166 165, 162 138 Z" fill="#a16207" stroke="#713f12" stroke-width="1.5" />
+                            <!-- Pañuelo naranja scout con broche de bellota -->
+                            <polygon points="108,138 132,138 120,154" fill="#f97316" />
+                            <circle cx="120" cy="154" r="2.5" fill="#78350f" />
+                          </g>
+                          <!-- Camisa Aloha de Tom Nook (Animal Crossing) -->
+                          <g id="svgClothesNookAloha" class="svg-accessory-clothes clothes-nook-aloha" style="display: none;">
+                            <path d="M 74 136 C 68 165, 76 188, 120 188 C 164 188, 172 165, 166 136 Z" fill="#0d9488" stroke="#0f766e" stroke-width="1.8" />
+                            <!-- Hojas blancas de Nook Inc. estampadas -->
+                            <path d="M 86 150 Q 92 145 98 152 Q 92 158 86 150 Z" fill="#ffffff" />
+                            <path d="M 136 156 Q 142 150 148 158 Q 142 164 136 156 Z" fill="#ffffff" />
+                            <path d="M 110 172 Q 116 166 122 174 Q 116 180 110 172 Z" fill="#ffffff" />
+                          </g>
+                          <!-- Suéter Formal de Canela (Isabelle) -->
+                          <g id="svgClothesIsabelleVest" class="svg-accessory-clothes clothes-isabelle-vest" style="display: none;">
+                            <path d="M 76 138 C 72 162, 78 186, 120 186 C 162 186, 168 162, 164 138 Z" fill="#fbcfe8" stroke="#f472b6" stroke-width="1.5" />
+                            <!-- Cuello de camisa blanco y corbatita roja -->
+                            <polygon points="112,138 120,148 128,138" fill="#ffffff" />
+                            <rect x="118" y="146" width="4" height="12" rx="1" fill="#dc2626" />
                           </g>
                         </g>
                       </svg>
@@ -791,42 +1073,14 @@
                 <!-- Menú Desplegable Flotante de Snacks -->
                 <div class="tama-popup-menu" id="snackMenu" style="display: none;">
                   <div class="popup-menu-header">
-                    <span>🌰 Alacena de Snacks de Nuez</span>
+                    <div class="popup-header-title">
+                      <span>🌰 Alacena de Snacks de Nuez</span>
+                      <span class="snack-balance-pill">Saldo: <strong id="snackAcornBalance">20</strong> 🌰</span>
+                    </div>
                     <button type="button" class="btn-close-popup" onclick="closeSnackMenu()">✕</button>
                   </div>
-                  <div class="snack-grid">
-                    <div class="snack-item" onclick="feedSquirrel('bellota')">
-                      <span class="snack-emoji">🌰</span>
-                      <div class="snack-info">
-                        <span class="snack-name">Bellota Silvestre</span>
-                        <span class="snack-benefit">+25 Apetito</span>
-                      </div>
-                      <span class="snack-price free">Gratis</span>
-                    </div>
-                    <div class="snack-item" onclick="feedSquirrel('nuez')">
-                      <span class="snack-emoji">🥜</span>
-                      <div class="snack-info">
-                        <span class="snack-name">Nuez Dorada</span>
-                        <span class="snack-benefit">+45 Apetito • +10 Cariño</span>
-                      </div>
-                      <span class="snack-price">2 🌰</span>
-                    </div>
-                    <div class="snack-item" onclick="feedSquirrel('te')">
-                      <span class="snack-emoji">🫖</span>
-                      <div class="snack-info">
-                        <span class="snack-name">Té de Lavanda</span>
-                        <span class="snack-benefit">+35 Energía • +15 Cariño</span>
-                      </div>
-                      <span class="snack-price">2 🌰</span>
-                    </div>
-                    <div class="snack-item" onclick="feedSquirrel('muffin')">
-                      <span class="snack-emoji">🧁</span>
-                      <div class="snack-info">
-                        <span class="snack-name">Muffin Frutal</span>
-                        <span class="snack-benefit">+60 Apetito • +25 Cariño</span>
-                      </div>
-                      <span class="snack-price">4 🌰</span>
-                    </div>
+                  <div class="snack-grid-modern" id="snackGridContainer">
+                    <!-- Contenido renderizado dinámicamente con SNACK_CATALOG en app.js -->
                   </div>
                 </div>
 
@@ -840,8 +1094,8 @@
                     <div class="room-option-card" id="roomOpt-cottage_room" onclick="selectSquirrelRoom('cottage_room')">
                       <span class="room-card-icon">🏡</span>
                       <div class="room-card-details">
-                        <span class="room-card-title">Casita de Madera</span>
-                        <span class="room-card-desc">Chimenea con leña chisporroteando y alfombra acogedora</span>
+                        <span class="room-card-title">Cabaña de Madera</span>
+                        <span class="room-card-desc">Cama acogedora, chimenea rústica y alfombra cálida</span>
                       </div>
                     </div>
                     <div class="room-option-card" id="roomOpt-garden_bridge" onclick="selectSquirrelRoom('garden_bridge')">
@@ -871,7 +1125,10 @@
                 <!-- Modal del Guardarropa de Nuez -->
                 <div class="tama-popup-menu wardrobe-menu" id="wardrobeMenu" style="display: none;">
                   <div class="popup-menu-header">
-                    <span>👗 Guardarropa de Nuez</span>
+                    <div class="popup-header-title">
+                      <span>👗 Guardarropa de Nuez</span>
+                      <span class="wardrobe-balance-pill">Saldo: <strong id="wardrobeAcornBalance">20</strong> 🌰</span>
+                    </div>
                     <button type="button" class="btn-close-popup" onclick="closeWardrobeModal()">✕</button>
                   </div>
                   <div class="wardrobe-tabs">
@@ -884,21 +1141,55 @@
                   </div>
                 </div>
 
-                <!-- Pantalla del Minijuego: Lluvia de Bellotas -->
+                <!-- Pantalla del Minijuego: Lluvia de Bellotas Arcade -->
                 <div class="minigame-screen" id="minigameScreen" style="display: none;">
                   <div class="minigame-header">
                     <div class="minigame-score">Bellotas: <span id="minigameScoreText">0</span> 🌰</div>
+                    <div class="minigame-combo-badge" id="minigameComboBadge">Combo x1 🔥</div>
                     <div class="minigame-timer">Tiempo: <span id="minigameTimerText">30s</span></div>
                     <button type="button" class="btn-close-minigame" onclick="quitMiniGame()">✕ Salir</button>
                   </div>
                   <div class="minigame-canvas-area" id="minigameCanvasArea">
+                    <!-- Efecto ambiental de rayos de sol y copas de árboles -->
+                    <div class="minigame-sunbeams"></div>
                     <div class="minigame-catcher" id="minigameCatcher">
                       <span class="catcher-basket">🧺</span>
                       <span class="catcher-mascot">🐿️</span>
                     </div>
                   </div>
                   <div class="minigame-controls-hint">
-                    Mueve el ratón o desliza el dedo de lado a lado para atrapar bellotas 🌰 y evitar ramas secas 🍂
+                    Atrapa Bellotas 🌰, Nueces Doradas 🥜 y Lavanda 🪻 (+5s). ¡Esquiva las ramas secas 🍂!
+                  </div>
+
+                  <!-- Modal Animado de Victoria del Minijuego (Estilo Animal Crossing) -->
+                  <div class="minigame-victory-modal" id="minigameVictoryModal" style="display: none;">
+                    <div class="victory-card">
+                      <div class="victory-confetti" id="victoryConfetti"></div>
+                      <div class="victory-stars" id="victoryStars">⭐⭐⭐</div>
+                      <h3 class="victory-title">¡Gran Cosecha! 🎉</h3>
+                      <p class="victory-subtitle">¡Las bellotas ya están en la alcancía de Nuez!</p>
+                      
+                      <div class="victory-acorns-box">
+                        <span class="victory-acorns-num" id="victoryAcornsEarned">+0</span>
+                        <span class="victory-acorns-label">🌰 Bellotas Ganadas</span>
+                      </div>
+
+                      <div class="victory-stats-row">
+                        <div class="v-stat-item">
+                          <span class="v-stat-label">Puntos</span>
+                          <span class="v-stat-num" id="victoryScoreNum">0</span>
+                        </div>
+                        <div class="v-stat-item">
+                          <span class="v-stat-label">Racha Máx</span>
+                          <span class="v-stat-num" id="victoryStreakNum">x1</span>
+                        </div>
+                      </div>
+
+                      <div class="victory-buttons-row">
+                        <button type="button" class="btn-victory-replay" onclick="startAcornMiniGame()">🎮 Jugar de nuevo</button>
+                        <button type="button" class="btn-victory-done" onclick="closeVictoryModal()">🐿️ Volver a la Casita</button>
+                      </div>
+                    </div>
                   </div>
                 </div>
 

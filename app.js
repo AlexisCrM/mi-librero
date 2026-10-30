@@ -2724,23 +2724,51 @@ const NUEZ_PET_PHRASES = [
   "¡Te quiero un montón, amiga lectora! 💕"
 ];
 
-// Catálogo del Guardarropa de Nuez
+// Catálogo Oficial de Snacks y Alimentos de Nuez (Con Precios y Beneficios)
+const SNACK_CATALOG = [
+  { id: 'bellota', name: 'Bellota Silvestre', icon: '🌰', cost: 0, boost: '+25 Apetito', desc: 'Crujiente bellota del bosque' },
+  { id: 'nuez', name: 'Nuez Dorada', icon: '🥜', cost: 4, boost: '+45 Apetito • +15 Cariño', desc: 'Tostadita y deliciosa' },
+  { id: 'te', name: 'Té de Lavanda y Miel', icon: '🫖', cost: 8, boost: '+40 Energía • +25 Cariño', desc: 'Infusión floral caliente' },
+  { id: 'cafe', name: 'Café con Leche', icon: '☕', cost: 12, boost: '+60 Energía • +15 Cariño', desc: 'Espuma con almendra' },
+  { id: 'muffin', name: 'Muffin de Moras', icon: '🧁', cost: 16, boost: '+65 Apetito • +30 Cariño', desc: 'Moras silvestres frescas' },
+  { id: 'galletas', name: 'Galletas de Miel', icon: '🍪', cost: 20, boost: '+75 Apetito • +35 Cariño', desc: 'Avena, miel y lavanda' },
+  { id: 'macarons', name: 'Macarons Parisinos', icon: '🍬', cost: 28, boost: '+85 Apetito • +45 Cariño', desc: 'Crema suave de lavanda' },
+  { id: 'banquete', name: 'Gran Banquete Real', icon: '🧺', cost: 45, boost: '100% Todo • +60 Cariño', desc: 'Festín para celebrar lecturas' }
+];
+
+// Catálogo del Guardarropa de Nuez (Temáticas: Lavanda, Taylor Swift, Dove Cameron, Ardillas y Animal Crossing)
 const WARDROBE_CATALOG = {
   hats: [
-    { id: 'hat-none', name: 'Sin Sombrerito', icon: '🐿️', desc: 'Estilo natural de Nuez' },
-    { id: 'hat-lavender', name: 'Corona de Lavanda', icon: '🌸', desc: 'Flores aromáticas de Zakia' },
-    { id: 'hat-beret', name: 'Boina de Lectora', icon: '🎨', desc: 'Elegante y artística' },
-    { id: 'hat-beanie', name: 'Gorro de Lana', icon: '🧶', desc: 'Tejido a mano para días frescos' },
-    { id: 'hat-nightcap', name: 'Gorro Estrellado', icon: '🌙', desc: 'Para soñar con bellotas' }
+    { id: 'hat-none', name: 'Sin Sombrerito', icon: '🐿️', cost: 0, theme: 'basic', themeLabel: 'Básico' },
+    { id: 'hat-lavender', name: 'Corona de Lavanda', icon: '🪻', cost: 18, theme: 'lavender', themeLabel: 'Lavanda' },
+    { id: 'hat-beret', name: 'Boina de Lectora', icon: '🎨', cost: 22, theme: 'basic', themeLabel: 'Clásico' },
+    { id: 'hat-beanie', name: 'Gorro de Lana Azul', icon: '🧶', cost: 26, theme: 'basic', themeLabel: 'Invierno' },
+    { id: 'hat-nightcap', name: 'Gorro Estrellado', icon: '🌙', cost: 35, theme: 'sleep', themeLabel: 'Noche' },
+    { id: 'hat-squirrel-ears', name: 'Capucha Esponjosa', icon: '🐾', cost: 45, theme: 'squirrel', themeLabel: 'Ardillitas' },
+    { id: 'hat-taylor-red', name: "Boina 'Red TV'", icon: '🧣', cost: 75, theme: 'taylor', themeLabel: 'Taylor Swift' },
+    { id: 'hat-dove-noir', name: 'Boina Velvet Noir', icon: '🖤', cost: 80, theme: 'dove', themeLabel: 'Dove Cameron' },
+    { id: 'hat-nook-inc', name: 'Gorra Nook Inc.', icon: '🍃', cost: 95, theme: 'ac', themeLabel: 'Animal Crossing' },
+    { id: 'hat-isabelle-ribbon', name: 'Lazo de Canela', icon: '🎀', cost: 110, theme: 'ac', themeLabel: 'Animal Crossing' },
+    { id: 'hat-royal-crown', name: 'Corona Real Dorada', icon: '👑', cost: 180, theme: 'ac', themeLabel: 'Animal Crossing' }
   ],
   clothes: [
-    { id: 'clothes-none', name: 'Pelaje Natural', icon: '✨', desc: 'Suave y esponjoso' },
-    { id: 'clothes-cardigan', name: 'Cardigan Tejido', icon: '🧣', desc: 'Inspirado en Taylor Swift' },
-    { id: 'clothes-pajamas', name: 'Pijama de Estrellas', icon: '🧸', desc: 'Calientito para dormir' }
+    { id: 'clothes-none', name: 'Pelaje Natural', icon: '🐿️', cost: 0, theme: 'basic', themeLabel: 'Básico' },
+    { id: 'clothes-pajamas', name: 'Pijama de Estrellas', icon: '✨', cost: 30, theme: 'sleep', themeLabel: 'Noche' },
+    { id: 'clothes-squirrel-scout', name: 'Chaleco Exploradora', icon: '🏕️', cost: 40, theme: 'squirrel', themeLabel: 'Ardillitas' },
+    { id: 'clothes-lavender-dress', name: 'Vestido de Lavanda', icon: '🪻', cost: 50, theme: 'lavender', themeLabel: 'Lavanda' },
+    { id: 'clothes-cardigan', name: 'Cardigan con Estrellas', icon: '⭐', cost: 85, theme: 'taylor', themeLabel: 'Taylor Swift' },
+    { id: 'clothes-taylor-lavender', name: "Vestido 'Lavender Haze'", icon: '💜', cost: 90, theme: 'taylor', themeLabel: 'Taylor Swift' },
+    { id: 'clothes-dove-jacket', name: "Chamarra 'Boyfriend'", icon: '🎸', cost: 85, theme: 'dove', themeLabel: 'Dove Cameron' },
+    { id: 'clothes-nook-aloha', name: 'Camisa Aloha Nook', icon: '🌴', cost: 95, theme: 'ac', themeLabel: 'Animal Crossing' },
+    { id: 'clothes-isabelle-vest', name: 'Suéter de Canela', icon: '🌸', cost: 105, theme: 'ac', themeLabel: 'Animal Crossing' }
   ],
   glasses: [
-    { id: 'glasses-none', name: 'Sin Lentes', icon: '👀', desc: 'Mirada brillante' },
-    { id: 'glasses-round', name: 'Lentes Dorados', icon: '👓', desc: 'Redondos de ratoncita de biblioteca' }
+    { id: 'glasses-none', name: 'Sin Lentes', icon: '👀', cost: 0, theme: 'basic', themeLabel: 'Básico' },
+    { id: 'glasses-round', name: 'Lentes de Lectora', icon: '👓', cost: 15, theme: 'basic', themeLabel: 'Clásico' },
+    { id: 'glasses-monocle', name: 'Monóculo Detective', icon: '🔍', cost: 60, theme: 'squirrel', themeLabel: 'Ardillitas' },
+    { id: 'glasses-dove-shades', name: 'Gafas Noir Ovaladas', icon: '🕶️', cost: 65, theme: 'dove', themeLabel: 'Dove Cameron' },
+    { id: 'glasses-taylor-heart', name: "Lentes Corazón '22'", icon: '❤️', cost: 70, theme: 'taylor', themeLabel: 'Taylor Swift' },
+    { id: 'glasses-brewster', name: 'Gafas Fígaro Café', icon: '☕', cost: 80, theme: 'ac', themeLabel: 'Animal Crossing' }
   ]
 };
 
@@ -2780,6 +2808,22 @@ function playTamaSound(type) {
         osc.start(now + delay);
         osc.stop(now + delay + 0.1);
       });
+    } else if (type === 'sip') {
+      // Delicado sorbo de té tibio
+      [0, 0.13].forEach((delay, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        const startFreq = idx === 0 ? 680 : 820;
+        osc.frequency.setValueAtTime(startFreq, now + delay);
+        osc.frequency.exponentialRampToValueAtTime(startFreq * 1.25, now + delay + 0.08);
+        gain.gain.setValueAtTime(0.14, now + delay);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.1);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + delay);
+        osc.stop(now + delay + 0.12);
+      });
     } else if (type === 'chirp') {
       // Voz balbuceada estilo Animalese
       const tones = [587.33, 698.46, 523.25, 783.99];
@@ -2809,6 +2853,47 @@ function playTamaSound(type) {
         osc.start(now + i * 0.1);
         osc.stop(now + i * 0.1 + 0.4);
       });
+    } else if (type === 'coin') {
+      // Campanita de moneda Animal Crossing
+      [987.77, 1318.51].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + i * 0.08);
+        gain.gain.setValueAtTime(0.18, now + i * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.2);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + i * 0.08);
+        osc.stop(now + i * 0.08 + 0.22);
+      });
+    } else if (type === 'combo') {
+      // Escala de combo ascendente
+      [587.33, 739.99, 880, 1174.66].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, now + i * 0.06);
+        gain.gain.setValueAtTime(0.18, now + i * 0.06);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.16);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + i * 0.06);
+        osc.stop(now + i * 0.06 + 0.18);
+      });
+    } else if (type === 'thud') {
+      // Choque sordo con rama seca
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(140, now);
+      osc.frequency.exponentialRampToValueAtTime(50, now + 0.15);
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.18);
     } else if (type === 'snore') {
       // Respiración relajante de noche
       const osc = ctx.createOscillator();
@@ -2823,7 +2908,7 @@ function playTamaSound(type) {
       osc.start(now);
       osc.stop(now + 0.55);
     } else if (type === 'catch') {
-      // Moneda de bellota en el minijuego
+      // Bellota atrapada en el minijuego
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sine';
@@ -2984,6 +3069,13 @@ function switchNookMode(mode) {
     if (timeBadge) timeBadge.style.display = 'flex';
     if (nuezBadge) nuezBadge.style.display = 'none';
 
+    // Cerrar cualquier modal que pudiera estar abierto
+    closeSnackMenu();
+    closeWardrobeModal();
+    quitMiniGame();
+    toggleRoomSelectorModal(false);
+    setNookModalState(false);
+
     // Restaurar reloj y momento del día
     updateZakiaSky();
   }
@@ -3025,17 +3117,61 @@ function setSquirrelExpression(expr) {
   }
 }
 
+// Controlador de visibilidad de modales en el marco de la ventana
+function setNookModalState(isOpen) {
+  const nook = document.getElementById('windowNook');
+  if (nook) {
+    nook.classList.toggle('modal-overlay-open', !!isOpen);
+  }
+}
+window.setNookModalState = setNookModalState;
+
+// Partículas aromáticas de lavanda flotante
+function spawnLavenderBlossomParticles(count = 6) {
+  const stage = document.getElementById('stageParticlesLayer') || document.getElementById('tamagotchiStage');
+  if (!stage) return;
+  const icons = ['🪻', '🌸', '✨', '💜'];
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('span');
+    p.className = 'lavender-blossom-particle';
+    p.textContent = icons[Math.floor(Math.random() * icons.length)];
+    p.style.left = `calc(50% + ${(Math.random() * 40 - 20)}px)`;
+    p.style.bottom = `95px`;
+    p.style.setProperty('--rx', `${(Math.random() * 120 - 60)}px`);
+    p.style.setProperty('--rot', `${(Math.random() * 90 - 45)}deg`);
+    p.style.animationDelay = `${(i * 0.16)}s`;
+    stage.appendChild(p);
+    setTimeout(() => p.remove(), 2400);
+  }
+}
+
 // Controlador del objeto sostenido en manitas
 function setSquirrelHeldItem(itemKey) {
-  const itemBook = document.getElementById('itemBook');
-  const itemAcorn = document.getElementById('itemAcorn');
-  const itemTea = document.getElementById('itemTea');
-  const itemMuffin = document.getElementById('itemMuffin');
+  const items = {
+    book: document.getElementById('itemBook'),
+    bellota: document.getElementById('itemAcorn'),
+    acorn: document.getElementById('itemAcorn'),
+    nuez: document.getElementById('itemGoldNut'),
+    te: document.getElementById('itemTea'),
+    tea: document.getElementById('itemTea'),
+    cafe: document.getElementById('itemCoffee'),
+    coffee: document.getElementById('itemCoffee'),
+    muffin: document.getElementById('itemBlackberryCake'),
+    galletas: document.getElementById('itemCookies'),
+    cookies: document.getElementById('itemCookies'),
+    macarons: document.getElementById('itemMacarons'),
+    banquete: document.getElementById('itemFeast'),
+    feast: document.getElementById('itemFeast')
+  };
 
-  if (itemBook) itemBook.style.display = (itemKey === 'book') ? 'inline' : 'none';
-  if (itemAcorn) itemAcorn.style.display = (itemKey === 'acorn' || itemKey === 'bellota' || itemKey === 'nuez') ? 'inline' : 'none';
-  if (itemTea) itemTea.style.display = (itemKey === 'tea' || itemKey === 'te') ? 'inline' : 'none';
-  if (itemMuffin) itemMuffin.style.display = (itemKey === 'muffin') ? 'inline' : 'none';
+  // Ocultar todos los objetos sostenidos
+  Object.values(items).forEach(el => {
+    if (el) el.style.display = 'none';
+  });
+
+  if (itemKey && itemKey !== 'none' && items[itemKey]) {
+    items[itemKey].style.display = 'inline';
+  }
 }
 
 // Seguimiento interactivo con la mirada y la cabecita
@@ -3088,9 +3224,14 @@ function renderSquirrelUI() {
   if (nuezName) nuezName.textContent = s.name || 'Nuez';
   if (nuezLevel) nuezLevel.textContent = `Nivel ${s.level || 1} (${s.title || 'Amiga Fiel'})`;
 
-  // Actualizar Contador de Bellotas en la cabecera
+  // Actualizar Contadores de Bellotas en la cabecera y en los modales
+  const acornCount = s.acorns ?? 20;
   const acornEl = document.getElementById('tamagotchiAcornCount');
-  if (acornEl) acornEl.textContent = s.acorns ?? 20;
+  const snackBalEl = document.getElementById('snackAcornBalance');
+  const wardrobeBalEl = document.getElementById('wardrobeAcornBalance');
+  if (acornEl) acornEl.textContent = acornCount;
+  if (snackBalEl) snackBalEl.textContent = acornCount;
+  if (wardrobeBalEl) wardrobeBalEl.textContent = acornCount;
 
   // Actualizar Barras de Estado
   const barHunger = document.getElementById('barHunger');
@@ -3107,23 +3248,69 @@ function renderSquirrelUI() {
   if (stage) stage.setAttribute('data-room', s.room || 'cottage_room');
 
   // Actualizar Capas SVG del Guardarropa (Sombreros, Ropa, Lentes)
-  const hatLavender = document.getElementById('svgHatLavender');
-  const hatBeret = document.getElementById('svgHatBeret');
-  const hatBeanie = document.getElementById('svgHatBeanie');
-  const hatNightcap = document.getElementById('svgHatNightcap');
+  const equipped = s.equipped || {};
+  const isSleeping = !!s.isSleeping;
 
-  if (hatLavender) hatLavender.style.display = (s.equipped?.hat === 'hat-lavender') ? 'inline' : 'none';
-  if (hatBeret) hatBeret.style.display = (s.equipped?.hat === 'hat-beret') ? 'inline' : 'none';
-  if (hatBeanie) hatBeanie.style.display = (s.equipped?.hat === 'hat-beanie') ? 'inline' : 'none';
-  if (hatNightcap) hatNightcap.style.display = (s.equipped?.hat === 'hat-nightcap' || s.isSleeping) ? 'inline' : 'none';
+  // Sombreros
+  const hatMap = {
+    'hat-lavender': 'svgHatLavender',
+    'hat-beret': 'svgHatBeret',
+    'hat-beanie': 'svgHatBeanie',
+    'hat-nightcap': 'svgHatNightcap',
+    'hat-taylor-red': 'svgHatTaylorRed',
+    'hat-dove-noir': 'svgHatDoveNoir',
+    'hat-squirrel-ears': 'svgHatSquirrelEars',
+    'hat-nook-inc': 'svgHatNookInc',
+    'hat-isabelle-ribbon': 'svgHatIsabelleRibbon',
+    'hat-royal-crown': 'svgHatRoyalCrown'
+  };
 
-  const glassesRound = document.getElementById('svgGlassesRound');
-  if (glassesRound) glassesRound.style.display = (s.equipped?.glasses === 'glasses-round') ? 'inline' : 'none';
+  Object.entries(hatMap).forEach(([key, svgId]) => {
+    const el = document.getElementById(svgId);
+    if (!el) return;
+    if (key === 'hat-nightcap' && isSleeping) {
+      el.style.display = 'inline';
+    } else {
+      el.style.display = (equipped.hat === key && !isSleeping) ? 'inline' : 'none';
+    }
+  });
 
-  const clothesCardigan = document.getElementById('svgClothesCardigan');
-  const clothesPajamas = document.getElementById('svgClothesPajamas');
-  if (clothesCardigan) clothesCardigan.style.display = (s.equipped?.clothes === 'clothes-cardigan' && !s.isSleeping) ? 'inline' : 'none';
-  if (clothesPajamas) clothesPajamas.style.display = (s.equipped?.clothes === 'clothes-pajamas' || s.isSleeping) ? 'inline' : 'none';
+  // Ropa
+  const clothesMap = {
+    'clothes-cardigan': 'svgClothesCardigan',
+    'clothes-pajamas': 'svgClothesPajamas',
+    'clothes-lavender-dress': 'svgClothesLavenderDress',
+    'clothes-taylor-lavender': 'svgClothesTaylorLavender',
+    'clothes-dove-jacket': 'svgClothesDoveJacket',
+    'clothes-squirrel-scout': 'svgClothesSquirrelScout',
+    'clothes-nook-aloha': 'svgClothesNookAloha',
+    'clothes-isabelle-vest': 'svgClothesIsabelleVest'
+  };
+
+  Object.entries(clothesMap).forEach(([key, svgId]) => {
+    const el = document.getElementById(svgId);
+    if (!el) return;
+    if (key === 'clothes-pajamas' && isSleeping) {
+      el.style.display = 'inline';
+    } else {
+      el.style.display = (equipped.clothes === key && !isSleeping) ? 'inline' : 'none';
+    }
+  });
+
+  // Lentes
+  const glassesMap = {
+    'glasses-round': 'svgGlassesRound',
+    'glasses-taylor-heart': 'svgGlassesTaylorHeart',
+    'glasses-dove-shades': 'svgGlassesDoveShades',
+    'glasses-brewster': 'svgGlassesBrewster',
+    'glasses-monocle': 'svgGlassesMonocle'
+  };
+
+  Object.entries(glassesMap).forEach(([key, svgId]) => {
+    const el = document.getElementById(svgId);
+    if (!el) return;
+    el.style.display = (equipped.glasses === key && !isSleeping) ? 'inline' : 'none';
+  });
 
   // Expresión y Estado de Sueño
   const sleepIcon = document.getElementById('sleepBtnIcon');
@@ -3155,6 +3342,8 @@ function handlePetSquirrel(e) {
   if (s.isSleeping) {
     // Despertar con un bostezo tierno
     s.isSleeping = false;
+    const stage = document.getElementById('tamagotchiStage');
+    if (stage) stage.classList.remove('is-sleeping');
     setSquirrelExpression('yawn');
     playTamaSound('chirp');
     showBubbleDialogue("Mmm... ¡Bostecito! ¡Qué lindo despertar con tus caricias!");
@@ -3232,102 +3421,204 @@ function showBubbleDialogue(text) {
 }
 
 // Menú de Snacks / Alimentación
+function renderSnackMenu() {
+  const container = document.getElementById('snackGridContainer');
+  const balEl = document.getElementById('snackAcornBalance');
+  if (!container || !currentSquirrel) return;
+
+  const acorns = currentSquirrel.acorns || 0;
+  if (balEl) balEl.textContent = acorns;
+
+  container.innerHTML = SNACK_CATALOG.map(snack => {
+    const isFree = snack.cost === 0;
+    const canAfford = isFree || acorns >= snack.cost;
+    const priceText = isFree ? 'Gratis' : `${snack.cost} 🌰`;
+    return `
+      <div class="snack-card-item ${canAfford ? '' : 'cant-afford'}" onclick="feedSquirrel('${snack.id}')">
+        <span class="snack-card-icon">${snack.icon}</span>
+        <div class="snack-card-info">
+          <span class="snack-card-title">${snack.name}</span>
+          <span class="snack-card-boost">${snack.boost}</span>
+        </div>
+        <span class="snack-card-price-pill ${isFree ? 'free' : 'paid'}">${priceText}</span>
+      </div>
+    `;
+  }).join('');
+}
+
 function openSnackMenu() {
+  setNookModalState(true);
   const menu = document.getElementById('snackMenu');
-  if (menu) menu.style.display = 'flex';
+  if (menu) {
+    renderSnackMenu();
+    menu.style.display = 'flex';
+  }
   playTamaSound('chirp');
 }
 
 function closeSnackMenu() {
   const menu = document.getElementById('snackMenu');
   if (menu) menu.style.display = 'none';
+  setNookModalState(false);
 }
 
 function feedSquirrel(snackKey) {
   if (!currentSquirrel) loadActiveSquirrel();
   const s = currentSquirrel;
 
-  const costs = { bellota: 0, nuez: 2, te: 2, muffin: 4 };
-  const cost = costs[snackKey] || 0;
+  const snack = SNACK_CATALOG.find(it => it.id === snackKey);
+  if (!snack) return;
 
+  const cost = snack.cost || 0;
   if (cost > (s.acorns || 0)) {
-    alert(`¡Necesitas ${cost} bellotas 🌰 para este snack! Puedes conseguir más leyendo libros o jugando en el minijuego.`);
+    showBubbleDialogue(`¡Te faltan bellotas! Cuesta ${cost} 🌰 y tienes ${s.acorns || 0} 🌰. ¡Lee libros o juega en el minijuego! 🎮`);
+    playTamaSound('thud');
     return;
   }
 
   s.acorns = Math.max(0, (s.acorns || 0) - cost);
+  closeSnackMenu();
 
-  // Nuez sostiene la comida en sus manitas y empieza a masticar
+  // Nuez sostiene la comida en sus manitas
   setSquirrelHeldItem(snackKey);
-  setSquirrelExpression('eating');
-  playTamaSound('eat');
 
-  // Animación de masticar
-  setTimeout(() => playTamaSound('eat'), 350);
-  setTimeout(() => playTamaSound('eat'), 700);
+  if (snackKey === 'te') {
+    // ANIMACIÓN ESPECIAL DE BEBER TÉ DE LAVANDA
+    const wrapper = document.getElementById('tamagotchiMascotWrapper');
+    if (wrapper) wrapper.classList.add('sipping-tea');
 
-  if (snackKey === 'bellota') {
-    s.hunger = Math.min(100, (s.hunger || 0) + 25);
-    showBubbleDialogue("¡Crunch crunch! ¡Qué bellota tan crujiente y dulce! 🌰✨");
-  } else if (snackKey === 'nuez') {
-    s.hunger = Math.min(100, (s.hunger || 0) + 45);
-    s.affection = Math.min(100, (s.affection || 0) + 12);
-    showBubbleDialogue("¡Una nuez dorada! ¡Mi favorita de todo el bosque! 🥜💖");
-  } else if (snackKey === 'te') {
-    s.energy = Math.min(100, (s.energy || 0) + 35);
-    s.affection = Math.min(100, (s.affection || 0) + 15);
-    showBubbleDialogue("¡Ahhh! Té de lavanda calientito... ¡Me da mucha energía para leer! 🫖🌿");
-  } else if (snackKey === 'muffin') {
-    s.hunger = Math.min(100, (s.hunger || 0) + 60);
+    setSquirrelExpression('love');
+    playTamaSound('sip');
+    setTimeout(() => playTamaSound('sip'), 500);
+    spawnLavenderBlossomParticles(7);
+
+    s.energy = Math.min(100, (s.energy || 0) + 40);
     s.affection = Math.min(100, (s.affection || 0) + 25);
-    showBubbleDialogue("¡Qué rico muffin de zarzamora! ¡Eres el mejor cocinero del mundo! 🧁🎉");
+    showBubbleDialogue("Mmm... ¡Qué aroma tan reconfortante a lavanda silvestre! 🪻 Siento una paz maravillosa mientras leo... ✨");
+
+    setTimeout(() => {
+      if (wrapper) wrapper.classList.remove('sipping-tea');
+      setSquirrelExpression('happy');
+      const svg = document.getElementById('nuezLivingSvg');
+      if (svg) {
+        svg.classList.add('hop-joy');
+        setTimeout(() => svg.classList.remove('hop-joy'), 480);
+      }
+      showBubbleDialogue("¡Ahhh! Delicioso... Me llenó el corazoncito de calma y energía 💜");
+      renderSquirrelUI();
+    }, 2400);
+
+    setTimeout(() => {
+      if (!currentSquirrel.isSleeping) {
+        setSquirrelHeldItem('book');
+        setSquirrelExpression('normal');
+      }
+    }, 4200);
+
+  } else {
+    // ANIMACIÓN DE MASTICAR SNACK
+    setSquirrelExpression('eating');
+    playTamaSound('eat');
+    setTimeout(() => playTamaSound('eat'), 350);
+    setTimeout(() => playTamaSound('eat'), 700);
+
+    // Ajuste de estadísticas y diálogo personalizado
+    if (snackKey === 'bellota') {
+      s.hunger = Math.min(100, (s.hunger || 0) + 25);
+      showBubbleDialogue("¡Crunch crunch! ¡Qué bellota tan crujiente y dulce! 🌰✨");
+    } else if (snackKey === 'nuez') {
+      s.hunger = Math.min(100, (s.hunger || 0) + 45);
+      s.affection = Math.min(100, (s.affection || 0) + 15);
+      showBubbleDialogue("¡Una nuez dorada tostada! ¡Mi favorita del bosque! 🥜💖");
+    } else if (snackKey === 'cafe') {
+      s.energy = Math.min(100, (s.energy || 0) + 60);
+      s.affection = Math.min(100, (s.affection || 0) + 15);
+      showBubbleDialogue("¡Qué café tan espumoso! ¡Listo para leer 100 páginas más! ☕✨");
+    } else if (snackKey === 'muffin') {
+      s.hunger = Math.min(100, (s.hunger || 0) + 65);
+      s.affection = Math.min(100, (s.affection || 0) + 30);
+      showBubbleDialogue("¡Mmm! ¡Muffin de moras recién horneado! ¡Delicioso! 🧁💜");
+    } else if (snackKey === 'galletas') {
+      s.hunger = Math.min(100, (s.hunger || 0) + 75);
+      s.affection = Math.min(100, (s.affection || 0) + 35);
+      showBubbleDialogue("¡Galletitas con miel y lavanda! ¡Crujientes y perfectas! 🍪🌸");
+    } else if (snackKey === 'macarons') {
+      s.hunger = Math.min(100, (s.hunger || 0) + 85);
+      s.affection = Math.min(100, (s.affection || 0) + 45);
+      showBubbleDialogue("¡Macarons parisinos! ¡Qué elegancia de merienda literaria! 🍬✨");
+    } else if (snackKey === 'banquete') {
+      s.hunger = 100;
+      s.energy = 100;
+      s.affection = Math.min(100, (s.affection || 0) + 60);
+      showBubbleDialogue("🎉 ¡EL GRAN BANQUETE REAL! ¡Esto es una fiesta inolvidable! 🧺🌰🍇");
+    }
+
+    setTimeout(() => {
+      setSquirrelExpression('happy');
+      const svg = document.getElementById('nuezLivingSvg');
+      if (svg) {
+        svg.classList.add('hop-joy');
+        setTimeout(() => svg.classList.remove('hop-joy'), 480);
+      }
+      renderSquirrelUI();
+    }, 1600);
+
+    setTimeout(() => {
+      if (!currentSquirrel.isSleeping) {
+        setSquirrelHeldItem('book');
+        setSquirrelExpression('normal');
+      }
+    }, 3600);
   }
 
-  closeSnackMenu();
   saveActiveSquirrel();
-
-  // Después de masticar, Nuez traga feliz, sonríe y da un saltito
-  setTimeout(() => {
-    setSquirrelExpression('happy');
-    const svg = document.getElementById('nuezLivingSvg');
-    if (svg) {
-      svg.classList.add('hop-joy');
-      setTimeout(() => svg.classList.remove('hop-joy'), 480);
-    }
-    renderSquirrelUI();
-  }, 1600);
-
-  // Vuelve a su librito después de unos segundos
-  setTimeout(() => {
-    if (!currentSquirrel.isSleeping) {
-      setSquirrelHeldItem('book');
-      setSquirrelExpression('normal');
-    }
-  }, 3400);
+  renderSquirrelUI();
 }
 
-// Dormir / Despertar
+// Dormir / Despertar con animación lenta hacia su camita rústica
+let isSleepTransitioning = false;
 function handleToggleSleep() {
+  if (isSleepTransitioning) return;
   if (!currentSquirrel) loadActiveSquirrel();
   const s = currentSquirrel;
+  const stage = document.getElementById('tamagotchiStage');
 
+  isSleepTransitioning = true;
   s.isSleeping = !s.isSleeping;
 
   if (s.isSleeping) {
+    // SECUENCIA LENTA DE IRSE A DORMIR A SU CAMA
     setSquirrelHeldItem('none');
-    setSquirrelExpression('sleeping');
-    playTamaSound('snore');
-    showBubbleDialogue("Zzz... Buenas noches, soñaré con cuentos y mágicas aventuras...");
-    s.energy = Math.min(100, (s.energy || 0) + 25);
-  } else {
     setSquirrelExpression('yawn');
     playTamaSound('chirp');
-    showBubbleDialogue("¡Buenos días! ¡Qué bien descansé! ¿Qué vamos a leer hoy?");
+    showBubbleDialogue("Yaaawn... 🥱 Qué sueñito tan rico... Me voy a mi camita de madera...");
+
+    // Activar clase para que se traslade suavemente hacia la cama a la izquierda
+    if (stage) stage.classList.add('is-sleeping');
+
+    setTimeout(() => {
+      setSquirrelExpression('sleeping');
+      playTamaSound('snore');
+      showBubbleDialogue("Zzz... Buenas noches, soñaré con cuentos y mágicas aventuras... 🌙 ✨");
+      s.energy = Math.min(100, (s.energy || 0) + 30);
+      saveActiveSquirrel();
+      renderSquirrelUI();
+      isSleepTransitioning = false;
+    }, 1600);
+
+  } else {
+    // DESPERTAR
+    if (stage) stage.classList.remove('is-sleeping');
+    setSquirrelExpression('yawn');
+    playTamaSound('chirp');
+    showBubbleDialogue("¡Buenos días! ☀️ ¡Qué bien descansé en mi camita de cabaña! ¿Qué vamos a leer hoy?");
 
     setTimeout(() => {
       setSquirrelHeldItem('book');
       setSquirrelExpression('happy');
+      saveActiveSquirrel();
       renderSquirrelUI();
+      isSleepTransitioning = false;
     }, 1400);
   }
 
@@ -3385,9 +3676,9 @@ function toggleRoomSelectorModal(force) {
   if (!menu) return;
   const isOpening = force !== undefined ? force : menu.style.display === 'none';
   menu.style.display = isOpening ? 'flex' : 'none';
+  setNookModalState(isOpening);
   if (isOpening) {
     playTamaSound('chirp');
-    // Marcar activo
     const currentRoom = currentSquirrel?.room || 'cottage_room';
     document.querySelectorAll('.room-option-card').forEach(card => {
       card.classList.toggle('active', card.getAttribute('data-room-id') === currentRoom);
@@ -3405,8 +3696,8 @@ function selectSquirrelRoom(roomId) {
   toggleRoomSelectorModal(false);
 
   const roomNames = {
-    cottage_room: "¡Qué acogedora es nuestra casita con chimenea! 🏡🔥",
-    garden_bridge: "¡El arroyo y las flores huelen delicioso! 🌸🌿",
+    cottage_room: "¡Qué acogedora es nuestra cabaña de madera con su camita y chimenea! 🏡🔥",
+    garden_bridge: "¡El arroyo y las flores de lavanda huelen delicioso! 🌸🌿",
     tea_nook: "¡Me encanta ver la lluvia mientras tomamos té! 🪟🌧️",
     starlit_roof: "¡Cuántas estrellas! ¡Busquemos constelaciones! 🌌✨"
   };
@@ -3417,6 +3708,7 @@ function selectSquirrelRoom(roomId) {
 function openWardrobeModal() {
   const menu = document.getElementById('wardrobeMenu');
   if (menu) {
+    setNookModalState(true);
     menu.style.display = 'flex';
     playTamaSound('chirp');
     renderWardrobeItems();
@@ -3426,6 +3718,7 @@ function openWardrobeModal() {
 function closeWardrobeModal() {
   const menu = document.getElementById('wardrobeMenu');
   if (menu) menu.style.display = 'none';
+  setNookModalState(false);
 }
 
 function switchWardrobeTab(tabKey) {
@@ -3439,7 +3732,15 @@ function switchWardrobeTab(tabKey) {
 
 function renderWardrobeItems() {
   const container = document.getElementById('wardrobeItemsContainer');
+  const balEl = document.getElementById('wardrobeAcornBalance');
   if (!container || !currentSquirrel) return;
+
+  if (!currentSquirrel.unlockedWardrobe) {
+    currentSquirrel.unlockedWardrobe = ['hat-none', 'clothes-none', 'glasses-none'];
+  }
+
+  const acorns = currentSquirrel.acorns || 0;
+  if (balEl) balEl.textContent = acorns;
 
   const items = WARDROBE_CATALOG[activeWardrobeTab] || [];
   const currentEquipped = currentSquirrel.equipped || {};
@@ -3450,11 +3751,24 @@ function renderWardrobeItems() {
     if (activeWardrobeTab === 'clothes') isEquipped = currentEquipped.clothes === item.id;
     if (activeWardrobeTab === 'glasses') isEquipped = currentEquipped.glasses === item.id;
 
+    const isOwned = item.cost === 0 || currentSquirrel.unlockedWardrobe.includes(item.id);
+    let statusClass = 'status-buy';
+    let statusText = `${item.cost} 🌰`;
+
+    if (isEquipped) {
+      statusClass = 'status-equipped';
+      statusText = '✓ Puesto';
+    } else if (isOwned) {
+      statusClass = 'status-wear';
+      statusText = 'Poner';
+    }
+
     return `
       <div class="wardrobe-item-card ${isEquipped ? 'equipped' : ''}" onclick="equipWardrobeItem('${activeWardrobeTab}', '${item.id}')">
+        <span class="wardrobe-item-theme theme-${item.theme || 'basic'}">${item.themeLabel || 'Estilo'}</span>
         <span class="wardrobe-item-icon">${item.icon}</span>
         <span class="wardrobe-item-name">${item.name}</span>
-        <span class="wardrobe-item-status">${isEquipped ? '✓ Puesto' : 'Poner'}</span>
+        <span class="wardrobe-item-status ${statusClass}">${statusText}</span>
       </div>
     `;
   }).join('');
@@ -3463,97 +3777,198 @@ function renderWardrobeItems() {
 function equipWardrobeItem(category, itemId) {
   if (!currentSquirrel) loadActiveSquirrel();
   if (!currentSquirrel.equipped) currentSquirrel.equipped = {};
+  if (!currentSquirrel.unlockedWardrobe) {
+    currentSquirrel.unlockedWardrobe = ['hat-none', 'clothes-none', 'glasses-none'];
+  }
 
-  if (category === 'hats') currentSquirrel.equipped.hat = itemId;
-  if (category === 'clothes') currentSquirrel.equipped.clothes = itemId;
-  if (category === 'glasses') currentSquirrel.equipped.glasses = itemId;
+  const items = WARDROBE_CATALOG[category] || [];
+  const item = items.find(it => it.id === itemId);
+  if (!item) return;
 
-  playTamaSound('chirp');
-  saveActiveSquirrel();
-  renderSquirrelUI();
-  renderWardrobeItems();
-  showBubbleDialogue("¡Mira cómo me veo! ¿Te gusta mi nuevo look? 👒✨");
+  const isOwned = item.cost === 0 || currentSquirrel.unlockedWardrobe.includes(item.id);
+
+  if (isOwned) {
+    // Si ya lo tiene comprado: equipar o desequipar si ya lo tiene puesto
+    let currentlyEquipped = false;
+    if (category === 'hats') currentlyEquipped = currentSquirrel.equipped.hat === item.id;
+    if (category === 'clothes') currentlyEquipped = currentSquirrel.equipped.clothes === item.id;
+    if (category === 'glasses') currentlyEquipped = currentSquirrel.equipped.glasses === item.id;
+
+    if (currentlyEquipped && item.id !== `${category}-none`) {
+      // Quitar accesorio
+      if (category === 'hats') currentSquirrel.equipped.hat = 'hat-none';
+      if (category === 'clothes') currentSquirrel.equipped.clothes = 'clothes-none';
+      if (category === 'glasses') currentSquirrel.equipped.glasses = 'glasses-none';
+      showBubbleDialogue(`¡Te quitaste ${item.name}! Nuez vuelve a su look natural. ✨`);
+    } else {
+      if (category === 'hats') currentSquirrel.equipped.hat = item.id;
+      if (category === 'clothes') currentSquirrel.equipped.clothes = item.id;
+      if (category === 'glasses') currentSquirrel.equipped.glasses = item.id;
+      showBubbleDialogue(`¡Mira qué lindo me queda ${item.name}! 👒✨`);
+    }
+
+    playTamaSound('chirp');
+    saveActiveSquirrel();
+    renderSquirrelUI();
+    renderWardrobeItems();
+
+  } else {
+    // Intentar comprar con bellotas
+    const cost = item.cost || 0;
+    const currentAcorns = currentSquirrel.acorns || 0;
+
+    if (currentAcorns >= cost) {
+      currentSquirrel.acorns -= cost;
+      currentSquirrel.unlockedWardrobe.push(item.id);
+
+      // Auto-equipar al comprar
+      if (category === 'hats') currentSquirrel.equipped.hat = item.id;
+      if (category === 'clothes') currentSquirrel.equipped.clothes = item.id;
+      if (category === 'glasses') currentSquirrel.equipped.glasses = item.id;
+
+      playTamaSound('coin');
+      setTimeout(() => playTamaSound('levelUp'), 200);
+
+      showBubbleDialogue(`¡Compraste ${item.name}! 🎉 ¡A Nuez le fascina su nuevo accesorio! ✨`);
+      saveActiveSquirrel();
+      renderSquirrelUI();
+      renderWardrobeItems();
+
+    } else {
+      playTamaSound('thud');
+      showBubbleDialogue(`¡Te faltan bellotas! Cuesta ${cost} 🌰 y tienes ${currentAcorns} 🌰. ¡Lee libros o juega en la Lluvia de Bellotas! 🎮`);
+    }
+  }
 }
 
-// Minijuego: Lluvia de Bellotas
+// Minijuego Arcade: Lluvia de Bellotas
+miniGameScore = 0;
+let miniGameAcornsWon = 0;
+let miniGameCombo = 1;
+let miniGameStreak = 0;
+let miniGameMaxStreak = 0;
+let isLavenderFrenzy = false;
+
 function startAcornMiniGame() {
   const screen = document.getElementById('minigameScreen');
   if (!screen) return;
 
+  setNookModalState(true);
+  closeVictoryModal(false);
+
   miniGameScore = 0;
+  miniGameAcornsWon = 0;
+  miniGameCombo = 1;
+  miniGameStreak = 0;
+  miniGameMaxStreak = 0;
   miniGameTimeLeft = 30;
+  isLavenderFrenzy = false;
+
   screen.style.display = 'flex';
   playTamaSound('chirp');
 
   const scoreEl = document.getElementById('minigameScoreText');
   const timerEl = document.getElementById('minigameTimerText');
+  const comboEl = document.getElementById('minigameComboBadge');
   if (scoreEl) scoreEl.textContent = '0';
   if (timerEl) timerEl.textContent = '30s';
+  if (comboEl) comboEl.textContent = 'Combo x1 🔥';
 
   const canvas = document.getElementById('minigameCanvasArea');
   const catcher = document.getElementById('minigameCatcher');
   if (!canvas || !catcher) return;
 
   // Limpiar objetos anteriores
-  canvas.querySelectorAll('.minigame-falling-item').forEach(el => el.remove());
+  canvas.querySelectorAll('.minigame-falling-item, .minigame-floating-score').forEach(el => el.remove());
 
-  // Movimiento del receptor con el cursor / touch
-  function handleMove(e) {
+  // Movimiento receptivo con cursor / touch y teclado
+  let catcherX = canvas.clientWidth / 2;
+  function updateCatcherPos(x) {
     const rect = canvas.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const x = Math.max(25, Math.min(rect.width - 25, clientX - rect.left));
-    catcher.style.left = `${x}px`;
+    catcherX = Math.max(30, Math.min(rect.width - 30, x));
+    catcher.style.left = `${catcherX}px`;
   }
 
-  canvas.onmousemove = handleMove;
-  canvas.ontouchmove = handleMove;
+  canvas.onmousemove = (e) => {
+    const rect = canvas.getBoundingClientRect();
+    updateCatcherPos(e.clientX - rect.left);
+  };
+  canvas.ontouchmove = (e) => {
+    const rect = canvas.getBoundingClientRect();
+    if (e.touches && e.touches[0]) {
+      updateCatcherPos(e.touches[0].clientX - rect.left);
+    }
+  };
 
-  // Caída periódica de bellotas y hojas
+  window.onkeydown = (e) => {
+    if (screen.style.display !== 'flex') return;
+    if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+      updateCatcherPos(catcherX - 25);
+    } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+      updateCatcherPos(catcherX + 25);
+    }
+  };
+
+  // Caída de items
   miniGameInterval = setInterval(() => {
     const rect = canvas.getBoundingClientRect();
     if (rect.width <= 0) return;
 
     const item = document.createElement('div');
     item.className = 'minigame-falling-item';
-    const isAcorn = Math.random() > 0.25;
-    item.textContent = isAcorn ? '🌰' : '🍂';
-    item.dataset.type = isAcorn ? 'acorn' : 'leaf';
 
-    const spawnX = Math.random() * (rect.width - 35) + 10;
+    const rand = Math.random();
+    let type = 'acorn';
+    let icon = '🌰';
+
+    if (isLavenderFrenzy) {
+      if (rand < 0.45) { type = 'gold_nut'; icon = '🥜'; }
+      else { type = 'acorn'; icon = '🌰'; }
+    } else {
+      if (rand < 0.58) { type = 'acorn'; icon = '🌰'; }
+      else if (rand < 0.76) { type = 'gold_nut'; icon = '🥜'; }
+      else if (rand < 0.88) { type = 'lavender'; icon = '🪻'; }
+      else { type = 'leaf'; icon = '🍂'; }
+    }
+
+    item.textContent = icon;
+    item.dataset.type = type;
+
+    const spawnX = Math.random() * (rect.width - 40) + 15;
     item.style.left = `${spawnX}px`;
-    item.style.animationDuration = `${(Math.random() * 1.2 + 1.6).toFixed(2)}s`;
+
+    // Velocidad progresiva a medida que avanza el reloj
+    const speedRatio = Math.max(0.7, miniGameTimeLeft / 30);
+    const fallDuration = (Math.random() * 0.4 + 1.2) * speedRatio;
+    item.style.animationDuration = `${fallDuration.toFixed(2)}s`;
     canvas.appendChild(item);
 
-    // Detección de colisión simple
+    // Detección de colisión
     const checkCollision = setInterval(() => {
       const cRect = catcher.getBoundingClientRect();
       const iRect = item.getBoundingClientRect();
 
       if (
-        iRect.bottom >= cRect.top + 5 &&
+        iRect.bottom >= cRect.top + 8 &&
         iRect.top <= cRect.bottom &&
         iRect.right >= cRect.left &&
         iRect.left <= cRect.right
       ) {
         clearInterval(checkCollision);
-        if (item.dataset.type === 'acorn') {
-          miniGameScore += 1;
-          if (scoreEl) scoreEl.textContent = miniGameScore;
-          playTamaSound('catch');
-        }
+        handleItemCatch(type, item, canvas);
         item.remove();
       } else if (iRect.top > rect.bottom) {
         clearInterval(checkCollision);
         item.remove();
       }
-    }, 40);
+    }, 35);
 
     setTimeout(() => {
       clearInterval(checkCollision);
       if (item.parentNode) item.remove();
-    }, 3200);
+    }, 2800);
 
-  }, 650);
+  }, 520);
 
   // Cuenta regresiva
   miniGameTimer = setInterval(() => {
@@ -3566,6 +3981,96 @@ function startAcornMiniGame() {
   }, 1000);
 }
 
+function handleItemCatch(type, itemEl, canvas) {
+  const scoreEl = document.getElementById('minigameScoreText');
+  const comboEl = document.getElementById('minigameComboBadge');
+  const timerEl = document.getElementById('minigameTimerText');
+
+  let floatText = '';
+  let floatColor = '#facc15';
+
+  if (type === 'acorn') {
+    miniGameStreak++;
+    miniGameMaxStreak = Math.max(miniGameMaxStreak, miniGameStreak);
+    updateMinigameCombo();
+
+    const pts = 10 * miniGameCombo;
+    miniGameScore += pts;
+    miniGameAcornsWon += 1;
+    floatText = `+1 🌰`;
+    floatColor = '#facc15';
+    playTamaSound('catch');
+
+  } else if (type === 'gold_nut') {
+    miniGameStreak += 2;
+    miniGameMaxStreak = Math.max(miniGameMaxStreak, miniGameStreak);
+    updateMinigameCombo();
+
+    const pts = 35 * miniGameCombo;
+    miniGameScore += pts;
+    miniGameAcornsWon += 3;
+    floatText = `+3 🥜✨`;
+    floatColor = '#f59e0b';
+    playTamaSound('coin');
+
+  } else if (type === 'lavender') {
+    miniGameStreak += 3;
+    miniGameMaxStreak = Math.max(miniGameMaxStreak, miniGameStreak);
+    updateMinigameCombo();
+
+    miniGameScore += 50 * miniGameCombo;
+    miniGameTimeLeft = Math.min(45, miniGameTimeLeft + 5);
+    if (timerEl) timerEl.textContent = `${miniGameTimeLeft}s`;
+
+    floatText = `+5s 🪻 FIEBRE!`;
+    floatColor = '#c084fc';
+    playTamaSound('levelUp');
+
+    isLavenderFrenzy = true;
+    setTimeout(() => { isLavenderFrenzy = false; }, 4000);
+
+  } else if (type === 'leaf') {
+    miniGameStreak = 0;
+    miniGameCombo = 1;
+    if (comboEl) comboEl.textContent = 'Combo x1 🔥';
+    if (miniGameAcornsWon > 0) miniGameAcornsWon -= 1;
+    floatText = `-1 🍂`;
+    floatColor = '#ef4444';
+    playTamaSound('thud');
+  }
+
+  if (scoreEl) scoreEl.textContent = miniGameAcornsWon;
+
+  // Texto flotante de recompensa
+  const itemLeft = itemEl.offsetLeft;
+  const f = document.createElement('div');
+  f.className = 'minigame-floating-score';
+  f.style.cssText = `position: absolute; left: ${itemLeft}px; bottom: 42px; font-weight: 900; font-size: 0.9rem; color: ${floatColor}; text-shadow: 0 2px 4px rgba(0,0,0,0.8); pointer-events: none; animation: floatScore 0.8s ease-out forwards;`;
+  f.textContent = floatText;
+  canvas.appendChild(f);
+  setTimeout(() => f.remove(), 800);
+}
+
+function updateMinigameCombo() {
+  const comboEl = document.getElementById('minigameComboBadge');
+  if (miniGameStreak >= 10) {
+    if (miniGameCombo !== 4) playTamaSound('combo');
+    miniGameCombo = 4;
+    if (comboEl) comboEl.textContent = 'Combo x4 ⚡ SUPER!';
+  } else if (miniGameStreak >= 6) {
+    if (miniGameCombo !== 3) playTamaSound('combo');
+    miniGameCombo = 3;
+    if (comboEl) comboEl.textContent = 'Combo x3 🔥';
+  } else if (miniGameStreak >= 3) {
+    if (miniGameCombo !== 2) playTamaSound('combo');
+    miniGameCombo = 2;
+    if (comboEl) comboEl.textContent = 'Combo x2 ✨';
+  } else {
+    miniGameCombo = 1;
+    if (comboEl) comboEl.textContent = 'Combo x1 🔥';
+  }
+}
+
 function endMiniGame() {
   clearInterval(miniGameInterval);
   clearInterval(miniGameTimer);
@@ -3574,13 +4079,39 @@ function endMiniGame() {
 
   playTamaSound('levelUp');
   if (!currentSquirrel) loadActiveSquirrel();
-  currentSquirrel.acorns = (currentSquirrel.acorns || 0) + miniGameScore;
-  currentSquirrel.affection = Math.min(100, (currentSquirrel.affection || 0) + Math.min(30, miniGameScore * 2));
+
+  const earned = Math.max(1, miniGameAcornsWon);
+  currentSquirrel.acorns = (currentSquirrel.acorns || 0) + earned;
+  currentSquirrel.affection = Math.min(100, (currentSquirrel.affection || 0) + Math.min(35, earned * 2));
   saveActiveSquirrel();
   renderSquirrelUI();
 
-  alert(`🎉 ¡Juego terminado!\n\nAtrapaste ${miniGameScore} bellotas 🌰 que se han sumado al bolso de Nuez.`);
-  quitMiniGame();
+  // Alerta moderna, animada y colorida estilo Animal Crossing (Sin alert() plano)
+  const modal = document.getElementById('minigameVictoryModal');
+  const earnedEl = document.getElementById('victoryAcornsEarned');
+  const starsEl = document.getElementById('victoryStars');
+  const scoreEl = document.getElementById('victoryScoreNum');
+  const streakEl = document.getElementById('victoryStreakNum');
+
+  if (starsEl) {
+    if (earned >= 22) starsEl.textContent = '⭐⭐⭐';
+    else if (earned >= 12) starsEl.textContent = '⭐⭐';
+    else starsEl.textContent = '⭐';
+  }
+
+  if (scoreEl) scoreEl.textContent = miniGameScore;
+  if (streakEl) streakEl.textContent = `x${miniGameMaxStreak}`;
+  if (earnedEl) earnedEl.textContent = `+${earned}`;
+
+  if (modal) modal.style.display = 'flex';
+}
+
+function closeVictoryModal(andQuit = true) {
+  const modal = document.getElementById('minigameVictoryModal');
+  if (modal) modal.style.display = 'none';
+  if (andQuit) {
+    quitMiniGame();
+  }
 }
 
 function quitMiniGame() {
@@ -3590,6 +4121,8 @@ function quitMiniGame() {
   miniGameTimer = null;
   const screen = document.getElementById('minigameScreen');
   if (screen) screen.style.display = 'none';
+  closeVictoryModal(false);
+  setNookModalState(false);
 }
 
 // Recompensa mágica cuando el lector avanza o termina libros
@@ -3618,6 +4151,22 @@ function rewardSquirrelForReading(type, title) {
     dot.style.display = 'inline-block';
   }
 }
+
+// Exportar funciones globales para los eventos onclick en HTML
+window.openSnackMenu = openSnackMenu;
+window.closeSnackMenu = closeSnackMenu;
+window.feedSquirrel = feedSquirrel;
+window.openWardrobeModal = openWardrobeModal;
+window.closeWardrobeModal = closeWardrobeModal;
+window.switchWardrobeTab = switchWardrobeTab;
+window.equipWardrobeItem = equipWardrobeItem;
+window.toggleRoomSelectorModal = toggleRoomSelectorModal;
+window.selectSquirrelRoom = selectSquirrelRoom;
+window.startAcornMiniGame = startAcornMiniGame;
+window.endMiniGame = endMiniGame;
+window.closeVictoryModal = closeVictoryModal;
+window.quitMiniGame = quitMiniGame;
+window.handlePetSquirrel = handlePetSquirrel;
 
 // Inicializar Tamagotchi al cargar la página
 document.addEventListener('DOMContentLoaded', () => {

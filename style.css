@@ -4163,25 +4163,37 @@ body.ac-theme {
 
 /* Ambiente Nocturno / Sueño en el Escenario de Nuez */
 .tamagotchi-stage.is-sleeping .stage-room-bg {
-  filter: brightness(0.82) hue-rotate(-8deg);
-  transition: filter 1s ease;
+  filter: brightness(0.68) saturate(1.2) hue-rotate(-8deg);
+  transition: filter 1.2s ease;
 }
 
 .tamagotchi-stage.is-sleeping .cozy-room-fireplace {
-  filter: drop-shadow(0 0 16px rgba(251, 146, 60, 0.85));
+  filter: drop-shadow(0 0 20px rgba(251, 146, 60, 0.95));
+}
+
+/* Ocultar tarjetas superiores y selector de modo cuando hay un modal abierto */
+.window-nook.modal-overlay-open #windowNuezBadge,
+.window-nook.modal-overlay-open #windowTimeBadge,
+.window-nook.modal-overlay-open #windowControlBar,
+.window-nook.modal-overlay-open #nookModePills {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  transform: translateY(-8px) scale(0.95);
+  transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s;
 }
 
 /* Menús Emergentes Flotantes (Snacks, Ambientes, Armario) */
 .tama-popup-menu {
   position: absolute;
-  inset: 12px;
-  background: rgba(255, 253, 248, 0.96);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 18px;
+  inset: 0;
+  background: rgba(255, 253, 248, 0.98);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 14px;
   border: 2px solid #ecd5b8;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
-  z-index: 25;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  z-index: 60;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -4189,7 +4201,7 @@ body.ac-theme {
 }
 
 @keyframes popupZoomIn {
-  from { opacity: 0; transform: scale(0.92); }
+  from { opacity: 0; transform: scale(0.94); }
   to { opacity: 1; transform: scale(1); }
 }
 
@@ -4203,6 +4215,12 @@ body.ac-theme {
   font-weight: 800;
   color: #5c3a21;
   background: #faf3ea;
+}
+
+.popup-header-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .btn-close-popup {
@@ -4222,67 +4240,91 @@ body.ac-theme {
   color: #2b1709;
 }
 
-/* Grilla de Snacks */
-.snack-grid {
+/* Grilla Moderna de Snacks con Precios y Efectos */
+.snack-grid-modern {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  padding: 10px;
+  gap: 10px;
+  padding: 12px 14px;
   overflow-y: auto;
+  flex: 1;
 }
 
-.snack-item {
+.snack-card-item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   background: #ffffff;
-  padding: 8px;
-  border-radius: 12px;
-  border: 1.5px solid #ecd5b8;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1.8px solid #ecd5b8;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
-.snack-item:hover {
-  border-color: #f59e0b;
+.snack-card-item:hover {
+  border-color: #d946ef;
   transform: translateY(-2px);
-  box-shadow: 0 3px 8px rgba(245, 158, 11, 0.22);
+  box-shadow: 0 6px 14px rgba(217, 70, 239, 0.2);
 }
 
-.snack-emoji {
-  font-size: 1.4rem;
+.snack-card-item.cant-afford {
+  opacity: 0.65;
+  background: #fbfbfc;
 }
 
-.snack-info {
+.snack-card-icon {
+  font-size: 1.6rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.snack-card-info {
   flex: 1;
   display: flex;
   flex-direction: column;
+  gap: 2px;
 }
 
-.snack-name {
-  font-size: 0.78rem;
+.snack-card-title {
+  font-size: 0.82rem;
   font-weight: 800;
-  color: #5c3a21;
+  color: #4a2810;
 }
 
-.snack-benefit {
-  font-size: 0.65rem;
+.snack-card-boost {
+  font-size: 0.68rem;
   color: #c026d3;
-  font-weight: 600;
+  font-weight: 700;
 }
 
-.snack-price {
+.snack-card-price-pill {
   font-size: 0.72rem;
   font-weight: 800;
-  color: #854d0e;
-  background: #fef3c7;
-  padding: 2px 6px;
-  border-radius: 10px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
 }
 
-.snack-price.free {
+.snack-card-price-pill.free {
   background: #dcfce7;
-  color: #166534;
+  color: #15803d;
+}
+
+.snack-card-price-pill.paid {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde047;
+}
+
+.snack-balance-pill, .wardrobe-balance-pill {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #78350f;
+  background: #fef3c7;
+  padding: 2px 9px;
+  border-radius: 12px;
+  border: 1px solid #fde047;
 }
 
 /* Grilla de Escenarios */
@@ -4378,16 +4420,18 @@ body.ac-theme {
   align-items: center;
   text-align: center;
   background: #ffffff;
-  padding: 8px;
+  padding: 8px 6px;
   border-radius: 12px;
   border: 1.5px solid #ecd5b8;
   cursor: pointer;
   transition: all 0.2s ease;
+  position: relative;
 }
 
 .wardrobe-item-card:hover {
   border-color: #d946ef;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(217, 70, 239, 0.22);
 }
 
 .wardrobe-item-card.equipped {
@@ -4395,21 +4439,59 @@ body.ac-theme {
   background: #ecfdf5;
 }
 
+.wardrobe-item-theme {
+  font-size: 0.58rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 1px 5px;
+  border-radius: 6px;
+  margin-bottom: 3px;
+}
+
+.theme-taylor { background: #fee2e2; color: #991b1b; }
+.theme-dove { background: #f4f4f5; color: #18181b; }
+.theme-ac { background: #ccfbf1; color: #0f766e; }
+.theme-lavender { background: #f3e8ff; color: #7e22ce; }
+.theme-squirrel { background: #ffedd5; color: #9a3412; }
+.theme-basic { background: #f1f5f9; color: #475569; }
+.theme-sleep { background: #e0e7ff; color: #3730a3; }
+
 .wardrobe-item-icon {
   font-size: 1.4rem;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 
 .wardrobe-item-name {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 800;
   color: #5c3a21;
+  line-height: 1.15;
+  margin-bottom: 4px;
 }
 
 .wardrobe-item-status {
   font-size: 0.65rem;
-  font-weight: 700;
-  color: #059669;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.wardrobe-item-status.status-equipped {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.wardrobe-item-status.status-wear {
+  background: #fdf4ff;
+  color: #a21caf;
+  border: 1px solid #f0abfc;
+}
+
+.wardrobe-item-status.status-buy {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde047;
 }
 
 /* Pantalla del Minijuego: Lluvia de Bellotas */
@@ -4417,10 +4499,12 @@ body.ac-theme {
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-  z-index: 35;
+  border-radius: 14px;
+  z-index: 60;
   display: flex;
   flex-direction: column;
   user-select: none;
+  overflow: hidden;
 }
 
 .minigame-header {
@@ -4435,6 +4519,16 @@ body.ac-theme {
 }
 
 .minigame-score { color: #facc15; }
+.minigame-combo-badge {
+  font-size: 0.72rem;
+  font-weight: 900;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
+  animation: pulseMusicGlow 1s infinite alternate;
+}
 .minigame-timer { color: #38bdf8; }
 
 .btn-close-minigame {
@@ -4454,6 +4548,13 @@ body.ac-theme {
   flex: 1;
   overflow: hidden;
   cursor: crosshair;
+}
+
+.minigame-sunbeams {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 10%, rgba(253, 224, 71, 0.15) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .minigame-catcher {
@@ -4489,4 +4590,345 @@ body.ac-theme {
   color: rgba(255, 255, 255, 0.75);
   font-size: 0.68rem;
   text-align: center;
+}
+
+/* Modal de Victoria del Minijuego (Estilo Animal Crossing) */
+.minigame-victory-modal {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: popupZoomIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.victory-card {
+  background: linear-gradient(160deg, #fffdfa 0%, #fef3c7 60%, #fae8ff 100%);
+  border: 3px solid #f59e0b;
+  border-radius: 20px;
+  padding: 16px 22px;
+  text-align: center;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  max-width: 320px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.victory-stars {
+  font-size: 1.8rem;
+  margin-bottom: 2px;
+  filter: drop-shadow(0 2px 8px rgba(250, 204, 21, 0.8));
+}
+
+.victory-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #78350f;
+}
+
+.victory-subtitle {
+  margin: 2px 0 10px 0;
+  font-size: 0.74rem;
+  color: #854d0e;
+  font-weight: 600;
+}
+
+.victory-acorns-box {
+  background: #ffffff;
+  border: 2px dashed #f59e0b;
+  border-radius: 14px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.victory-acorns-num {
+  font-size: 1.9rem;
+  font-weight: 900;
+  color: #b45309;
+  line-height: 1.1;
+}
+
+.victory-acorns-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #92400e;
+}
+
+.victory-stats-row {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.v-stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.v-stat-label {
+  font-size: 0.64rem;
+  color: #78350f;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.v-stat-num {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #9333ea;
+}
+
+.victory-buttons-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.btn-victory-replay, .btn-victory-done {
+  border: none;
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 800;
+  padding: 7px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn-victory-replay {
+  background: #f59e0b;
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4);
+}
+
+.btn-victory-replay:hover {
+  transform: translateY(-2px);
+  background: #d97706;
+}
+
+.btn-victory-done {
+  background: #9333ea;
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(147, 51, 234, 0.4);
+}
+
+.btn-victory-done:hover {
+  transform: translateY(-2px);
+  background: #7e22ce;
+}
+
+/* Capa de Decoración Rústica de la Cabaña */
+.cabin-decor-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tamagotchi-stage:not([data-room="cottage_room"]) .cabin-decor-layer,
+.tamagotchi-stage:not([data-room="cottage_room"]) .cozy-room-bed {
+  display: none !important;
+}
+
+/* Ventana exterior con estrellas en la pared de troncos */
+.cabin-window-back {
+  position: absolute;
+  top: 14px;
+  left: 36px;
+  width: 58px;
+  height: 64px;
+  border-radius: 28px 28px 4px 4px;
+  background: linear-gradient(180deg, #1e1b4b 0%, #312e81 60%, #4338ca 100%);
+  border: 3.5px solid #78350f;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.7), 0 3px 10px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.cabin-window-sky {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.cabin-star {
+  position: absolute;
+  color: #fef08a;
+  font-size: 8px;
+  animation: starTwinkle 2.5s infinite ease-in-out alternate;
+}
+.cabin-star.cs1 { top: 10px; left: 12px; animation-delay: 0.3s; }
+.cabin-star.cs2 { top: 22px; right: 10px; animation-delay: 1.1s; }
+
+.cabin-moon {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 11px;
+  filter: drop-shadow(0 0 6px #fde047);
+}
+
+.cabin-pine-silhouette {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 18px;
+  background: radial-gradient(circle at 40% 100%, #064e3b 0%, #022c22 80%);
+  border-radius: 60% 60% 0 0;
+}
+
+.cabin-curtain {
+  position: absolute;
+  top: 0;
+  width: 14px;
+  height: 100%;
+  background: rgba(233, 213, 255, 0.45);
+  backdrop-filter: blur(1px);
+}
+.cabin-curtain.left { left: 0; border-right: 1px dotted rgba(192, 132, 252, 0.6); }
+.cabin-curtain.right { right: 0; border-left: 1px dotted rgba(192, 132, 252, 0.6); }
+
+/* Guirnalda de luces cálidas de hadas */
+.cabin-fairy-lights {
+  position: absolute;
+  top: 10px;
+  left: 105px;
+  right: 90px;
+  height: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1.5px dashed rgba(202, 138, 4, 0.55);
+  border-radius: 50% / 0 0 100% 100%;
+}
+
+.fairy-light {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fde047;
+  box-shadow: 0 0 8px 3px rgba(250, 204, 21, 0.85);
+  animation: fairyFlicker 1.8s infinite alternate ease-in-out;
+}
+.fl1 { animation-delay: 0.1s; background: #fef08a; }
+.fl2 { animation-delay: 0.7s; background: #e9d5ff; box-shadow: 0 0 8px 3px rgba(192, 132, 252, 0.85); }
+.fl3 { animation-delay: 1.2s; background: #fed7aa; }
+.fl4 { animation-delay: 0.4s; background: #fef08a; }
+.fl5 { animation-delay: 0.9s; background: #e9d5ff; }
+.fl6 { animation-delay: 1.5s; background: #fed7aa; }
+
+@keyframes fairyFlicker {
+  0% { opacity: 0.7; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1.15); }
+}
+
+/* Repisa con lavanda y bellotas */
+.cabin-wall-shelf {
+  position: absolute;
+  top: 36px;
+  right: 105px;
+  background: #78350f;
+  border-bottom: 3px solid #451a03;
+  padding: 2px 6px;
+  border-radius: 3px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+  display: flex;
+  gap: 6px;
+  font-size: 13px;
+}
+
+/* Cama de Cabaña de Madera estilo Animal Crossing */
+.cozy-room-bed {
+  position: absolute;
+  left: 10px;
+  bottom: 24px;
+  width: 108px;
+  height: 74px;
+  z-index: 3;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
+}
+
+.ac-cabin-bed-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Transición suave de Nuez hacia su camita al dormir */
+.tamagotchi-character-area {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  transition: transform 1.6s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+}
+
+.tamagotchi-stage.is-sleeping .tamagotchi-character-area {
+  transform: translate(-98px, 6px) scale(0.82);
+}
+
+.tamagotchi-stage.is-sleeping .tamagotchi-mascot-wrapper {
+  animation: sleepSnuggleFloat 3.5s infinite alternate ease-in-out !important;
+}
+
+@keyframes sleepSnuggleFloat {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-3px) rotate(-1deg); }
+  100% { transform: translateY(1px) rotate(1deg); }
+}
+
+.tamagotchi-stage.is-sleeping .cozy-room-bed {
+  filter: drop-shadow(0 4px 14px rgba(192, 132, 252, 0.55));
+}
+
+/* Animación de Beber Té de Lavanda Silvestre */
+.tamagotchi-mascot-wrapper.sipping-tea #itemTea {
+  animation: nuezSipCup 2.4s ease-in-out infinite;
+  transform-origin: 120px 145px;
+}
+
+@keyframes nuezSipCup {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(0, -9px) scale(1.08) rotate(-4deg); }
+  45% { transform: translate(0, -10px) scale(1.1) rotate(-6deg); }
+  70% { transform: translate(0, -9px) scale(1.08) rotate(-4deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+.lavender-blossom-particle {
+  position: absolute;
+  pointer-events: none;
+  font-size: 1.1rem;
+  z-index: 25;
+  animation: floatBlossom 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes floatBlossom {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.5) rotate(0deg);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(calc(var(--rx, 0px) * 0.4), -20px) scale(1.15) rotate(15deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--rx, 0px), -65px) scale(0.8) rotate(var(--rot, 45deg));
+  }
 }
