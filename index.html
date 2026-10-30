@@ -906,12 +906,21 @@
             </div>
           </div>
           
-          <!-- BANCA CON COLCHONETA GRIS REALISTA (SIN EMOJIS, como lo pidió el usuario y la foto real) -->
-          <!-- BANCA CON COLCHONETA GRIS REALISTA (Con botones de acción representados solo por emojis táctiles estilo Animal Crossing) -->
+          <!-- BANCA CON COLCHONETA GRIS REALISTA (Modo Postal: botones capitoné limpios / Modo Nuez: botones táctiles con emojis) -->
           <div class="reading-bench" id="readingBench">
             <div class="bench-cushion gray-mattress">
-              <!-- Botones de Acción de Nuez (Solo representados por emojis, ubicados en la colchoneta gris) -->
-              <div class="bench-actions-strip" id="benchActionsStrip">
+              <!-- Vista MODO POSTAL: Botones de capitoné acolchados limpios (Sin emojis) -->
+              <div class="cushion-tufts-group" id="cushionTuftsGroup">
+                <div class="cushion-tuft t1"></div>
+                <div class="cushion-tuft t2"></div>
+                <div class="cushion-tuft t3"></div>
+                <div class="cushion-tuft t4"></div>
+                <div class="cushion-tuft t5"></div>
+                <div class="cushion-tuft t6"></div>
+              </div>
+
+              <!-- Vista MODO NUEZ: Botones de Acción representados solo por emojis táctiles estilo Animal Crossing -->
+              <div class="bench-actions-strip" id="benchActionsStrip" style="display: none;">
                 <button type="button" class="btn-bench-action" id="benchBtnFeed" onclick="handleBenchFeed()" title="Alimentar a Nuez 🌰">
                   <span class="bench-action-icon">🌰</span>
                 </button>

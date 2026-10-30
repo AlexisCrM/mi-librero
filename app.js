@@ -2938,6 +2938,8 @@ function switchNookMode(mode) {
   const nuezBadge = document.getElementById('windowNuezBadge');
   const nuezName = document.getElementById('windowNuezName');
   const nuezLevel = document.getElementById('windowNuezLevel');
+  const benchActions = document.getElementById('benchActionsStrip');
+  const benchTufts = document.getElementById('cushionTuftsGroup');
 
   if (mode === 'tamagotchi') {
     btnTama?.classList.add('active');
@@ -2948,6 +2950,10 @@ function switchNookMode(mode) {
     if (hudAcorns) hudAcorns.style.display = 'inline-flex';
     if (btnRoom) btnRoom.style.display = 'inline-flex';
     if (btnPhoto) btnPhoto.style.display = 'none';
+
+    // MOSTRAR botones de acción con emojis en la colchoneta gris (SOLO en modo Nuez)
+    if (benchActions) benchActions.style.display = 'flex';
+    if (benchTufts) benchTufts.style.display = 'none';
 
     // MOSTRAR tarjeta de Nuez en la cabecera y OCULTAR tarjeta de ubicación
     if (timeBadge) timeBadge.style.display = 'none';
@@ -2969,6 +2975,10 @@ function switchNookMode(mode) {
     if (hudAcorns) hudAcorns.style.display = 'none';
     if (btnRoom) btnRoom.style.display = 'none';
     if (btnPhoto) btnPhoto.style.display = 'inline-flex';
+
+    // OCULTAR botones de acción con emojis y MOSTRAR botones capitoné limpios (MODO POSTAL)
+    if (benchActions) benchActions.style.display = 'none';
+    if (benchTufts) benchTufts.style.display = 'flex';
 
     // MOSTRAR tarjeta de ubicación real (Querétaro, CDMX, Guadalajara, etc.) y OCULTAR tarjeta de Nuez
     if (timeBadge) timeBadge.style.display = 'flex';
