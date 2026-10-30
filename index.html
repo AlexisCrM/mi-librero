@@ -366,6 +366,33 @@
                       <span class="shelf-lavender-bunch" title="Ramitos de lavanda secándose">🪻</span>
                       <span class="shelf-acorn-jar" title="Frasco de bellotas cosechadas">🏺</span>
                     </div>
+
+                    <!-- Reloj rústico de pared con péndulo que se balancea -->
+                    <div class="cabin-cuckoo-clock">
+                      <div class="clock-body">
+                        <div class="clock-face">
+                          <span class="clock-center-dot"></span>
+                        </div>
+                      </div>
+                      <div class="clock-pendulum-arm">
+                        <span class="clock-bob"></span>
+                      </div>
+                    </div>
+
+                    <!-- Manojo de flores silvestres y lavanda colgado del maderamen -->
+                    <div class="cabin-hanging-herb">
+                      <div class="herb-twine"></div>
+                      <div class="herb-bouquet">🪻🌾</div>
+                    </div>
+
+                    <!-- Motes y chispitas de luz cálida flotando en el aire de la cabaña -->
+                    <div class="cabin-ambient-motes">
+                      <span class="ambient-mote amt1"></span>
+                      <span class="ambient-mote amt2"></span>
+                      <span class="ambient-mote amt3"></span>
+                      <span class="ambient-mote amt4"></span>
+                      <span class="ambient-mote amt5"></span>
+                    </div>
                   </div>
 
                   <!-- Cama de Cabaña de Madera de Nuez (Estilo Animal Crossing) -->
@@ -602,83 +629,232 @@
                             <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="rgba(45, 20, 8, 0.25)" />
                           </filter>
 
-                          <linearGradient id="nuezFurGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="#f6a457" />
-                            <stop offset="45%" stop-color="#e08434" />
-                            <stop offset="100%" stop-color="#b65e1f" />
-                          </linearGradient>
-
-                          <radialGradient id="nuezTailGrad" cx="42%" cy="32%" r="68%">
-                            <stop offset="0%" stop-color="#fbc17a" />
-                            <stop offset="38%" stop-color="#e18636" />
-                            <stop offset="85%" stop-color="#b15918" />
-                            <stop offset="100%" stop-color="#8a3f0e" />
+                          <radialGradient id="nuezHighlightGrad" cx="50%" cy="30%" r="70%">
+                            <stop offset="0%" stop-color="#ffedd5" />
+                            <stop offset="45%" stop-color="#fdba74" />
+                            <stop offset="100%" stop-color="#ea580c" />
                           </radialGradient>
 
+                          <linearGradient id="nuezTailGrad" x1="20%" y1="0%" x2="80%" y2="100%">
+                            <stop offset="0%" stop-color="#fed7aa" />
+                            <stop offset="25%" stop-color="#f97316" />
+                            <stop offset="65%" stop-color="#c2410c" />
+                            <stop offset="100%" stop-color="#7c2d12" />
+                          </linearGradient>
+
+                          <linearGradient id="nuezFurGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#fb923c" />
+                            <stop offset="40%" stop-color="#ea580c" />
+                            <stop offset="85%" stop-color="#c2410c" />
+                            <stop offset="100%" stop-color="#9a3412" />
+                          </linearGradient>
+
+                          <linearGradient id="nuezChestGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#ffffff" />
+                            <stop offset="55%" stop-color="#fff7ed" />
+                            <stop offset="100%" stop-color="#ffedd5" />
+                          </linearGradient>
+
                           <linearGradient id="nuezCreamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="#fffefb" />
-                            <stop offset="60%" stop-color="#fff2dd" />
-                            <stop offset="100%" stop-color="#fae3c3" />
+                            <stop offset="0%" stop-color="#ffffff" />
+                            <stop offset="60%" stop-color="#fef3c7" />
+                            <stop offset="100%" stop-color="#fed7aa" />
                           </linearGradient>
 
                           <linearGradient id="nuezEarPink" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="#ffccd5" />
-                            <stop offset="100%" stop-color="#ff99aa" />
+                            <stop offset="0%" stop-color="#ffe4e6" />
+                            <stop offset="70%" stop-color="#fecdd3" />
+                            <stop offset="100%" stop-color="#fda4af" />
                           </linearGradient>
 
-                          <radialGradient id="nuezIrisGrad" cx="45%" cy="40%" r="60%">
-                            <stop offset="0%" stop-color="#9a5223" />
-                            <stop offset="45%" stop-color="#5a2b10" />
-                            <stop offset="85%" stop-color="#2c1407" />
-                            <stop offset="100%" stop-color="#190a03" />
+                          <radialGradient id="nuezIrisGrad" cx="42%" cy="36%" r="65%">
+                            <stop offset="0%" stop-color="#b45309" />
+                            <stop offset="40%" stop-color="#78350f" />
+                            <stop offset="80%" stop-color="#451a03" />
+                            <stop offset="100%" stop-color="#1c0a02" />
                           </radialGradient>
 
                           <radialGradient id="nuezBlushGrad" cx="50%" cy="50%" r="50%">
-                            <stop offset="0%" stop-color="#ff6b8b" stop-opacity="0.8" />
-                            <stop offset="65%" stop-color="#ff859f" stop-opacity="0.45" />
-                            <stop offset="100%" stop-color="#ff9eb4" stop-opacity="0" />
+                            <stop offset="0%" stop-color="#ff4d6d" stop-opacity="0.85" />
+                            <stop offset="60%" stop-color="#ff758f" stop-opacity="0.4" />
+                            <stop offset="100%" stop-color="#ffb3c1" stop-opacity="0" />
                           </radialGradient>
                         </defs>
 
-                        <!-- Sombra elíptica sobre el tapete -->
-                        <ellipse id="nuezFloorShadow" cx="120" cy="204" rx="55" ry="11" fill="rgba(45, 25, 12, 0.28)" />
+                        <!-- Sombra elíptica suave sobre el tapete -->
+                        <ellipse id="nuezFloorShadow" cx="120" cy="204" rx="58" ry="12" fill="rgba(35, 18, 8, 0.35)" />
 
                         <!-- Grupo Raíz del Cuerpo -->
                         <g id="nuezBodyRoot" class="nuez-body-root">
 
-                          <!-- 1. COLITA ESPONJOSA GIGANTE -->
+                          <!-- 1. COLITA ESPONJOSA GIGANTE Y VOLUMINOSA ESTILO ARDILLA REAL -->
                           <g id="nuezTail" class="nuez-tail-part">
-                            <path d="M 108 178 C 135 188, 175 182, 198 152 C 224 116, 222 62, 192 32 C 165 6, 124 16, 128 46 C 132 68, 162 76, 168 95 C 175 116, 155 142, 126 156 C 114 162, 102 168, 98 174 Z" fill="url(#nuezTailGrad)" filter="url(#nuezSoftShadow)" />
-                            <!-- Textura brillante de la colita -->
-                            <path d="M 188 40 C 166 22, 138 28, 138 48 C 138 64, 158 72, 164 88" fill="none" stroke="#fed7aa" stroke-width="4.5" stroke-linecap="round" opacity="0.85" />
-                            <path d="M 198 110 C 196 85, 185 65, 172 52" fill="none" stroke="#fbd38d" stroke-width="3" stroke-linecap="round" opacity="0.6" />
+                            <!-- Silueta y volumen peludo de la cola -->
+                            <path d="M 108 178 C 135 188, 178 184, 202 150 C 230 112, 226 56, 194 28 C 164 2, 120 14, 124 46 C 128 70, 160 80, 166 100 C 174 122, 154 146, 124 160 C 112 165, 102 170, 98 174 Z" fill="url(#nuezTailGrad)" filter="url(#nuezSoftShadow)" />
+                            
+                            <!-- Mechones de pelaje ondeante en la cola -->
+                            <path d="M 198 34 C 182 18, 152 22, 142 42 C 138 58, 158 68, 166 85 C 172 98, 168 116, 152 134" fill="none" stroke="#fef08a" stroke-width="4.5" stroke-linecap="round" opacity="0.8" />
+                            <path d="M 212 85 C 218 60, 204 42, 186 32" fill="none" stroke="#fed7aa" stroke-width="3.5" stroke-linecap="round" opacity="0.75" />
+                            <path d="M 210 130 C 216 106, 208 86, 192 70" fill="none" stroke="#fde047" stroke-width="3" stroke-linecap="round" opacity="0.65" />
+                            <path d="M 178 145 C 190 135, 196 118, 188 102" fill="none" stroke="#fed7aa" stroke-width="2.5" stroke-linecap="round" opacity="0.6" />
                           </g>
 
-                          <!-- 2. PATITAS INFERIORES -->
+                          <!-- 2. PATITAS TRASERAS ACOGEDORAS -->
                           <g id="nuezFeet" class="nuez-feet-part">
-                            <ellipse cx="86" cy="196" rx="16" ry="10" fill="#c76f25" />
-                            <ellipse cx="85" cy="196" rx="10" ry="6" fill="#ffb4c2" opacity="0.65" />
-                            <ellipse cx="154" cy="196" rx="16" ry="10" fill="#c76f25" />
-                            <ellipse cx="155" cy="196" rx="10" ry="6" fill="#ffb4c2" opacity="0.65" />
+                            <ellipse cx="84" cy="196" rx="17" ry="10.5" fill="#9a3412" stroke="#7c2d12" stroke-width="1.5" />
+                            <ellipse cx="83" cy="195" rx="11" ry="6.5" fill="#fed7aa" opacity="0.85" />
+                            <ellipse cx="156" cy="196" rx="17" ry="10.5" fill="#9a3412" stroke="#7c2d12" stroke-width="1.5" />
+                            <ellipse cx="157" cy="195" rx="11" ry="6.5" fill="#fed7aa" opacity="0.85" />
                           </g>
 
-                          <!-- 3. CUERPO Y PANCITA GORDITA -->
+                          <!-- 3. CUERPO Y PANCITA GORDITA CON PECHO BLANCO ESPONJOSO -->
                           <g id="nuezTorso" class="nuez-torso-part">
-                            <path d="M 78 135 C 62 165, 68 200, 120 200 C 172 200, 178 165, 162 135 C 152 115, 88 115, 78 135 Z" fill="url(#nuezFurGrad)" filter="url(#nuezSoftShadow)" />
-                            <path d="M 94 140 C 84 165, 90 194, 120 194 C 150 194, 156 165, 146 140 C 138 128, 102 128, 94 140 Z" fill="url(#nuezCreamGrad)" />
+                            <!-- Contorno del torso y caderas -->
+                            <path d="M 76 132 C 60 162, 66 200, 120 200 C 174 200, 180 162, 164 132 C 154 112, 86 112, 76 132 Z" fill="url(#nuezFurGrad)" filter="url(#nuezSoftShadow)" />
+                            
+                            <!-- Pecho y pancita blanca cremosa con textura de pelaje -->
+                            <path d="M 94 136 C 82 162, 88 194, 120 194 C 152 194, 158 162, 146 136 C 138 124, 102 124, 94 136 Z" fill="url(#nuezChestGrad)" />
+                            <!-- Mechones suaves de pelaje en el pecho -->
+                            <path d="M 112 142 L 120 148 L 128 142" fill="none" stroke="#fde047" stroke-width="1.5" stroke-linecap="round" opacity="0.7" />
+                            <path d="M 108 154 L 120 162 L 132 154" fill="none" stroke="#fed7aa" stroke-width="1.8" stroke-linecap="round" opacity="0.6" />
                           </g>
 
-                          <!-- 4. CABEZA ARTICULADA -->
-                          <g id="nuezHead" class="nuez-head-part">
-                            <!-- Oreja Izquierda -->
-                            <g id="nuezEarL" class="nuez-ear-item ear-left">
-                              <path d="M 82 82 C 60 52, 70 28, 92 46 C 98 52, 96 68, 88 78 Z" fill="#cf7729" />
-                              <path d="M 82 76 C 68 56, 75 40, 88 52 C 92 56, 90 68, 85 74 Z" fill="url(#nuezEarPink)" />
+                          <!-- 4. MANITAS DELANTERAS Y OBJETO ARTICULADOS JUNTOS (Suben a la boca al comer/beber) -->
+                          <g id="nuezArmsAndItem" class="nuez-arms-item-group">
+                            <!-- Objeto sostenido (Mini Libro, Snacks y Bebidas) -->
+                            <g id="nuezHeldItem" class="nuez-held-item-group" transform="translate(100, 138)">
+                              <!-- Mini Libro Morado (Defecto) -->
+                              <g id="itemBook" class="held-object item-book">
+                                <rect x="0" y="0" width="40" height="26" rx="4" fill="#7e22ce" stroke="#581c87" stroke-width="1.5" filter="url(#nuezSoftShadow)" />
+                                <rect x="4" y="2" width="32" height="22" rx="2" fill="#faf5ff" />
+                                <rect x="18" y="0" width="4" height="26" fill="#581c87" />
+                                <path d="M 19 24 L 21 32 L 23 24 Z" fill="#eab308" />
+                                <text x="8" y="17" font-size="10" fill="#a855f7">📖</text>
+                              </g>
+                              <!-- Bellota Silvestre Realista -->
+                              <g id="itemAcorn" class="held-object item-acorn" style="display: none;">
+                                <!-- Cúpula rugosa con textura de escamas -->
+                                <path d="M 8 7 C 8 -1, 32 -1, 32 7 L 34 11 L 6 11 Z" fill="#542308" stroke="#3b1704" stroke-width="1.4" />
+                                <line x1="12" y1="5" x2="28" y2="5" stroke="#78350f" stroke-width="1.2" stroke-linecap="round" />
+                                <circle cx="20" cy="-2" r="1.8" fill="#3b1704" />
+                                <!-- Cuerpo de la bellota tostada -->
+                                <path d="M 7 11 C 7 26, 33 26, 33 11 Z" fill="#b45309" stroke="#78350f" stroke-width="1.4" />
+                                <path d="M 11 13 Q 13 22 20 23" fill="none" stroke="#fde68a" stroke-width="2" stroke-linecap="round" opacity="0.75" />
+                                <circle cx="14" cy="15" r="2.2" fill="#ffffff" opacity="0.8" />
+                              </g>
+                              <!-- Nuez Dorada Brillante -->
+                              <g id="itemGoldNut" class="held-object item-goldnut" style="display: none;">
+                                <ellipse cx="20" cy="14" rx="14" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="1.8" />
+                                <path d="M 14 6 Q 20 1 26 6 Q 20 11 14 6 Z" fill="#fde047" opacity="0.6" />
+                                <path d="M 20 3 L 20 25" stroke="#ca8a04" stroke-width="1.2" stroke-linecap="round" opacity="0.5" />
+                                <circle cx="15" cy="10" r="2.8" fill="#ffffff" opacity="0.9" />
+                                <text x="24" y="8" font-size="9" fill="#fde047">✨</text>
+                              </g>
+                              <!-- Té de Lavanda Silvestre Calientito (Taza de Porcelana con Flores de Lavanda) -->
+                              <g id="itemTea" class="held-object item-tea" style="display: none;">
+                                <!-- Platito de porcelana -->
+                                <ellipse cx="20" cy="22" rx="16" ry="4.5" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2" />
+                                <!-- Taza de té -->
+                                <path d="M 7 6 L 33 6 C 33 16, 27 21, 20 21 C 13 21, 7 16, 7 6 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.4" />
+                                <!-- Asa de la taza -->
+                                <path d="M 32 9 C 37 9, 37 16, 32 17" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round" />
+                                <!-- Infusión de lavanda caliente en el interior -->
+                                <ellipse cx="20" cy="8" rx="11" ry="3.5" fill="#9333ea" />
+                                <ellipse cx="20" cy="8" rx="8" ry="2" fill="#c084fc" opacity="0.8" />
+                                <!-- Ramillete de lavanda pintado en la porcelana -->
+                                <circle cx="16" cy="14" r="2" fill="#c084fc" />
+                                <circle cx="20" cy="13" r="2.2" fill="#a855f7" />
+                                <circle cx="24" cy="14" r="2" fill="#c084fc" />
+                                <path d="M 18 16 L 22 16" stroke="#22c55e" stroke-width="1" stroke-linecap="round" />
+                                <!-- Hilillos de vapor aromático -->
+                                <path d="M 16 3 Q 13 -3 17 -8 Q 20 -12 17 -16" fill="none" stroke="rgba(216,180,254,0.95)" stroke-width="1.8" stroke-linecap="round" class="ac-steam-wisp w1" />
+                                <path d="M 23 2 Q 26 -4 22 -9 Q 19 -13 23 -17" fill="none" stroke="rgba(216,180,254,0.9)" stroke-width="1.8" stroke-linecap="round" class="ac-steam-wisp w2" />
+                              </g>
+                              <!-- Café con Leche de El Alpiste (Brewster) -->
+                              <g id="itemCoffee" class="held-object item-coffee" style="display: none;">
+                                <rect x="8" y="7" width="24" height="19" rx="4" fill="#047857" stroke="#065f46" stroke-width="1.6" />
+                                <ellipse cx="20" cy="7" rx="12" ry="3.8" fill="#451a03" />
+                                <ellipse cx="20" cy="7" rx="9" ry="2.5" fill="#fde68a" opacity="0.75" />
+                                <!-- Asa -->
+                                <path d="M 32 11 C 36 11, 36 18, 32 19" fill="none" stroke="#065f46" stroke-width="2.2" stroke-linecap="round" />
+                                <!-- Logo de Brewster -->
+                                <circle cx="20" cy="16" r="3.8" fill="#ffffff" />
+                                <path d="M 18 16 Q 20 14 22 16" stroke="#047857" stroke-width="1.2" fill="none" />
+                                <!-- Vapor -->
+                                <path d="M 20 3 Q 17 -2 20 -7" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.6" stroke-linecap="round" class="ac-steam-wisp" />
+                              </g>
+                              <!-- Muffin de Moras del Bosque -->
+                              <g id="itemBlackberryCake" class="held-object item-cake" style="display: none;">
+                                <path d="M 10 14 L 14 24 L 26 24 L 30 14 Z" fill="#fed7aa" stroke="#f97316" stroke-width="1.2" />
+                                <ellipse cx="20" cy="13" rx="13" ry="8" fill="#9333ea" />
+                                <ellipse cx="20" cy="10" rx="9" ry="5" fill="#c084fc" />
+                                <circle cx="20" cy="6" r="3.5" fill="#3b0764" />
+                                <circle cx="16" cy="12" r="1.5" fill="#581c87" />
+                                <circle cx="24" cy="11" r="1.5" fill="#581c87" />
+                              </g>
+                              <!-- Galletitas de Miel y Avena -->
+                              <g id="itemCookies" class="held-object item-cookies" style="display: none;">
+                                <circle cx="16" cy="15" r="9" fill="#fde68a" stroke="#d97706" stroke-width="1.4" />
+                                <circle cx="26" cy="17" r="8" fill="#f59e0b" stroke="#b45309" stroke-width="1.4" />
+                                <circle cx="14" cy="13" r="1.8" fill="#78350f" />
+                                <circle cx="18" cy="17" r="1.6" fill="#78350f" />
+                                <circle cx="25" cy="15" r="1.6" fill="#451a03" />
+                                <circle cx="27" cy="19" r="1.5" fill="#451a03" />
+                              </g>
+                              <!-- Macarons 'Lavender Haze' -->
+                              <g id="itemMacarons" class="held-object item-macarons" style="display: none;">
+                                <ellipse cx="20" cy="21" rx="13" ry="5.5" fill="#e9d5ff" stroke="#a855f7" stroke-width="1.2" />
+                                <rect x="9" y="18" width="22" height="3" fill="#ffffff" />
+                                <ellipse cx="20" cy="14" rx="13" ry="5.5" fill="#d8b4fe" stroke="#a855f7" stroke-width="1.2" />
+                                <text x="25" y="11" font-size="8" fill="#fde047">★</text>
+                              </g>
+                              <!-- Gran Banquete Real del Bosque -->
+                              <g id="itemFeast" class="held-object item-feast" style="display: none;">
+                                <rect x="6" y="12" width="28" height="15" rx="3" fill="#b45309" stroke="#78350f" stroke-width="1.4" />
+                                <path d="M 8 12 Q 20 6 32 12" fill="none" stroke="#ca8a04" stroke-width="1.5" />
+                                <ellipse cx="14" cy="11" r="4" fill="#ef4444" />
+                                <ellipse cx="21" cy="9" r="4.5" fill="#8b5cf6" />
+                                <ellipse cx="27" cy="11" r="3.5" fill="#f59e0b" />
+                              </g>
                             </g>
-                            <!-- Oreja Derecha -->
+
+                            <!-- Manitas Delanteras con Deditos que Abrazan y Sostienen -->
+                            <g id="nuezPaws" class="nuez-paws-part">
+                              <!-- Patita Izquierda -->
+                              <g id="pawL" class="nuez-paw paw-left">
+                                <ellipse cx="94" cy="152" rx="11" ry="8.5" fill="#c76f25" stroke="#7c2d12" stroke-width="1.4" />
+                                <!-- Deditos tiernos -->
+                                <circle cx="101" cy="149" r="2.8" fill="#ea580c" />
+                                <circle cx="102" cy="153" r="2.8" fill="#ea580c" />
+                                <circle cx="99" cy="157" r="2.8" fill="#ea580c" />
+                              </g>
+                              <!-- Patita Derecha -->
+                              <g id="pawR" class="nuez-paw paw-right">
+                                <ellipse cx="146" cy="152" rx="11" ry="8.5" fill="#c76f25" stroke="#7c2d12" stroke-width="1.4" />
+                                <!-- Deditos tiernos -->
+                                <circle cx="139" cy="149" r="2.8" fill="#ea580c" />
+                                <circle cx="138" cy="153" r="2.8" fill="#ea580c" />
+                                <circle cx="141" cy="157" r="2.8" fill="#ea580c" />
+                              </g>
+                            </g>
+                          </g>
+
+                          <!-- 5. CABEZA ARTICULADA CON MEJILLAS ESPONJOSAS DE ARDILLA REAL -->
+                          <g id="nuezHead" class="nuez-head-part">
+                            <!-- Oreja Izquierda con Mechón Peludo -->
+                            <g id="nuezEarL" class="nuez-ear-item ear-left">
+                              <path d="M 82 82 C 58 50, 70 24, 92 44 C 98 50, 96 68, 88 78 Z" fill="#c2410c" stroke="#7c2d12" stroke-width="1.5" />
+                              <path d="M 82 76 C 68 54, 75 38, 88 50 C 92 54, 90 68, 85 74 Z" fill="url(#nuezEarPink)" />
+                              <!-- Pelo fino esponjoso en la punta de la oreja -->
+                              <path d="M 88 40 Q 82 30 78 32 Q 86 36 90 42" fill="#7c2d12" />
+                            </g>
+
+                            <!-- Oreja Derecha con Mechón Peludo -->
                             <g id="nuezEarR" class="nuez-ear-item ear-right">
-                              <path d="M 158 82 C 180 52, 170 28, 148 46 C 142 52, 144 68, 152 78 Z" fill="#cf7729" />
-                              <path d="M 158 76 C 172 56, 165 40, 152 52 C 148 56, 150 68, 155 74 Z" fill="url(#nuezEarPink)" />
+                              <path d="M 158 82 C 182 50, 170 24, 148 44 C 142 50, 144 68, 152 78 Z" fill="#c2410c" stroke="#7c2d12" stroke-width="1.5" />
+                              <path d="M 158 76 C 172 54, 165 38, 152 50 C 148 54, 150 68, 155 74 Z" fill="url(#nuezEarPink)" />
+                              <!-- Pelo fino esponjoso en la punta de la oreja -->
+                              <path d="M 152 40 Q 158 30 162 32 Q 154 36 150 42" fill="#7c2d12" />
                             </g>
 
                             <!-- Flor de Lavanda Detrás de la Oreja -->
@@ -692,28 +868,30 @@
                               <circle cx="0" cy="-1" r="3.5" fill="#fde047" />
                             </g>
 
-                            <!-- Cabeza Redonda y Cachetona -->
-                            <path d="M 74 100 C 66 125, 82 142, 120 142 C 158 142, 174 125, 166 100 C 160 68, 80 68, 74 100 Z" fill="url(#nuezFurGrad)" filter="url(#nuezSoftShadow)" />
-                            <path d="M 116 70 C 114 62, 120 58, 123 64 C 126 59, 131 62, 128 70 Z" fill="#f5a356" />
+                            <!-- Cabeza con Mejillas Esponjosas Típicas de Ardilla -->
+                            <path d="M 74 98 C 66 104, 52 112, 58 122 C 62 130, 72 134, 80 140 C 95 146, 145 146, 160 140 C 168 134, 178 130, 182 122 C 188 112, 174 104, 166 98 C 160 66, 80 66, 74 98 Z" fill="url(#nuezFurGrad)" filter="url(#nuezSoftShadow)" />
+                            
+                            <!-- Mechones de pelaje en las mejillas -->
+                            <path d="M 58 122 Q 68 126 72 124" fill="none" stroke="#fff7ed" stroke-width="2" stroke-linecap="round" />
+                            <path d="M 182 122 Q 172 126 168 124" fill="none" stroke="#fff7ed" stroke-width="2" stroke-linecap="round" />
 
-                            <!-- Mechones esponjosos en las orejas -->
-                            <path d="M 82 72 Q 86 64 88 74 Q 92 66 94 76" fill="none" stroke="#fff1db" stroke-width="2.2" stroke-linecap="round" />
-                            <path d="M 158 72 Q 154 64 152 74 Q 148 66 146 76" fill="none" stroke="#fff1db" stroke-width="2.2" stroke-linecap="round" />
+                            <!-- Mechón central en la frente -->
+                            <path d="M 116 70 C 114 62, 120 58, 123 64 C 126 59, 131 62, 128 70 Z" fill="#fed7aa" />
 
-                            <!-- Bigotitos Adorables de Nuez -->
-                            <g class="nuez-whiskers" stroke="#3b1d0c" stroke-width="1.8" stroke-linecap="round" opacity="0.8">
-                              <line x1="68" y1="112" x2="48" y2="108" />
-                              <line x1="68" y1="117" x2="46" y2="117" />
-                              <line x1="68" y1="122" x2="50" y2="125" />
-                              <line x1="172" y1="112" x2="192" y2="108" />
-                              <line x1="172" y1="117" x2="194" y2="117" />
-                              <line x1="172" y1="122" x2="190" y2="125" />
+                            <!-- Bigotitos Adorables y Flexibles -->
+                            <g class="nuez-whiskers" stroke="#2a1205" stroke-width="1.8" stroke-linecap="round" opacity="0.85">
+                              <line x1="68" y1="112" x2="44" y2="108" />
+                              <line x1="68" y1="117" x2="42" y2="117" />
+                              <line x1="68" y1="122" x2="46" y2="126" />
+                              <line x1="172" y1="112" x2="196" y2="108" />
+                              <line x1="172" y1="117" x2="198" y2="117" />
+                              <line x1="172" y1="122" x2="194" y2="126" />
                             </g>
 
-                            <!-- Mejillas con Rubor -->
+                            <!-- Mejillas con Rubor Tierno -->
                             <ellipse id="blushL" class="nuez-blush-spot" cx="88" cy="116" rx="14" ry="8" fill="url(#nuezBlushGrad)" />
                             <ellipse id="blushR" class="nuez-blush-spot" cx="152" cy="116" rx="14" ry="8" fill="url(#nuezBlushGrad)" />
-                            <g class="blush-lines" stroke="#ff477e" stroke-width="1.4" stroke-linecap="round" opacity="0.6">
+                            <g class="blush-lines" stroke="#ff4d6d" stroke-width="1.4" stroke-linecap="round" opacity="0.7">
                               <line x1="84" y1="114" x2="87" y2="118" />
                               <line x1="88" y1="113" x2="91" y2="119" />
                               <line x1="92" y1="114" x2="95" y2="118" />
@@ -722,31 +900,41 @@
                               <line x1="153" y1="114" x2="156" y2="118" />
                             </g>
 
-                            <!-- Hocico Crema y Naricita -->
-                            <ellipse cx="120" cy="116" rx="20" ry="14" fill="url(#nuezCreamGrad)" />
-                            <path d="M 116 107 C 117 105, 123 105, 124 107 C 124 110, 121 112, 120 112 C 119 112, 116 110, 116 107 Z" fill="#2c1407" />
-                            <circle cx="118.5" cy="107" r="1.2" fill="#ffffff" opacity="0.8" />
+                            <!-- Hocico 3D de Ardilla con Almohadillas y Nariz Móvil -->
+                            <ellipse cx="120" cy="116" rx="20" ry="14" fill="url(#nuezCreamGrad)" stroke="#fed7aa" stroke-width="1" />
+                            
+                            <!-- Naricita de ardilla con reflejo -->
+                            <g id="nuezNoseGroup" class="nuez-nose-group">
+                              <path d="M 115 107 C 116 104, 124 104, 125 107 C 125 111, 121 113, 120 113 C 119 113, 115 111, 115 107 Z" fill="#2c1407" />
+                              <circle cx="118" cy="106.5" r="1.4" fill="#ffffff" opacity="0.85" />
+                            </g>
 
-                            <!-- EXPRESIONES DE OJOS -->
-                            <!-- Ojos Normales Kawaii con Parpadeo -->
+                            <!-- Puntos de los bigotitos en el hocico -->
+                            <circle cx="110" cy="115" r="1" fill="#78350f" opacity="0.6" />
+                            <circle cx="107" cy="118" r="1" fill="#78350f" opacity="0.6" />
+                            <circle cx="130" cy="115" r="1" fill="#78350f" opacity="0.6" />
+                            <circle cx="133" cy="118" r="1" fill="#78350f" opacity="0.6" />
+
+                            <!-- EXPRESIONES DE OJOS CON PARPADEO SUAVE -->
+                            <!-- Ojos Normales con Doble Reflejo e Iris Cálido -->
                             <g id="eyesNormal" class="nuez-expression-part face-eyes-normal">
                               <g id="eyeL" class="nuez-eye-pupil eye-left" transform-origin="98 100">
                                 <ellipse cx="98" cy="100" rx="9.5" ry="11.5" fill="url(#nuezIrisGrad)" />
-                                <circle cx="95.5" cy="96" r="4.2" fill="#ffffff" />
-                                <circle cx="101" cy="104" r="2.2" fill="#ffffff" />
-                                <path d="M 88 95 Q 98 88 108 94" fill="none" stroke="#2c1407" stroke-width="2.6" stroke-linecap="round" />
-                                <path d="M 106 92 L 109 90" fill="none" stroke="#2c1407" stroke-width="2" stroke-linecap="round" />
+                                <circle cx="95.5" cy="95.5" r="4.2" fill="#ffffff" />
+                                <circle cx="101.5" cy="103.5" r="2.2" fill="#ffffff" />
+                                <path d="M 88 94 Q 98 87 108 93" fill="none" stroke="#2c1407" stroke-width="2.6" stroke-linecap="round" />
+                                <path d="M 106 91 L 109 89" fill="none" stroke="#2c1407" stroke-width="2" stroke-linecap="round" />
                               </g>
                               <g id="eyeR" class="nuez-eye-pupil eye-right" transform-origin="142 100">
                                 <ellipse cx="142" cy="100" rx="9.5" ry="11.5" fill="url(#nuezIrisGrad)" />
-                                <circle cx="139.5" cy="96" r="4.2" fill="#ffffff" />
-                                <circle cx="145" cy="104" r="2.2" fill="#ffffff" />
-                                <path d="M 132 94 Q 142 88 152 95" fill="none" stroke="#2c1407" stroke-width="2.6" stroke-linecap="round" />
-                                <path d="M 134 90 L 131 92" fill="none" stroke="#2c1407" stroke-width="2" stroke-linecap="round" />
+                                <circle cx="139.5" cy="95.5" r="4.2" fill="#ffffff" />
+                                <circle cx="145.5" cy="103.5" r="2.2" fill="#ffffff" />
+                                <path d="M 132 93 Q 142 87 152 94" fill="none" stroke="#2c1407" stroke-width="2.6" stroke-linecap="round" />
+                                <path d="M 134 89 L 131 91" fill="none" stroke="#2c1407" stroke-width="2" stroke-linecap="round" />
                               </g>
                             </g>
 
-                            <!-- Ojos Felices / Caricias -->
+                            <!-- Ojos Felices / Sonrisa Tierna -->
                             <g id="eyesHappy" class="nuez-expression-part face-eyes-happy" style="display: none;">
                               <path d="M 89 102 Q 98 88 107 102" fill="none" stroke="#2c1407" stroke-width="3.6" stroke-linecap="round" />
                               <path d="M 133 102 Q 142 88 151 102" fill="none" stroke="#2c1407" stroke-width="3.6" stroke-linecap="round" />
@@ -760,105 +948,35 @@
                               <path d="M 132 100 C 132 92, 142 90, 142 97 C 142 90, 152 92, 152 100 C 152 107, 142 112, 142 114 C 142 112, 132 107, 132 100 Z" fill="#ec4899" />
                             </g>
 
-                            <!-- Ojos Comiendo -->
+                            <!-- Ojos Comiendo Felices (> <) -->
                             <g id="eyesEating" class="nuez-expression-part face-eyes-eating" style="display: none;">
                               <path d="M 90 95 L 100 101 L 90 107" fill="none" stroke="#2c1407" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
                               <path d="M 150 95 L 140 101 L 150 107" fill="none" stroke="#2c1407" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
                             </g>
 
-                            <!-- Ojos Durmiendo -->
+                            <!-- Ojos Durmiendo Relajada -->
                             <g id="eyesSleeping" class="nuez-expression-part face-eyes-sleeping" style="display: none;">
                               <path d="M 89 97 Q 98 106 107 97" fill="none" stroke="#3b1d0c" stroke-width="3.4" stroke-linecap="round" />
                               <path d="M 133 97 Q 142 106 151 97" fill="none" stroke="#3b1d0c" stroke-width="3.4" stroke-linecap="round" />
                             </g>
 
-                            <!-- BOCAS -->
+                            <!-- BOCAS EXPRESIVAS (Incluye dientitos de ardilla al masticar) -->
                             <path id="mouthDefault" class="nuez-mouth-item mouth-cat" d="M 112 117 Q 116 122 120 117 Q 124 122 128 117" fill="none" stroke="#3b1d0c" stroke-width="2.5" stroke-linecap="round" />
+                            
                             <g id="mouthSmile" class="nuez-mouth-item mouth-smile" style="display: none;">
                               <path d="M 112 116 Q 120 128 128 116 Z" fill="#991b1b" stroke="#3b1d0c" stroke-width="2" />
                               <path d="M 115 121 Q 120 125 125 121 Z" fill="#f472b6" />
                             </g>
-                            <ellipse id="mouthChew" class="nuez-mouth-item mouth-chew" cx="120" cy="119" rx="5" ry="3.5" fill="#991b1b" style="display: none;" />
+
+                            <!-- Boca comiendo con Dientitos Blancos de Ardilla -->
+                            <g id="mouthChew" class="nuez-mouth-item mouth-chew" style="display: none;">
+                              <path d="M 114 116 Q 120 124 126 116 Z" fill="#881337" stroke="#3b1d0c" stroke-width="1.8" />
+                              <!-- Dientes frontales de ardillita -->
+                              <rect x="117.5" y="115.5" width="2.4" height="3.2" rx="0.6" fill="#ffffff" stroke="#3b1d0c" stroke-width="0.6" />
+                              <rect x="120.2" y="115.5" width="2.4" height="3.2" rx="0.6" fill="#ffffff" stroke="#3b1d0c" stroke-width="0.6" />
+                            </g>
+
                             <ellipse id="mouthYawn" class="nuez-mouth-item mouth-yawn" cx="120" cy="120" rx="7" ry="9" fill="#7f1d1d" stroke="#3b1d0c" stroke-width="2" style="display: none;" />
-                          </g>
-
-                          <!-- 5. MANITAS DE LA ARDILLITA -->
-                          <g id="nuezPaws" class="nuez-paws-part">
-                            <ellipse id="pawL" class="nuez-paw paw-left" cx="95" cy="155" rx="11" ry="8" fill="#cf7729" />
-                            <ellipse id="pawR" class="nuez-paw paw-right" cx="145" cy="155" rx="11" ry="8" fill="#cf7729" />
-                          </g>
-
-                          <!-- 6. OBJETO SOSTENIDO EN MANITAS (Comidas y Bebidas Animadas) -->
-                          <g id="nuezHeldItem" class="nuez-held-item-group" transform="translate(100, 140)">
-                            <!-- Mini Libro Morado (Defecto) -->
-                            <g id="itemBook" class="held-object item-book">
-                              <rect x="0" y="0" width="40" height="26" rx="4" fill="#7e22ce" filter="url(#nuezSoftShadow)" />
-                              <rect x="4" y="2" width="32" height="22" rx="2" fill="#faf5ff" />
-                              <rect x="18" y="0" width="4" height="26" fill="#581c87" />
-                              <path d="M 19 24 L 21 32 L 23 24 Z" fill="#eab308" />
-                              <text x="8" y="17" font-size="10" fill="#a855f7">📖</text>
-                            </g>
-                            <!-- Bellota Silvestre -->
-                            <g id="itemAcorn" class="held-object item-acorn" style="display: none;">
-                              <path d="M 12 6 C 12 0, 28 0, 28 6 L 30 10 L 10 10 Z" fill="#78350f" />
-                              <path d="M 10 10 C 10 24, 30 24, 30 10 Z" fill="#b45309" />
-                              <circle cx="16" cy="14" r="2" fill="#fde68a" opacity="0.6" />
-                            </g>
-                            <!-- Nuez Dorada Brillante -->
-                            <g id="itemGoldNut" class="held-object item-goldnut" style="display: none;">
-                              <ellipse cx="20" cy="14" rx="14" ry="12" fill="#eab308" stroke="#ca8a04" stroke-width="1.5" />
-                              <path d="M 14 6 Q 20 2 26 6" stroke="#fef08a" stroke-width="2" fill="none" stroke-linecap="round" />
-                              <circle cx="16" cy="11" r="2.5" fill="#ffffff" opacity="0.8" />
-                              <text x="24" y="8" font-size="8" fill="#fde047">✨</text>
-                            </g>
-                            <!-- Té de Lavanda & Miel -->
-                            <g id="itemTea" class="held-object item-tea" style="display: none;">
-                              <ellipse cx="20" cy="18" rx="14" ry="8" fill="#ffffff" stroke="#e2e8f0" stroke-width="2" />
-                              <ellipse cx="20" cy="17" rx="11" ry="6" fill="#a855f7" />
-                              <!-- Hilillo de vapor violeta -->
-                              <path d="M 17 10 Q 14 5 18 1" fill="none" stroke="rgba(216,180,254,0.9)" stroke-width="2" stroke-linecap="round" class="ac-steam-wisp" />
-                              <path d="M 23 11 Q 26 6 22 2" fill="none" stroke="rgba(216,180,254,0.9)" stroke-width="2" stroke-linecap="round" class="ac-steam-wisp" />
-                              <!-- Mini florecita de lavanda en el borde -->
-                              <circle cx="9" cy="14" r="2.5" fill="#c084fc" />
-                            </g>
-                            <!-- Café de El Alpiste (Brewster) -->
-                            <g id="itemCoffee" class="held-object item-coffee" style="display: none;">
-                              <rect x="8" y="8" width="24" height="18" rx="4" fill="#047857" stroke="#065f46" stroke-width="1.5" />
-                              <ellipse cx="20" cy="8" rx="12" ry="3.5" fill="#451a03" />
-                              <!-- Logo palomita blanca de Brewster -->
-                              <circle cx="20" cy="17" r="3.5" fill="#ffffff" />
-                              <path d="M 18 17 Q 20 15 22 17" stroke="#047857" stroke-width="1" fill="none" />
-                              <!-- Vapor -->
-                              <path d="M 20 4 Q 18 0 20 -4" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="1.5" stroke-linecap="round" class="ac-steam-wisp" />
-                            </g>
-                            <!-- Pastelito de Zarzamora & Lavanda -->
-                            <g id="itemBlackberryCake" class="held-object item-cake" style="display: none;">
-                              <path d="M 10 14 L 14 24 L 26 24 L 30 14 Z" fill="#fed7aa" stroke="#f97316" stroke-width="1" />
-                              <ellipse cx="20" cy="13" rx="13" ry="8" fill="#9333ea" />
-                              <ellipse cx="20" cy="10" rx="9" ry="5" fill="#c084fc" />
-                              <circle cx="20" cy="6" r="3.5" fill="#3b0764" />
-                            </g>
-                            <!-- Galletitas de Animal Crossing -->
-                            <g id="itemCookies" class="held-object item-cookies" style="display: none;">
-                              <path d="M 8 16 C 8 8, 24 8, 24 16 C 24 22, 16 26, 8 16 Z" fill="#fde68a" stroke="#d97706" stroke-width="1.2" />
-                              <!-- Mordisquito en la galleta -->
-                              <circle cx="24" cy="14" r="3" fill="#cf7729" />
-                              <circle cx="15" cy="15" r="1.5" fill="#78350f" />
-                            </g>
-                            <!-- Macarons 'Lavender Haze' de Taylor -->
-                            <g id="itemMacarons" class="held-object item-macarons" style="display: none;">
-                              <ellipse cx="20" cy="20" rx="12" ry="5" fill="#e9d5ff" stroke="#a855f7" stroke-width="1" />
-                              <rect x="10" y="17" width="20" height="3" fill="#faf5ff" />
-                              <ellipse cx="20" cy="14" rx="12" ry="5" fill="#d8b4fe" stroke="#a855f7" stroke-width="1" />
-                              <text x="25" y="11" font-size="7" fill="#fde047">★</text>
-                            </g>
-                            <!-- Banquete Supremo del Bosque -->
-                            <g id="itemFeast" class="held-object item-feast" style="display: none;">
-                              <rect x="6" y="12" width="28" height="15" rx="3" fill="#b45309" stroke="#78350f" stroke-width="1.2" />
-                              <ellipse cx="14" cy="11" r="4" fill="#ef4444" />
-                              <ellipse cx="22" cy="10" r="4.5" fill="#8b5cf6" />
-                              <ellipse cx="27" cy="12" r="3.5" fill="#f59e0b" />
-                            </g>
                           </g>
 
                           <!-- 7. ACCESORIOS SVG (Guardarropa dinámico temático) -->

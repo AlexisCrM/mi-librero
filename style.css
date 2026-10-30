@@ -3499,13 +3499,13 @@ body.ac-theme {
   100% { transform: translateY(-26px) translateX(6px) scale(0.3); opacity: 0; }
 }
 
-/* Mesita auxiliar con lámpara, té y libros estilo Animal Crossing (100% Vectorial pura en SVG, sin emojis) */
+/* Mesita auxiliar con lámpara, té y libros estilo Animal Crossing (Al lado de la camita, sin estorbar) */
 .cozy-room-table {
   position: absolute;
-  left: 14px;
-  bottom: 22px;
-  width: 72px;
-  height: 95px;
+  left: 114px;
+  bottom: 20px;
+  width: 54px;
+  height: 78px;
   z-index: 3;
   pointer-events: none;
   filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
@@ -3561,18 +3561,32 @@ body.ac-theme {
   transform: scale(0.96);
 }
 
-/* Respiración corporal continua */
+/* Respiración corporal continua de ardilla viva */
 .nuez-body-root {
   transform-origin: 120px 200px;
-  animation: nuezBreathing 3.2s ease-in-out infinite;
+  animation: nuezBreathing 3.4s ease-in-out infinite;
 }
 
 @keyframes nuezBreathing {
   0%, 100% { transform: scale(1, 1) translateY(0); }
-  50% { transform: scale(1.025, 0.98) translateY(-3px); }
+  50% { transform: scale(1.03, 0.975) translateY(-2px); }
 }
 
-/* Colita esponjosa - Movimiento suave armónico */
+/* Nariz con olfateo natural y tics de ardilla viva */
+.nuez-nose-group {
+  transform-origin: 120px 108px;
+  animation: noseSniffTwitch 3.8s ease-in-out infinite;
+}
+
+@keyframes noseSniffTwitch {
+  0%, 82%, 100% { transform: translateY(0) scale(1); }
+  85% { transform: translateY(-1.8px) scale(1.08, 0.92); }
+  88% { transform: translateY(0) scale(1); }
+  92% { transform: translateY(-1.5px) scale(1.06, 0.94); }
+  95% { transform: translateY(0) scale(1); }
+}
+
+/* Colita esponjosa - Movimiento suave armónico de ardilla */
 .nuez-tail-part {
   transform-origin: 108px 178px;
   animation: tailIdleSwish 3.6s ease-in-out infinite;
@@ -3586,8 +3600,10 @@ body.ac-theme {
 /* Cola rápida cuando está feliz, comiendo o siendo acariciada */
 .nuez-svg-mascot.happy .nuez-tail-part,
 .nuez-svg-mascot.petting .nuez-tail-part,
-.nuez-svg-mascot.eating .nuez-tail-part {
-  animation: tailFastWag 0.38s ease-in-out infinite alternate !important;
+.nuez-svg-mascot.eating .nuez-tail-part,
+.nuez-svg-mascot.is-eating .nuez-tail-part,
+.nuez-svg-mascot.is-drinking .nuez-tail-part {
+  animation: tailFastWag 0.35s ease-in-out infinite alternate !important;
 }
 
 @keyframes tailFastWag {
@@ -3629,23 +3645,132 @@ body.ac-theme {
   95% { transform: scaleY(0.08); }
 }
 
-/* Masticación de mejillas y boca al comer */
-.nuez-svg-mascot.eating .nuez-blush-spot {
-  animation: cheekNomNom 0.32s ease-in-out infinite alternate;
+/* =================================================================
+   ANIMACIÓN DETALLADA Y ARTICULADA DE COMER (Estilo Ardilla Real)
+   ================================================================= */
+.nuez-arms-item-group {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: 120px 160px;
+}
+
+.nuez-head-part {
+  transition: transform 0.25s ease;
+  transform-origin: 120px 120px;
+}
+
+/* Manitas y alimento suben directamente al hocico con rápida masticación */
+.nuez-svg-mascot.eating .nuez-arms-item-group,
+.nuez-svg-mascot.is-eating .nuez-arms-item-group {
+  animation: squirrelEatArmsLift 0.16s ease-in-out infinite alternate !important;
+}
+
+@keyframes squirrelEatArmsLift {
+  0% { transform: translateY(-23px) rotate(-1.5deg) scale(1.05); }
+  100% { transform: translateY(-27px) rotate(1.5deg) scale(1.08); }
+}
+
+/* Cabeza se asoma hacia las patitas con deleite */
+.nuez-svg-mascot.eating .nuez-head-part,
+.nuez-svg-mascot.is-eating .nuez-head-part {
+  animation: squirrelHeadEating 0.16s ease-in-out infinite alternate !important;
+}
+
+@keyframes squirrelHeadEating {
+  0% { transform: translateY(0px) rotate(0deg); }
+  100% { transform: translateY(2.5px) rotate(-1deg); }
+}
+
+/* Masticación de mejillas y boca con dientitos blancos de ardilla */
+.nuez-svg-mascot.eating .nuez-blush-spot,
+.nuez-svg-mascot.is-eating .nuez-blush-spot {
+  animation: cheekNomNom 0.16s ease-in-out infinite alternate;
 }
 
 @keyframes cheekNomNom {
   0% { transform: scale(1); }
-  100% { transform: scale(1.4) translateY(-1px); }
+  100% { transform: scale(1.35) translateY(-1px); }
 }
 
-.nuez-svg-mascot.eating #mouthChew {
-  animation: mouthNomNom 0.32s ease-in-out infinite alternate;
+.nuez-svg-mascot.eating #mouthChew,
+.nuez-svg-mascot.is-eating #mouthChew {
+  display: block !important;
+  animation: mouthNomNom 0.16s ease-in-out infinite alternate !important;
 }
 
 @keyframes mouthNomNom {
-  0% { transform: scaleY(0.4); }
-  100% { transform: scaleY(1.4); }
+  0% { transform: scale(1, 0.5); }
+  100% { transform: scale(1.05, 1.35); }
+}
+
+/* Bigotitos vibrando de emoción al comer */
+.nuez-svg-mascot.eating .nuez-whiskers,
+.nuez-svg-mascot.is-eating .nuez-whiskers {
+  animation: whiskersNom 0.14s ease-in-out infinite alternate;
+}
+
+@keyframes whiskersNom {
+  0% { transform: rotate(-2deg); }
+  100% { transform: rotate(2deg); }
+}
+
+/* =================================================================
+   ANIMACIÓN DETALLADA Y ARTICULADA DE BEBER (Té y Café)
+   ================================================================= */
+.nuez-svg-mascot.is-drinking .nuez-arms-item-group {
+  animation: squirrelDrinkArmsLift 2.4s ease-in-out infinite !important;
+}
+
+@keyframes squirrelDrinkArmsLift {
+  0% { transform: translateY(0) rotate(0deg) scale(1); }
+  22% { transform: translateY(-24px) rotate(7deg) scale(1.06); }
+  50% { transform: translateY(-26px) rotate(11deg) scale(1.08); }
+  75% { transform: translateY(-24px) rotate(7deg) scale(1.06); }
+  100% { transform: translateY(0) rotate(0deg) scale(1); }
+}
+
+.nuez-svg-mascot.is-drinking .nuez-head-part {
+  animation: squirrelHeadDrinking 2.4s ease-in-out infinite !important;
+}
+
+@keyframes squirrelHeadDrinking {
+  0% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(2px) rotate(2deg); }
+  50% { transform: translateY(3.5px) rotate(3deg); }
+  75% { transform: translateY(2px) rotate(1deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+.nuez-svg-mascot.is-drinking .ac-steam-wisp {
+  animation: steamDriftLively 1.6s infinite ease-out !important;
+}
+
+@keyframes steamDriftLively {
+  0% { transform: translateY(0) scale(0.6); opacity: 0; }
+  35% { opacity: 0.95; }
+  100% { transform: translateY(-22px) scale(1.5) translateX(4px); opacity: 0; }
+}
+
+/* Partículas de migajas crujientes al comer */
+.food-crumb-particle {
+  position: absolute;
+  pointer-events: none;
+  z-index: 40;
+  border-radius: 50%;
+  animation: crumbFall 0.85s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes crumbFall {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  60% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(var(--cx, 10px), var(--cy, 45px)) scale(0.4);
+    opacity: 0;
+  }
 }
 
 /* Saltito de alegría */
@@ -3700,11 +3825,24 @@ body.ac-theme {
   transition: opacity 0.5s ease-in-out, filter 0.5s ease;
 }
 
-/* Escenario 1: Casita de Madera Cálida con Chimenea */
+/* Escenario 1: Casita de Madera Cálida con Chimenea y Troncos Apilados 3D */
 .tamagotchi-stage[data-room="cottage_room"] .stage-room-bg {
   background: 
-    radial-gradient(circle at 80% 65%, rgba(255, 140, 40, 0.35) 0%, transparent 50%),
-    linear-gradient(180deg, #442a17 0%, #301d10 65%, #24140b 100%);
+    /* Brillo dorado y rojizo de la chimenea proyectado en el muro */
+    radial-gradient(circle at 86% 62%, rgba(249, 115, 22, 0.42) 0%, rgba(217, 119, 6, 0.18) 35%, transparent 68%),
+    /* Haz de luz de la lámpara de noche sobre la pared izquierda */
+    radial-gradient(circle at 24% 65%, rgba(254, 240, 138, 0.3) 0%, rgba(245, 158, 11, 0.1) 28%, transparent 55%),
+    /* Troncos apilados con relieve cilíndrico y vetas de madera rústica */
+    repeating-linear-gradient(
+      180deg,
+      #5c2e0b 0px,
+      #78350f 4px,
+      #9a4613 14px,
+      #78350f 24px,
+      #451a03 27px,
+      #270f03 29px
+    );
+  box-shadow: inset 0 0 45px rgba(20, 8, 2, 0.5);
 }
 
 .tamagotchi-stage[data-room="cottage_room"] .stage-room-bg::before {
@@ -3713,11 +3851,21 @@ body.ac-theme {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 40%;
+  height: 38%;
   background: 
-    radial-gradient(ellipse at 50% 100%, rgba(255, 230, 180, 0.18) 0%, transparent 60%),
-    repeating-linear-gradient(90deg, #4a2e19 0px, #4a2e19 60px, #361f0e 61px, #361f0e 63px);
-  border-top: 3px solid #6b4324;
+    radial-gradient(ellipse at 84% 65%, rgba(249, 115, 22, 0.32) 0%, transparent 60%),
+    radial-gradient(ellipse at 25% 65%, rgba(254, 240, 138, 0.22) 0%, transparent 52%),
+    /* Duelas de madera de roble cálido con biseles */
+    repeating-linear-gradient(
+      90deg,
+      #b45309 0px,
+      #a14906 18px,
+      #8d3d05 35px,
+      #78350f 36px,
+      #451a03 38px
+    );
+  border-top: 4px solid #3b1704;
+  box-shadow: inset 0 6px 14px rgba(10, 4, 1, 0.4);
 }
 
 /* Visibilidad de muebles de la casita */
@@ -4848,13 +4996,157 @@ body.ac-theme {
   font-size: 13px;
 }
 
-/* Cama de Cabaña de Madera estilo Animal Crossing */
+/* Reloj rústico de pared con péndulo que se balancea estilo Animal Crossing */
+.cabin-cuckoo-clock {
+  position: absolute;
+  top: 14px;
+  right: 58px;
+  width: 26px;
+  height: 40px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.clock-body {
+  width: 24px;
+  height: 22px;
+  background: #78350f;
+  border: 1.5px solid #451a03;
+  border-radius: 3px 3px 2px 2px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clock-body::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  border-bottom: 8px solid #92400e;
+}
+
+.clock-face {
+  width: 13px;
+  height: 13px;
+  background: #fef3c7;
+  border-radius: 50%;
+  border: 1px solid #78350f;
+  position: relative;
+}
+
+.clock-center-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2.4px;
+  height: 2.4px;
+  background: #451a03;
+  border-radius: 50%;
+}
+
+.clock-pendulum-arm {
+  width: 2px;
+  height: 16px;
+  background: #ca8a04;
+  margin: 0 auto;
+  position: relative;
+  transform-origin: top center;
+  animation: pendulumTick 1.3s infinite ease-in-out alternate;
+}
+
+.clock-bob {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background: #fde047;
+  border-radius: 50%;
+  border: 1px solid #ca8a04;
+}
+
+@keyframes pendulumTick {
+  0% { transform: rotate(-16deg); }
+  100% { transform: rotate(16deg); }
+}
+
+/* Manojo de lavanda secándose boca abajo colgado de la viga */
+.cabin-hanging-herb {
+  position: absolute;
+  top: 10px;
+  right: 135px;
+  z-index: 2;
+  pointer-events: none;
+  transform-origin: top center;
+  animation: herbSway 3.8s infinite ease-in-out alternate;
+}
+
+.herb-twine {
+  width: 1.5px;
+  height: 12px;
+  background: #a16207;
+  margin: 0 auto;
+}
+
+.herb-bouquet {
+  font-size: 13px;
+  transform: scaleY(-1);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+}
+
+@keyframes herbSway {
+  0% { transform: rotate(-5deg); }
+  100% { transform: rotate(5deg); }
+}
+
+/* Chispitas y motas de luz dorada flotando en la cabaña */
+.cabin-ambient-motes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.ambient-mote {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fde047 0%, rgba(250, 204, 21, 0.35) 60%, transparent 100%);
+  filter: drop-shadow(0 0 3px #fde047);
+  opacity: 0;
+  animation: moteFloatUp 5.4s infinite ease-in-out;
+}
+
+.amt1 { width: 4.5px; height: 4.5px; left: 78%; bottom: 26%; animation-duration: 4.6s; animation-delay: 0.2s; }
+.amt2 { width: 3px; height: 3px; left: 60%; bottom: 22%; animation-duration: 6s; animation-delay: 1.4s; }
+.amt3 { width: 4px; height: 4px; left: 82%; bottom: 38%; animation-duration: 5.2s; animation-delay: 2.6s; }
+.amt4 { width: 3.5px; height: 3.5px; left: 36%; bottom: 24%; animation-duration: 6.8s; animation-delay: 0.8s; }
+.amt5 { width: 4px; height: 4px; left: 46%; bottom: 28%; animation-duration: 5.6s; animation-delay: 3.4s; }
+
+@keyframes moteFloatUp {
+  0% { transform: translate(0, 0) scale(0.6); opacity: 0; }
+  30% { opacity: 0.85; transform: translate(6px, -22px) scale(1.1); }
+  70% { opacity: 0.55; transform: translate(-4px, -50px) scale(0.9); }
+  100% { opacity: 0; transform: translate(8px, -80px) scale(0.3); }
+}
+
+/* Cama de Cabaña de Madera estilo Animal Crossing (Ubicada en la esquina izquierda) */
 .cozy-room-bed {
   position: absolute;
-  left: 10px;
-  bottom: 24px;
-  width: 108px;
-  height: 74px;
+  left: 8px;
+  bottom: 20px;
+  width: 104px;
+  height: 72px;
   z-index: 3;
   pointer-events: none;
   filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
@@ -4879,7 +5171,7 @@ body.ac-theme {
 }
 
 .tamagotchi-stage.is-sleeping .tamagotchi-character-area {
-  transform: translate(-98px, 6px) scale(0.82);
+  transform: translate(-170px, 8px) scale(0.76);
 }
 
 .tamagotchi-stage.is-sleeping .tamagotchi-mascot-wrapper {

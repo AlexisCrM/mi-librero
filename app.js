@@ -2724,16 +2724,16 @@ const NUEZ_PET_PHRASES = [
   "¡Te quiero un montón, amiga lectora! 💕"
 ];
 
-// Catálogo Oficial de Snacks y Alimentos de Nuez (Con Precios y Beneficios)
+// Catálogo Oficial de Snacks y Alimentos de Nuez (Precios equilibrados y animaciones temáticas)
 const SNACK_CATALOG = [
   { id: 'bellota', name: 'Bellota Silvestre', icon: '🌰', cost: 0, boost: '+25 Apetito', desc: 'Crujiente bellota del bosque' },
-  { id: 'nuez', name: 'Nuez Dorada', icon: '🥜', cost: 4, boost: '+45 Apetito • +15 Cariño', desc: 'Tostadita y deliciosa' },
-  { id: 'te', name: 'Té de Lavanda y Miel', icon: '🫖', cost: 8, boost: '+40 Energía • +25 Cariño', desc: 'Infusión floral caliente' },
-  { id: 'cafe', name: 'Café con Leche', icon: '☕', cost: 12, boost: '+60 Energía • +15 Cariño', desc: 'Espuma con almendra' },
-  { id: 'muffin', name: 'Muffin de Moras', icon: '🧁', cost: 16, boost: '+65 Apetito • +30 Cariño', desc: 'Moras silvestres frescas' },
-  { id: 'galletas', name: 'Galletas de Miel', icon: '🍪', cost: 20, boost: '+75 Apetito • +35 Cariño', desc: 'Avena, miel y lavanda' },
-  { id: 'macarons', name: 'Macarons Parisinos', icon: '🍬', cost: 28, boost: '+85 Apetito • +45 Cariño', desc: 'Crema suave de lavanda' },
-  { id: 'banquete', name: 'Gran Banquete Real', icon: '🧺', cost: 45, boost: '100% Todo • +60 Cariño', desc: 'Festín para celebrar lecturas' }
+  { id: 'nuez', name: 'Nuez Dorada', icon: '🥜', cost: 2, boost: '+45 Apetito • +15 Cariño', desc: 'Tostadita y deliciosa' },
+  { id: 'te', name: 'Té de Lavanda y Miel', icon: '🫖', cost: 4, boost: '+40 Energía • +25 Cariño', desc: 'Infusión floral caliente' },
+  { id: 'cafe', name: 'Café con Leche', icon: '☕', cost: 6, boost: '+60 Energía • +15 Cariño', desc: 'Espuma con almendra' },
+  { id: 'muffin', name: 'Muffin de Moras', icon: '🧁', cost: 10, boost: '+65 Apetito • +30 Cariño', desc: 'Moras silvestres frescas' },
+  { id: 'galletas', name: 'Galletas de Miel', icon: '🍪', cost: 14, boost: '+75 Apetito • +35 Cariño', desc: 'Avena, miel y lavanda' },
+  { id: 'macarons', name: 'Macarons Parisinos', icon: '🍬', cost: 18, boost: '+85 Apetito • +45 Cariño', desc: 'Crema suave de lavanda' },
+  { id: 'banquete', name: 'Gran Banquete Real', icon: '🧺', cost: 28, boost: '100% Todo • +60 Cariño', desc: 'Festín para celebrar lecturas' }
 ];
 
 // Catálogo del Guardarropa de Nuez (Temáticas: Lavanda, Taylor Swift, Dove Cameron, Ardillas y Animal Crossing)
@@ -2956,7 +2956,7 @@ function loadActiveSquirrel() {
       hunger: 85,
       affection: 90,
       energy: 80,
-      acorns: 20,
+      acorns: 50,
       room: 'cottage_room',
       equipped: {
         hat: 'hat-none',
@@ -2966,6 +2966,11 @@ function loadActiveSquirrel() {
       isSleeping: false,
       lastUpdated: Date.now()
     };
+  }
+
+  // Bono especial de bienvenida de bellotas si el lector tiene saldo bajo para que pueda probar snacks y ropita
+  if ((data.acorns || 0) < 40) {
+    data.acorns = 50;
   }
 
   // Comprobar decaimiento suave según tiempo
@@ -3142,6 +3147,39 @@ function spawnLavenderBlossomParticles(count = 6) {
     p.style.animationDelay = `${(i * 0.16)}s`;
     stage.appendChild(p);
     setTimeout(() => p.remove(), 2400);
+  }
+}
+
+// Partículas de migajas crujientes al masticar estilo Animal Crossing
+function spawnFoodCrumbs(count = 8, snackKey = 'bellota') {
+  const container = document.getElementById('tamagotchiMascotWrapper');
+  if (!container) return;
+  const palettes = {
+    bellota: ['#b45309', '#78350f', '#fde68a', '#d97706'],
+    nuez: ['#eab308', '#ca8a04', '#fef08a', '#b45309'],
+    muffin: ['#9333ea', '#c084fc', '#fed7aa', '#581c87'],
+    galletas: ['#fde68a', '#d97706', '#b45309', '#ca8a04'],
+    macarons: ['#d8b4fe', '#f472b6', '#ffffff', '#c084fc'],
+    banquete: ['#ef4444', '#8b5cf6', '#f59e0b', '#10b981', '#fde047']
+  };
+  const colors = palettes[snackKey] || palettes.bellota;
+  for (let i = 0; i < count; i++) {
+    const crumb = document.createElement('div');
+    crumb.className = 'food-crumb-particle';
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const size = Math.floor(Math.random() * 3.5) + 3; // 3px a 6.5px
+    const cx = (Math.random() - 0.5) * 55;
+    const cy = 25 + Math.random() * 30;
+    crumb.style.width = `${size}px`;
+    crumb.style.height = `${size}px`;
+    crumb.style.backgroundColor = color;
+    crumb.style.left = `calc(50% + ${(Math.random() - 0.5) * 18}px)`;
+    crumb.style.top = `56%`;
+    crumb.style.setProperty('--cx', `${cx}px`);
+    crumb.style.setProperty('--cy', `${cy}px`);
+    crumb.style.animationDelay = `${(i * 0.1)}s`;
+    container.appendChild(crumb);
+    setTimeout(() => crumb.remove(), 1100);
   }
 }
 
@@ -3479,34 +3517,47 @@ function feedSquirrel(snackKey) {
   s.acorns = Math.max(0, (s.acorns || 0) - cost);
   closeSnackMenu();
 
-  // Nuez sostiene la comida en sus manitas
+  const svg = document.getElementById('nuezLivingSvg');
+
+  // Nuez sostiene la comida en sus manitas articuladas
   setSquirrelHeldItem(snackKey);
 
-  if (snackKey === 'te') {
-    // ANIMACIÓN ESPECIAL DE BEBER TÉ DE LAVANDA
-    const wrapper = document.getElementById('tamagotchiMascotWrapper');
-    if (wrapper) wrapper.classList.add('sipping-tea');
+  if (snackKey === 'te' || snackKey === 'cafe') {
+    // ANIMACIÓN ARTICULADA DE BEBER (Taza sube suavemente a los labios con vapor y aroma)
+    if (svg) {
+      svg.classList.remove('is-eating');
+      svg.classList.add('is-drinking');
+    }
 
     setSquirrelExpression('love');
     playTamaSound('sip');
-    setTimeout(() => playTamaSound('sip'), 500);
-    spawnLavenderBlossomParticles(7);
+    setTimeout(() => playTamaSound('sip'), 650);
+    setTimeout(() => playTamaSound('sip'), 1300);
 
-    s.energy = Math.min(100, (s.energy || 0) + 40);
-    s.affection = Math.min(100, (s.affection || 0) + 25);
-    showBubbleDialogue("Mmm... ¡Qué aroma tan reconfortante a lavanda silvestre! 🪻 Siento una paz maravillosa mientras leo... ✨");
+    if (snackKey === 'te') {
+      spawnLavenderBlossomParticles(8);
+      s.energy = Math.min(100, (s.energy || 0) + 40);
+      s.affection = Math.min(100, (s.affection || 0) + 25);
+      showBubbleDialogue("Mmm... ¡Qué aroma tan reconfortante a té de lavanda silvestre! 🪻 Siento una paz maravillosa en mi rincón acogedor... ✨");
+    } else {
+      spawnLavenderBlossomParticles(4);
+      s.energy = Math.min(100, (s.energy || 0) + 60);
+      s.affection = Math.min(100, (s.affection || 0) + 15);
+      showBubbleDialogue("¡Sluuuurp! ¡Un delicioso café calientito con leche espumosa de El Alpiste! ☕ Súper despierta para devorar más libros... ✨");
+    }
 
     setTimeout(() => {
-      if (wrapper) wrapper.classList.remove('sipping-tea');
-      setSquirrelExpression('happy');
-      const svg = document.getElementById('nuezLivingSvg');
       if (svg) {
+        svg.classList.remove('is-drinking');
         svg.classList.add('hop-joy');
-        setTimeout(() => svg.classList.remove('hop-joy'), 480);
+        setTimeout(() => svg.classList.remove('hop-joy'), 500);
       }
-      showBubbleDialogue("¡Ahhh! Delicioso... Me llenó el corazoncito de calma y energía 💜");
+      setSquirrelExpression('happy');
+      showBubbleDialogue(snackKey === 'cafe' 
+        ? "¡Wooo! ¡Ese café estuvo increíble! ¡Con energía al 100%! ☕🔥" 
+        : "¡Ahhh! Delicioso hasta la última gotita... ¡Llena de calma y amor! 💜✨");
       renderSquirrelUI();
-    }, 2400);
+    }, 2600);
 
     setTimeout(() => {
       if (!currentSquirrel.isSleeping) {
@@ -3516,59 +3567,68 @@ function feedSquirrel(snackKey) {
     }, 4200);
 
   } else {
-    // ANIMACIÓN DE MASTICAR SNACK
+    // ANIMACIÓN ARTICULADA DE MASTICAR (Manitas suben al hocico con dientitos y migajas)
+    if (svg) {
+      svg.classList.remove('is-drinking');
+      svg.classList.add('is-eating');
+    }
     setSquirrelExpression('eating');
+
+    // Cascada de soniditos crujientes de ardilla
     playTamaSound('eat');
-    setTimeout(() => playTamaSound('eat'), 350);
-    setTimeout(() => playTamaSound('eat'), 700);
+    setTimeout(() => playTamaSound('eat'), 200);
+    setTimeout(() => playTamaSound('eat'), 420);
+    setTimeout(() => playTamaSound('eat'), 660);
+    setTimeout(() => playTamaSound('eat'), 900);
+
+    // Lluvia de migajitas crujientes cayendo de las patitas
+    spawnFoodCrumbs(10, snackKey);
+    setTimeout(() => spawnFoodCrumbs(6, snackKey), 350);
 
     // Ajuste de estadísticas y diálogo personalizado
     if (snackKey === 'bellota') {
       s.hunger = Math.min(100, (s.hunger || 0) + 25);
-      showBubbleDialogue("¡Crunch crunch! ¡Qué bellota tan crujiente y dulce! 🌰✨");
+      showBubbleDialogue("¡Crunch crunch! ¡Qué rica bellota silvestre! ¡Mis dientitos están felices! 🌰✨");
     } else if (snackKey === 'nuez') {
       s.hunger = Math.min(100, (s.hunger || 0) + 45);
       s.affection = Math.min(100, (s.affection || 0) + 15);
-      showBubbleDialogue("¡Una nuez dorada tostada! ¡Mi favorita del bosque! 🥜💖");
-    } else if (snackKey === 'cafe') {
-      s.energy = Math.min(100, (s.energy || 0) + 60);
-      s.affection = Math.min(100, (s.affection || 0) + 15);
-      showBubbleDialogue("¡Qué café tan espumoso! ¡Listo para leer 100 páginas más! ☕✨");
+      showBubbleDialogue("¡Una nuez dorada tostada! ¡Crujiente y tostadita, mi favorita! 🥜💖");
     } else if (snackKey === 'muffin') {
       s.hunger = Math.min(100, (s.hunger || 0) + 65);
       s.affection = Math.min(100, (s.affection || 0) + 30);
-      showBubbleDialogue("¡Mmm! ¡Muffin de moras recién horneado! ¡Delicioso! 🧁💜");
+      showBubbleDialogue("¡Mmm! ¡Muffin esponjoso de moras silvestres! ¡Una delicia total! 🧁💜");
     } else if (snackKey === 'galletas') {
       s.hunger = Math.min(100, (s.hunger || 0) + 75);
       s.affection = Math.min(100, (s.affection || 0) + 35);
-      showBubbleDialogue("¡Galletitas con miel y lavanda! ¡Crujientes y perfectas! 🍪🌸");
+      showBubbleDialogue("¡Galletitas con miel y lavanda! ¡Crujientes por fuera y suaves por dentro! 🍪🌸");
     } else if (snackKey === 'macarons') {
       s.hunger = Math.min(100, (s.hunger || 0) + 85);
       s.affection = Math.min(100, (s.affection || 0) + 45);
-      showBubbleDialogue("¡Macarons parisinos! ¡Qué elegancia de merienda literaria! 🍬✨");
+      showBubbleDialogue("¡Macarons 'Lavender Haze'! ¡Qué elegancia de merienda literaria parisina! 🍬✨");
     } else if (snackKey === 'banquete') {
       s.hunger = 100;
       s.energy = 100;
       s.affection = Math.min(100, (s.affection || 0) + 60);
-      showBubbleDialogue("🎉 ¡EL GRAN BANQUETE REAL! ¡Esto es una fiesta inolvidable! 🧺🌰🍇");
+      showBubbleDialogue("🎉 ¡EL GRAN BANQUETE REAL! ¡Esto es una fiesta inolvidable en la cabaña! 🧺🌰🍇");
     }
 
     setTimeout(() => {
-      setSquirrelExpression('happy');
-      const svg = document.getElementById('nuezLivingSvg');
       if (svg) {
+        svg.classList.remove('is-eating');
         svg.classList.add('hop-joy');
-        setTimeout(() => svg.classList.remove('hop-joy'), 480);
+        setTimeout(() => svg.classList.remove('hop-joy'), 500);
       }
+      setSquirrelExpression('happy');
+      showBubbleDialogue("¡Ñam ñam! ¡Qué merienda tan deliciosa! Mi pancita está súper contenta 🌰💖");
       renderSquirrelUI();
-    }, 1600);
+    }, 2400);
 
     setTimeout(() => {
       if (!currentSquirrel.isSleeping) {
         setSquirrelHeldItem('book');
         setSquirrelExpression('normal');
       }
-    }, 3600);
+    }, 4000);
   }
 
   saveActiveSquirrel();
