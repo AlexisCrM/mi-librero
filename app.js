@@ -2937,20 +2937,137 @@ function switchNookMode(mode) {
   const btnTama = document.getElementById('btnModeTamagotchi');
   const viewPostal = document.getElementById('windowGlass');
   const viewTama = document.getElementById('tamagotchiGlass');
+  const windowNook = document.getElementById('windowNook');
+  const hudAcorns = document.getElementById('hudAcornCounter');
+  const btnRoom = document.getElementById('btnSwitchRoom');
+  const btnPhoto = document.getElementById('btnChangePhoto');
+  const timeBadge = document.getElementById('windowTimeBadge');
 
   if (mode === 'tamagotchi') {
     btnTama?.classList.add('active');
     btnPostal?.classList.remove('active');
+    windowNook?.classList.add('mode-tamagotchi-active');
     if (viewPostal) viewPostal.style.display = 'none';
     if (viewTama) viewTama.style.display = 'flex';
+    if (hudAcorns) hudAcorns.style.display = 'inline-flex';
+    if (btnRoom) btnRoom.style.display = 'inline-flex';
+    if (btnPhoto) btnPhoto.style.display = 'none';
+
     playTamaSound('chirp');
     refreshSquirrelForActiveReader();
+
+    // Actualizar la píldora superior para mostrar el perfil limpio de Nuez
+    if (timeBadge && currentSquirrel) {
+      timeBadge.innerHTML = `
+        <span class="location-pin">🐿️</span>
+        <span class="time-clock">${currentSquirrel.name || 'Nuez'}</span>
+        <span class="time-sep">•</span>
+        <span class="time-phase-tag">Nivel ${currentSquirrel.level || 1} (${currentSquirrel.title || 'Amiga Fiel'})</span>
+      `;
+    }
+
+    initSquirrelMouseTracking();
   } else {
     btnPostal?.classList.add('active');
     btnTama?.classList.remove('active');
+    windowNook?.classList.remove('mode-tamagotchi-active');
     if (viewPostal) viewPostal.style.display = 'block';
     if (viewTama) viewTama.style.display = 'none';
+    if (hudAcorns) hudAcorns.style.display = 'none';
+    if (btnRoom) btnRoom.style.display = 'none';
+    if (btnPhoto) btnPhoto.style.display = 'inline-flex';
+
+    // Restaurar reloj y fase solar de Zakia
+    updateZakiaSky();
   }
+}
+
+// Controlador de Expresiones Faciales de Nuez
+function setSquirrelExpression(expr) {
+  const svg = document.getElementById('nuezLivingSvg');
+  if (!svg) return;
+
+  // 1. Ojos
+  const eyesNormal = document.getElementById('eyesNormal');
+  const eyesHappy = document.getElementById('eyesHappy');
+  const eyesLove = document.getElementById('eyesLove');
+  const eyesEating = document.getElementById('eyesEating');
+  const eyesSleeping = document.getElementById('eyesSleeping');
+
+  if (eyesNormal) eyesNormal.style.display = (expr === 'normal') ? 'inline' : 'none';
+  if (eyesHappy) eyesHappy.style.display = (expr === 'happy') ? 'inline' : 'none';
+  if (eyesLove) eyesLove.style.display = (expr === 'love') ? 'inline' : 'none';
+  if (eyesEating) eyesEating.style.display = (expr === 'eating') ? 'inline' : 'none';
+  if (eyesSleeping) eyesSleeping.style.display = (expr === 'sleeping' || expr === 'yawn') ? 'inline' : 'none';
+
+  // 2. Bocas
+  const mouthDefault = document.getElementById('mouthDefault');
+  const mouthSmile = document.getElementById('mouthSmile');
+  const mouthChew = document.getElementById('mouthChew');
+  const mouthYawn = document.getElementById('mouthYawn');
+
+  if (mouthDefault) mouthDefault.style.display = (expr === 'normal' || expr === 'sleeping') ? 'inline' : 'none';
+  if (mouthSmile) mouthSmile.style.display = (expr === 'happy' || expr === 'love') ? 'inline' : 'none';
+  if (mouthChew) mouthChew.style.display = (expr === 'eating') ? 'inline' : 'none';
+  if (mouthYawn) mouthYawn.style.display = (expr === 'yawn') ? 'inline' : 'none';
+
+  // 3. Clases de estado en el SVG
+  svg.classList.remove('happy', 'love', 'eating', 'sleeping', 'petting');
+  if (expr !== 'normal') {
+    svg.classList.add(expr);
+  }
+}
+
+// Controlador del objeto sostenido en manitas
+function setSquirrelHeldItem(itemKey) {
+  const itemBook = document.getElementById('itemBook');
+  const itemAcorn = document.getElementById('itemAcorn');
+  const itemTea = document.getElementById('itemTea');
+  const itemMuffin = document.getElementById('itemMuffin');
+
+  if (itemBook) itemBook.style.display = (itemKey === 'book') ? 'inline' : 'none';
+  if (itemAcorn) itemAcorn.style.display = (itemKey === 'acorn' || itemKey === 'bellota' || itemKey === 'nuez') ? 'inline' : 'none';
+  if (itemTea) itemTea.style.display = (itemKey === 'tea' || itemKey === 'te') ? 'inline' : 'none';
+  if (itemMuffin) itemMuffin.style.display = (itemKey === 'muffin') ? 'inline' : 'none';
+}
+
+// Seguimiento interactivo con la mirada y la cabecita
+let isMouseTrackingActive = false;
+function initSquirrelMouseTracking() {
+  if (isMouseTrackingActive) return;
+  const stage = document.getElementById('tamagotchiStage');
+  if (!stage) return;
+  isMouseTrackingActive = true;
+
+  stage.addEventListener('mousemove', (e) => {
+    if (!currentSquirrel || currentSquirrel.isSleeping) return;
+    const rect = stage.getBoundingClientRect();
+    if (rect.width <= 0) return;
+
+    const mx = (e.clientX - rect.left) / rect.width - 0.5; // -0.5 a 0.5
+    const my = (e.clientY - rect.top) / rect.height - 0.5;
+
+    const eyeL = document.getElementById('eyeL');
+    const eyeR = document.getElementById('eyeR');
+    const head = document.getElementById('nuezHead');
+
+    if (eyeL && eyeR) {
+      eyeL.style.transform = `translate(${mx * 4.5}px, ${my * 3.5}px)`;
+      eyeR.style.transform = `translate(${mx * 4.5}px, ${my * 3.5}px)`;
+    }
+    if (head) {
+      head.style.transform = `rotate(${mx * 5}deg)`;
+    }
+  });
+
+  stage.addEventListener('mouseleave', () => {
+    const eyeL = document.getElementById('eyeL');
+    const eyeR = document.getElementById('eyeR');
+    const head = document.getElementById('nuezHead');
+    if (eyeL) eyeL.style.transform = 'translate(0, 0)';
+    if (eyeR) eyeR.style.transform = 'translate(0, 0)';
+    if (head) head.style.transform = 'rotate(0deg)';
+  });
 }
 
 // Renderizar la interfaz visual del Tamagotchi
@@ -2958,13 +3075,7 @@ function renderSquirrelUI() {
   if (!currentSquirrel) loadActiveSquirrel();
   const s = currentSquirrel;
 
-  // Actualizar HUD
-  const nameEl = document.getElementById('tamagotchiName');
-  if (nameEl) nameEl.textContent = s.name || 'Nuez';
-
-  const titleEl = document.getElementById('tamagotchiTitleBadge');
-  if (titleEl) titleEl.textContent = `Nivel ${s.level || 1} • ${s.title || 'Amiga Fiel'}`;
-
+  // Actualizar Contador de Bellotas en la cabecera
   const acornEl = document.getElementById('tamagotchiAcornCount');
   if (acornEl) acornEl.textContent = s.acorns ?? 20;
 
@@ -2982,75 +3093,117 @@ function renderSquirrelUI() {
   const stage = document.getElementById('tamagotchiStage');
   if (stage) stage.setAttribute('data-room', s.room || 'cottage_room');
 
-  // Actualizar Ropita y Sombrero
-  const hatLayer = document.getElementById('mascotHatLayer');
-  if (hatLayer) {
-    hatLayer.className = `mascot-accessory-hat ${s.equipped?.hat || 'hat-none'}`;
-  }
+  // Actualizar Capas SVG del Guardarropa (Sombreros, Ropa, Lentes)
+  const hatLavender = document.getElementById('svgHatLavender');
+  const hatBeret = document.getElementById('svgHatBeret');
+  const hatBeanie = document.getElementById('svgHatBeanie');
+  const hatNightcap = document.getElementById('svgHatNightcap');
 
-  const clothesLayer = document.getElementById('mascotClothesLayer');
-  if (clothesLayer) {
-    clothesLayer.className = `mascot-accessory-clothes ${s.equipped?.clothes || 'clothes-none'}`;
-  }
+  if (hatLavender) hatLavender.style.display = (s.equipped?.hat === 'hat-lavender') ? 'inline' : 'none';
+  if (hatBeret) hatBeret.style.display = (s.equipped?.hat === 'hat-beret') ? 'inline' : 'none';
+  if (hatBeanie) hatBeanie.style.display = (s.equipped?.hat === 'hat-beanie') ? 'inline' : 'none';
+  if (hatNightcap) hatNightcap.style.display = (s.equipped?.hat === 'hat-nightcap' || s.isSleeping) ? 'inline' : 'none';
 
-  const glassesLayer = document.getElementById('mascotGlassesLayer');
-  if (glassesLayer) {
-    glassesLayer.className = `mascot-accessory-glasses ${s.equipped?.glasses || 'glasses-none'}`;
-  }
+  const glassesRound = document.getElementById('svgGlassesRound');
+  if (glassesRound) glassesRound.style.display = (s.equipped?.glasses === 'glasses-round') ? 'inline' : 'none';
 
-  // Estado de Sueño
-  const figure = document.getElementById('tamagotchiFigure');
+  const clothesCardigan = document.getElementById('svgClothesCardigan');
+  const clothesPajamas = document.getElementById('svgClothesPajamas');
+  if (clothesCardigan) clothesCardigan.style.display = (s.equipped?.clothes === 'clothes-cardigan' && !s.isSleeping) ? 'inline' : 'none';
+  if (clothesPajamas) clothesPajamas.style.display = (s.equipped?.clothes === 'clothes-pajamas' || s.isSleeping) ? 'inline' : 'none';
+
+  // Expresión y Estado de Sueño
   const sleepIcon = document.getElementById('sleepBtnIcon');
   const sleepLabel = document.getElementById('sleepBtnLabel');
+  const zzz = document.getElementById('mascotSleepZzz');
 
   if (s.isSleeping) {
-    figure?.classList.add('sleeping');
+    setSquirrelExpression('sleeping');
+    setSquirrelHeldItem('none');
     if (sleepIcon) sleepIcon.textContent = '☀️';
     if (sleepLabel) sleepLabel.textContent = 'Despertar';
+    if (zzz) zzz.style.display = 'block';
   } else {
-    figure?.classList.remove('sleeping');
+    setSquirrelExpression('normal');
+    setSquirrelHeldItem('book');
     if (sleepIcon) sleepIcon.textContent = '🌙';
     if (sleepLabel) sleepLabel.textContent = 'Dormir';
+    if (zzz) zzz.style.display = 'none';
   }
 }
 
-// Acariciar a Nuez
+// Acariciar a Nuez con reacciones expresivas y partículas
 function handlePetSquirrel(e) {
   if (!currentSquirrel) loadActiveSquirrel();
   const s = currentSquirrel;
 
   if (s.isSleeping) {
-    // Si estaba dormida, despierta suavemente con bostezo tierno
+    // Despertar con un bostezo tierno
     s.isSleeping = false;
+    setSquirrelExpression('yawn');
     playTamaSound('chirp');
-    showBubbleDialogue("Mmm... ¡Qué lindo despertar con tu saludo! ☀️🌸");
+    showBubbleDialogue("Mmm... ¡Bostecito! ¡Qué lindo despertar con tus caricias! ☀️🌸");
     saveActiveSquirrel();
-    renderSquirrelUI();
+
+    setTimeout(() => {
+      setSquirrelExpression('happy');
+      setSquirrelHeldItem('book');
+      renderSquirrelUI();
+    }, 1400);
     return;
   }
 
   s.affection = Math.min(100, (s.affection || 0) + 6);
-  s.acorns = (s.acorns || 0) + 1; // +1 bellotita por mimarla
+  s.acorns = (s.acorns || 0) + 1; // +1 bellota por mimarla
   playTamaSound('pet');
 
-  // Frase aleatoria de Nuez
+  // Frase de Nuez
   const phrase = NUEZ_PET_PHRASES[Math.floor(Math.random() * NUEZ_PET_PHRASES.length)];
   showBubbleDialogue(phrase);
 
-  // Animación de rebote alegre en la figura
-  const figure = document.getElementById('tamagotchiFigure');
-  if (figure) {
-    figure.style.transform = 'scale(1.12) translateY(-6px)';
-    setTimeout(() => {
-      figure.style.transform = '';
-    }, 280);
+  // Expresión de amor y alegría (ojitos corazones / cerrados felices y sonrisa)
+  setSquirrelExpression('love');
+
+  // Animación de saltito alegre en el SVG
+  const svg = document.getElementById('nuezLivingSvg');
+  if (svg) {
+    svg.classList.add('hop-joy');
+    setTimeout(() => svg.classList.remove('hop-joy'), 480);
+  }
+
+  // Generar partículas de corazones y chispitas que brotan de su cabecita
+  const wrapper = document.getElementById('tamagotchiMascotWrapper');
+  if (wrapper) {
+    const rect = wrapper.getBoundingClientRect();
+    const clickX = e ? (e.clientX - rect.left) : (rect.width / 2);
+    const clickY = e ? (e.clientY - rect.top) : (rect.height / 3);
+    const icons = ['💕', '🌸', '✨', '💖', '⭐'];
+
+    for (let i = 0; i < 4; i++) {
+      const p = document.createElement('span');
+      p.className = 'floating-pet-heart';
+      p.textContent = icons[Math.floor(Math.random() * icons.length)];
+      p.style.left = `${clickX + (Math.random() * 30 - 15)}px`;
+      p.style.top = `${clickY + (Math.random() * 20 - 10)}px`;
+      p.style.setProperty('--tx', `${(Math.random() * 36 - 18)}px`);
+      p.style.setProperty('--tx-end', `${(Math.random() * 50 - 25)}px`);
+      wrapper.appendChild(p);
+      setTimeout(() => p.remove(), 1200);
+    }
   }
 
   saveActiveSquirrel();
   renderSquirrelUI();
+
+  // Volver a la expresión normal relajada después de un momento
+  setTimeout(() => {
+    if (!currentSquirrel.isSleeping) {
+      setSquirrelExpression('normal');
+    }
+  }, 2400);
 }
 
-// Mostrar diálogo en el bocadillo de Nuez
+// Mostrar diálogo en el bocadillo de Nuez con voz balbuceada de Animal Crossing
 function showBubbleDialogue(text) {
   const bubble = document.getElementById('tamagotchiBubble');
   const bubbleText = document.getElementById('tamagotchiBubbleText');
@@ -3089,6 +3242,15 @@ function feedSquirrel(snackKey) {
 
   s.acorns = Math.max(0, (s.acorns || 0) - cost);
 
+  // Nuez sostiene la comida en sus manitas y empieza a masticar
+  setSquirrelHeldItem(snackKey);
+  setSquirrelExpression('eating');
+  playTamaSound('eat');
+
+  // Animación de masticar
+  setTimeout(() => playTamaSound('eat'), 350);
+  setTimeout(() => playTamaSound('eat'), 700);
+
   if (snackKey === 'bellota') {
     s.hunger = Math.min(100, (s.hunger || 0) + 25);
     showBubbleDialogue("¡Crunch crunch! ¡Qué bellota tan crujiente y dulce! 🌰✨");
@@ -3106,10 +3268,27 @@ function feedSquirrel(snackKey) {
     showBubbleDialogue("¡Qué rico muffin de zarzamora! ¡Eres el mejor cocinero del mundo! 🧁🎉");
   }
 
-  playTamaSound('eat');
   closeSnackMenu();
   saveActiveSquirrel();
-  renderSquirrelUI();
+
+  // Después de masticar, Nuez traga feliz, sonríe y da un saltito
+  setTimeout(() => {
+    setSquirrelExpression('happy');
+    const svg = document.getElementById('nuezLivingSvg');
+    if (svg) {
+      svg.classList.add('hop-joy');
+      setTimeout(() => svg.classList.remove('hop-joy'), 480);
+    }
+    renderSquirrelUI();
+  }, 1600);
+
+  // Vuelve a su librito después de unos segundos
+  setTimeout(() => {
+    if (!currentSquirrel.isSleeping) {
+      setSquirrelHeldItem('book');
+      setSquirrelExpression('normal');
+    }
+  }, 3400);
 }
 
 // Dormir / Despertar
@@ -3120,12 +3299,21 @@ function handleToggleSleep() {
   s.isSleeping = !s.isSleeping;
 
   if (s.isSleeping) {
+    setSquirrelHeldItem('none');
+    setSquirrelExpression('sleeping');
     playTamaSound('snore');
     showBubbleDialogue("Zzz... Buenas noches, soñaré con cuentos y aventuras... 🌙💤");
     s.energy = Math.min(100, (s.energy || 0) + 25);
   } else {
+    setSquirrelExpression('yawn');
     playTamaSound('chirp');
     showBubbleDialogue("¡Buenos días! ¡Qué bien descansé! ¿Qué vamos a leer hoy? ☀️✨");
+
+    setTimeout(() => {
+      setSquirrelHeldItem('book');
+      setSquirrelExpression('happy');
+      renderSquirrelUI();
+    }, 1400);
   }
 
   saveActiveSquirrel();
