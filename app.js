@@ -834,20 +834,19 @@ async function initLocationDetection() {
 }
 
 // ===================================================================
-// AUDIO / MÚSICA AMBIENTAL (Taylor Swift - Cloud + Local fallback)
+// AUDIO / MÚSICA AMBIENTAL (Taylor Swift - Playlist multi-parte sin límites)
 // ===================================================================
 let bgMusicAudio = null;
 let audioCtx = null;
 let isMusicPlaying = false;
 let musicInterval = null;
 
-const TAYLOR_AUDIO_SOURCES = [
-  'https://drive.usercontent.google.com/download?id=1Q2MqoNONNjif_Mq01Bbei0NoY6iKAwL8&export=download&confirm=t',
-  'https://docs.google.com/uc?export=open&id=1Q2MqoNONNjif_Mq01Bbei0NoY6iKAwL8',
-  'https://drive.google.com/uc?export=download&id=1Q2MqoNONNjif_Mq01Bbei0NoY6iKAwL8',
-  'music/Taylor.mp3'
+const TAYLOR_PLAYLIST = [
+  'music/Taylor_part1.mp3',
+  'music/Taylor_part2.mp3',
+  'music/Taylor_part3.mp3'
 ];
-let currentAudioSourceIdx = 0;
+let currentPlaylistIdx = 0;
 
 const PENTATONIC_FREQS = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25];
 
@@ -855,30 +854,39 @@ function initCozyAudio() {
   if (bgMusicAudio) return bgMusicAudio;
 
   const audioEl = document.getElementById('bgMusicTrack');
-  bgMusicAudio = audioEl || new Audio(TAYLOR_AUDIO_SOURCES[0]);
-  bgMusicAudio.loop = true;
+  bgMusicAudio = audioEl || new Audio(TAYLOR_PLAYLIST[0]);
   bgMusicAudio.volume = 0.65;
 
-  // Manejador de error para probar automáticamente la siguiente fuente si una falla
+  // Manejador de error para probar automáticamente la siguiente parte o archivo local
   bgMusicAudio.addEventListener('error', (e) => {
-    console.warn('Error al cargar fuente de música:', bgMusicAudio.currentSrc || bgMusicAudio.src, e);
-    if (currentAudioSourceIdx < TAYLOR_AUDIO_SOURCES.length - 1) {
-      currentAudioSourceIdx++;
-      console.log('Intentando fuente alternativa de audio #' + currentAudioSourceIdx + ':', TAYLOR_AUDIO_SOURCES[currentAudioSourceIdx]);
-      bgMusicAudio.src = TAYLOR_AUDIO_SOURCES[currentAudioSourceIdx];
+    console.warn('Error al cargar pista de música:', bgMusicAudio.currentSrc || bgMusicAudio.src, e);
+    if (currentPlaylistIdx < TAYLOR_PLAYLIST.length - 1) {
+      currentPlaylistIdx++;
+      console.log('Intentando parte #' + (currentPlaylistIdx + 1) + ' de Taylor Swift:', TAYLOR_PLAYLIST[currentPlaylistIdx]);
+      bgMusicAudio.src = TAYLOR_PLAYLIST[currentPlaylistIdx];
       bgMusicAudio.load();
       if (isMusicPlaying) {
-        bgMusicAudio.play().catch(err => console.warn('Error al reproducir fuente alternativa:', err));
+        bgMusicAudio.play().catch(err => console.warn('Error al reproducir pista alternativa:', err));
+      }
+    } else {
+      // Fallback a archivo unificado local si existe
+      bgMusicAudio.src = 'music/Taylor.mp3';
+      bgMusicAudio.load();
+      if (isMusicPlaying) {
+        bgMusicAudio.play().catch(err => console.warn('Fallback local falló:', err));
       }
     }
   });
 
-  // BUCLE INFINITO: cuando la canción se termine, volver a reproducirla de inmediato
+  // BUCLE CONTINUO: cuando termine una parte, reproducir automáticamente la siguiente en cadena
   bgMusicAudio.addEventListener('ended', () => {
-    bgMusicAudio.currentTime = 0;
+    currentPlaylistIdx = (currentPlaylistIdx + 1) % TAYLOR_PLAYLIST.length;
+    console.log('Reproduciendo siguiente parte de Taylor Swift #' + (currentPlaylistIdx + 1) + ':', TAYLOR_PLAYLIST[currentPlaylistIdx]);
+    bgMusicAudio.src = TAYLOR_PLAYLIST[currentPlaylistIdx];
+    bgMusicAudio.load();
     const replayPromise = bgMusicAudio.play();
     if (replayPromise !== undefined) {
-      replayPromise.catch(err => console.warn('Error al reiniciar en bucle Taylor Swift:', err));
+      replayPromise.catch(err => console.warn('Error al continuar playlist de Taylor Swift:', err));
     }
   });
 
@@ -914,28 +922,13 @@ function toggleCozyMusic() {
           btn?.setAttribute('title', 'Pausar música ⏸️ (Taylor Swift)');
         })
         .catch((err) => {
-          console.warn('El navegador bloqueó la reproducción o la fuente externa está restringida:', err);
-          // Si falla la primera fuente, intentamos la siguiente inmediatamente
-          if (currentAudioSourceIdx < TAYLOR_AUDIO_SOURCES.length - 1) {
-            currentAudioSourceIdx++;
-            audio.src = TAYLOR_AUDIO_SOURCES[currentAudioSourceIdx];
-            audio.load();
-            audio.play().catch(() => {
-              // Fallback de campanas relajantes en caso de no poder conectar
-              if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-              if (audioCtx.state === 'suspended') audioCtx.resume();
-              isMusicPlaying = true;
-              btn?.classList.add('playing');
-              startCozyChimes();
-            });
-          } else {
-            // Fallback de campanas relajantes
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            isMusicPlaying = true;
-            btn?.classList.add('playing');
-            startCozyChimes();
-          }
+          console.warn('El navegador bloqueó la reproducción automática o hubo un fallo de carga:', err);
+          // Intentar reanudar AudioContext o fallback
+          if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+          isMusicPlaying = true;
+          btn?.classList.add('playing');
+          startCozyChimes();
         });
     }
   } else {
@@ -2942,6 +2935,9 @@ function switchNookMode(mode) {
   const btnRoom = document.getElementById('btnSwitchRoom');
   const btnPhoto = document.getElementById('btnChangePhoto');
   const timeBadge = document.getElementById('windowTimeBadge');
+  const nuezBadge = document.getElementById('windowNuezBadge');
+  const nuezName = document.getElementById('windowNuezName');
+  const nuezLevel = document.getElementById('windowNuezLevel');
 
   if (mode === 'tamagotchi') {
     btnTama?.classList.add('active');
@@ -2953,19 +2949,16 @@ function switchNookMode(mode) {
     if (btnRoom) btnRoom.style.display = 'inline-flex';
     if (btnPhoto) btnPhoto.style.display = 'none';
 
-    playTamaSound('chirp');
-    refreshSquirrelForActiveReader();
-
-    // Actualizar la píldora superior para mostrar el perfil limpio de Nuez
-    if (timeBadge && currentSquirrel) {
-      timeBadge.innerHTML = `
-        <span class="location-pin">🐿️</span>
-        <span class="time-clock">${currentSquirrel.name || 'Nuez'}</span>
-        <span class="time-sep">•</span>
-        <span class="time-phase-tag">Nivel ${currentSquirrel.level || 1} (${currentSquirrel.title || 'Amiga Fiel'})</span>
-      `;
+    // MOSTRAR tarjeta de Nuez en la cabecera y OCULTAR tarjeta de ubicación
+    if (timeBadge) timeBadge.style.display = 'none';
+    if (nuezBadge) {
+      nuezBadge.style.display = 'flex';
+      if (nuezName) nuezName.textContent = currentSquirrel?.name || 'Nuez';
+      if (nuezLevel) nuezLevel.textContent = `Nivel ${currentSquirrel?.level || 1} (${currentSquirrel?.title || 'Amiga Fiel'})`;
     }
 
+    playTamaSound('chirp');
+    refreshSquirrelForActiveReader();
     initSquirrelMouseTracking();
   } else {
     btnPostal?.classList.add('active');
@@ -2977,7 +2970,11 @@ function switchNookMode(mode) {
     if (btnRoom) btnRoom.style.display = 'none';
     if (btnPhoto) btnPhoto.style.display = 'inline-flex';
 
-    // Restaurar reloj y fase solar de Zakia
+    // MOSTRAR tarjeta de ubicación real (Querétaro, CDMX, Guadalajara, etc.) y OCULTAR tarjeta de Nuez
+    if (timeBadge) timeBadge.style.display = 'flex';
+    if (nuezBadge) nuezBadge.style.display = 'none';
+
+    // Restaurar reloj y momento del día
     updateZakiaSky();
   }
 }
@@ -3074,6 +3071,12 @@ function initSquirrelMouseTracking() {
 function renderSquirrelUI() {
   if (!currentSquirrel) loadActiveSquirrel();
   const s = currentSquirrel;
+
+  // Actualizar Tarjeta de Nuez en la cabecera si está en modo Tamagotchi
+  const nuezName = document.getElementById('windowNuezName');
+  const nuezLevel = document.getElementById('windowNuezLevel');
+  if (nuezName) nuezName.textContent = s.name || 'Nuez';
+  if (nuezLevel) nuezLevel.textContent = `Nivel ${s.level || 1} (${s.title || 'Amiga Fiel'})`;
 
   // Actualizar Contador de Bellotas en la cabecera
   const acornEl = document.getElementById('tamagotchiAcornCount');

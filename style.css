@@ -3194,23 +3194,43 @@ body.ac-theme {
    TAMAGOTCHI DE NUEZ LA ARDILLITA (Marco Central del Librero)
    =================================================================== */
 
-/* Selector de Modo: Postal vs Tamagotchi */
+/* Selector de Modo: Postal vs Tamagotchi (Ubicado en la esquina inferior donde estaba el letrero) */
 .nook-mode-pills {
   position: absolute;
-  top: 14px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 12px;
+  right: 14px;
   display: flex;
   align-items: center;
   gap: 4px;
-  background: rgba(255, 250, 242, 0.92);
+  background: rgba(255, 250, 242, 0.94);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  padding: 3px;
+  padding: 3px 5px;
   border-radius: 24px;
-  box-shadow: 0 3px 12px rgba(85, 55, 30, 0.16), 0 1px 3px rgba(0, 0, 0, 0.05);
-  border: 1.5px solid rgba(225, 195, 160, 0.6);
+  box-shadow: 0 4px 14px rgba(85, 55, 30, 0.22), 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1.5px solid rgba(225, 195, 160, 0.75);
+  z-index: 25;
+}
+
+/* Tarjeta de Nuez en la cabecera (SOLO visible en modo Tamagotchi) */
+.window-nuez-badge {
+  position: absolute;
+  top: 10px;
+  left: 12px;
   z-index: 30;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid #d8b4fe;
+  padding: 3px 12px;
+  border-radius: var(--border-radius-pill);
+  font-size: 0.74rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--wood-deep);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+  user-select: none;
 }
 
 .btn-nook-mode {

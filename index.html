@@ -258,7 +258,7 @@
 
         <!-- Ventana central con rincón de lectura, paisaje de Zakia y controles modernos -->
         <div class="window-nook" id="windowNook">
-          <!-- Píldora de ubicación, reloj y momento del día en Zakia -->
+          <!-- Píldora de ubicación, reloj y momento del día (SOLO en modo Postal) -->
           <div class="window-time-badge" id="windowTimeBadge" title="Haz clic para alternar: Mañana 🌅, Tarde ☀️, Atardecer 🌇, Noche 🌙 o Automático 🔄">
             <span class="location-pin" id="windowLocationText">📍 Zakia, Qro.</span>
             <span class="time-sep">•</span>
@@ -266,18 +266,15 @@
             <span class="time-phase-tag" id="windowPhaseLabel">☀️ Tarde</span>
           </div>
 
-          <!-- Selector de Modo: Postal Artística vs. Tamagotchi de Nuez -->
-          <div class="nook-mode-pills" id="nookModePills">
-            <button type="button" class="btn-nook-mode active" id="btnModePostal" onclick="switchNookMode('postal')" title="Ver postal de lectura 🖼️">
-              <span>🖼️ Postal</span>
-            </button>
-            <button type="button" class="btn-nook-mode" id="btnModeTamagotchi" onclick="switchNookMode('tamagotchi')" title="Cuidar y visitar a Nuez 🐿️">
-              <span>🐿️ Nuez</span>
-              <span class="tama-bubble-ping" id="tamaAttentionDot" style="display: none;"></span>
-            </button>
+          <!-- Píldora de Nuez (SOLO en modo Nuez) -->
+          <div class="window-time-badge window-nuez-badge" id="windowNuezBadge" title="Nivel de amistad con Nuez" style="display: none;">
+            <span class="location-pin">🐿️</span>
+            <span class="time-clock" id="windowNuezName">Nuez</span>
+            <span class="time-sep">•</span>
+            <span class="time-phase-tag" id="windowNuezLevel">Nivel 1 (Amiga Fiel)</span>
           </div>
 
-          <!-- Barra de 3 botones con iconos modernos (Música, Cambiar Foto, Configuración) -->
+          <!-- Barra de botones con iconos modernos (Música, Cambiar Foto, Configuración) -->
           <div class="window-control-bar" id="windowControlBar">
             <div class="hud-acorn-counter" id="hudAcornCounter" title="Bellotas reunidas leyendo y jugando" style="display: none;">
               <span class="acorn-icon">🌰</span>
@@ -320,11 +317,18 @@
               <div class="window-scene-image-container">
                 <img src="assets/window_scene.jpg" alt="Rincón de lectura en el centro del librero" class="window-scene-hd-img" id="windowSceneImg">
                 <div class="window-time-atmosphere" id="windowTimeAtmosphere"></div>
-                <!-- Frase en el jardín como en Photo 1 -->
-                <div class="garden-signpost-badge" id="gardenSignpostBadge">
-                  <span id="gardenSignpostText">Un buen libro también es un hogar 🌸</span>
-                </div>
               </div>
+            </div>
+
+            <!-- Selector de Modo: Postal vs. Nuez (Ubicado en la esquina inferior donde estaba el letrero) -->
+            <div class="nook-mode-pills" id="nookModePills">
+              <button type="button" class="btn-nook-mode active" id="btnModePostal" onclick="switchNookMode('postal')" title="Ver postal de lectura 🖼️">
+                <span>🖼️ Postal</span>
+              </button>
+              <button type="button" class="btn-nook-mode" id="btnModeTamagotchi" onclick="switchNookMode('tamagotchi')" title="Cuidar y visitar a Nuez 🐿️">
+                <span>🐿️ Nuez</span>
+                <span class="tama-bubble-ping" id="tamaAttentionDot" style="display: none;"></span>
+              </button>
             </div>
 
             <!-- 2. Vista TAMAGOTCHI INTERACTIVO DE NUEZ -->
@@ -1531,10 +1535,8 @@
   </div>
 
   <!-- Audio de Taylor Swift en bucle continuo para el botón de música -->
-  <audio id="bgMusicTrack" preload="none" loop>
-    <source src="https://drive.usercontent.google.com/download?id=1Q2MqoNONNjif_Mq01Bbei0NoY6iKAwL8&export=download&confirm=t" type="audio/mpeg">
-    <source src="https://docs.google.com/uc?export=open&id=1Q2MqoNONNjif_Mq01Bbei0NoY6iKAwL8" type="audio/mpeg">
-    <source src="https://drive.google.com/uc?export=download&id=1Q2MqoNONNjif_Mq01Bbei0NoY6iKAwL8" type="audio/mpeg">
+  <audio id="bgMusicTrack" preload="none">
+    <source src="music/Taylor_part1.mp3" type="audio/mpeg">
     <source src="music/Taylor.mp3" type="audio/mpeg">
   </audio>
 
