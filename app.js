@@ -3086,6 +3086,31 @@ function switchNookMode(mode) {
   }
 }
 
+// Estado de animación de alimentación
+let isSquirrelEatingActive = false;
+let eatingStepTimers = [];
+
+// Mapeo de IDs de elementos SVG para cada alimento
+function getFoodElementId(snackKey) {
+  const map = {
+    bellota: 'itemAcorn',
+    acorn: 'itemAcorn',
+    nuez: 'itemGoldNut',
+    te: 'itemTea',
+    tea: 'itemTea',
+    cafe: 'itemCoffee',
+    coffee: 'itemCoffee',
+    muffin: 'itemBlackberryCake',
+    galletas: 'itemCookies',
+    cookies: 'itemCookies',
+    macarons: 'itemMacarons',
+    banquete: 'itemFeast',
+    feast: 'itemFeast',
+    book: 'itemBook'
+  };
+  return map[snackKey] || 'itemAcorn';
+}
+
 // Controlador de Expresiones Faciales de Nuez
 function setSquirrelExpression(expr) {
   const svg = document.getElementById('nuezLivingSvg');
@@ -3099,7 +3124,7 @@ function setSquirrelExpression(expr) {
   const eyesSleeping = document.getElementById('eyesSleeping');
 
   if (eyesNormal) eyesNormal.style.display = (expr === 'normal') ? 'inline' : 'none';
-  if (eyesHappy) eyesHappy.style.display = (expr === 'happy') ? 'inline' : 'none';
+  if (eyesHappy) eyesHappy.style.display = (expr === 'happy' || expr === 'lick') ? 'inline' : 'none';
   if (eyesLove) eyesLove.style.display = (expr === 'love') ? 'inline' : 'none';
   if (eyesEating) eyesEating.style.display = (expr === 'eating') ? 'inline' : 'none';
   if (eyesSleeping) eyesSleeping.style.display = (expr === 'sleeping' || expr === 'yawn') ? 'inline' : 'none';
@@ -3109,15 +3134,17 @@ function setSquirrelExpression(expr) {
   const mouthSmile = document.getElementById('mouthSmile');
   const mouthChew = document.getElementById('mouthChew');
   const mouthYawn = document.getElementById('mouthYawn');
+  const mouthLick = document.getElementById('mouthLick');
 
   if (mouthDefault) mouthDefault.style.display = (expr === 'normal' || expr === 'sleeping') ? 'inline' : 'none';
   if (mouthSmile) mouthSmile.style.display = (expr === 'happy' || expr === 'love') ? 'inline' : 'none';
   if (mouthChew) mouthChew.style.display = (expr === 'eating') ? 'inline' : 'none';
   if (mouthYawn) mouthYawn.style.display = (expr === 'yawn') ? 'inline' : 'none';
+  if (mouthLick) mouthLick.style.display = (expr === 'lick') ? 'inline' : 'none';
 
   // 3. Clases de estado en el SVG
   svg.classList.remove('happy', 'love', 'eating', 'sleeping', 'petting');
-  if (expr !== 'normal') {
+  if (expr !== 'normal' && expr !== 'lick') {
     svg.classList.add(expr);
   }
 }
@@ -3183,8 +3210,13 @@ function spawnFoodCrumbs(count = 8, snackKey = 'bellota') {
   }
 }
 
-// Controlador del objeto sostenido en manitas
-function setSquirrelHeldItem(itemKey) {
+// Controlador del objeto sostenido en manitas con soporte para fases progresivas (0 a 4)
+function setSquirrelHeldItem(itemKey, stage = 0) {
+  // NUNCA permitir que vuelva el libro por defecto si Nuez está comiendo o bebiendo
+  if (isSquirrelEatingActive && itemKey === 'book') {
+    return;
+  }
+
   const items = {
     book: document.getElementById('itemBook'),
     bellota: document.getElementById('itemAcorn'),
@@ -3208,7 +3240,20 @@ function setSquirrelHeldItem(itemKey) {
   });
 
   if (itemKey && itemKey !== 'none' && items[itemKey]) {
-    items[itemKey].style.display = 'inline';
+    const targetItem = items[itemKey];
+    targetItem.style.display = 'inline';
+
+    // Manejar fases de consumo en el SVG (0: entero, 1: mordisco 1, 2: mitad, 3: bocado final, 4: acabado)
+    const stageElements = targetItem.querySelectorAll('.food-stage');
+    if (stageElements.length > 0) {
+      stageElements.forEach((el, idx) => {
+        el.style.display = (idx === stage) ? 'inline' : 'none';
+      });
+      // Si la etapa es 4 (se lo acabó), el alimento desaparece de las patitas
+      if (stage >= stageElements.length) {
+        targetItem.style.display = 'none';
+      }
+    }
   }
 }
 
@@ -3362,7 +3407,7 @@ function renderSquirrelUI() {
     if (sleepBtn) sleepBtn.title = 'Despertar a Nuez ☀️';
     if (zzz) zzz.style.display = 'flex';
     if (stage) stage.classList.add('is-sleeping');
-  } else {
+  } else if (!isSquirrelEatingActive) {
     setSquirrelExpression('normal');
     setSquirrelHeldItem('book');
     if (sleepIcon) sleepIcon.textContent = '🌙';
@@ -3504,6 +3549,13 @@ function feedSquirrel(snackKey) {
   if (!currentSquirrel) loadActiveSquirrel();
   const s = currentSquirrel;
 
+  // Si ya está comiendo, pedirle con ternura que termine su bocadito
+  if (isSquirrelEatingActive) {
+    showBubbleDialogue("¡Espera un momentito! Todavía estoy saboreando este rico bocadito... 😋💖");
+    playTamaSound('chirp');
+    return;
+  }
+
   const snack = SNACK_CATALOG.find(it => it.id === snackKey);
   if (!snack) return;
 
@@ -3514,125 +3566,218 @@ function feedSquirrel(snackKey) {
     return;
   }
 
+  // Descontar saldo y cerrar el menú
   s.acorns = Math.max(0, (s.acorns || 0) - cost);
+  saveActiveSquirrel();
+
+  // Actualizar indicadores numéricos de bellotas sin alterar estado del SVG
+  const acornCount = s.acorns ?? 20;
+  const acornEl = document.getElementById('tamagotchiAcornCount');
+  const snackBalEl = document.getElementById('snackAcornBalance');
+  const wardrobeBalEl = document.getElementById('wardrobeAcornBalance');
+  if (acornEl) acornEl.textContent = acornCount;
+  if (snackBalEl) snackBalEl.textContent = acornCount;
+  if (wardrobeBalEl) wardrobeBalEl.textContent = acornCount;
   closeSnackMenu();
 
+  // Iniciar estado exclusivo de alimentación
+  isSquirrelEatingActive = true;
+  eatingStepTimers.forEach(t => clearTimeout(t));
+  eatingStepTimers = [];
+
   const svg = document.getElementById('nuezLivingSvg');
-
-  // Nuez sostiene la comida en sus manitas articuladas
-  setSquirrelHeldItem(snackKey);
-
-  if (snackKey === 'te' || snackKey === 'cafe') {
-    // ANIMACIÓN ARTICULADA DE BEBER (Taza sube suavemente a los labios con vapor y aroma)
-    if (svg) {
-      svg.classList.remove('is-eating');
-      svg.classList.add('is-drinking');
-    }
-
-    setSquirrelExpression('love');
-    playTamaSound('sip');
-    setTimeout(() => playTamaSound('sip'), 650);
-    setTimeout(() => playTamaSound('sip'), 1300);
-
-    if (snackKey === 'te') {
-      spawnLavenderBlossomParticles(8);
-      s.energy = Math.min(100, (s.energy || 0) + 40);
-      s.affection = Math.min(100, (s.affection || 0) + 25);
-      showBubbleDialogue("Mmm... ¡Qué aroma tan reconfortante a té de lavanda silvestre! 🪻 Siento una paz maravillosa en mi rincón acogedor... ✨");
-    } else {
-      spawnLavenderBlossomParticles(4);
-      s.energy = Math.min(100, (s.energy || 0) + 60);
-      s.affection = Math.min(100, (s.affection || 0) + 15);
-      showBubbleDialogue("¡Sluuuurp! ¡Un delicioso café calientito con leche espumosa de El Alpiste! ☕ Súper despierta para devorar más libros... ✨");
-    }
-
-    setTimeout(() => {
-      if (svg) {
-        svg.classList.remove('is-drinking');
-        svg.classList.add('hop-joy');
-        setTimeout(() => svg.classList.remove('hop-joy'), 500);
-      }
-      setSquirrelExpression('happy');
-      showBubbleDialogue(snackKey === 'cafe' 
-        ? "¡Wooo! ¡Ese café estuvo increíble! ¡Con energía al 100%! ☕🔥" 
-        : "¡Ahhh! Delicioso hasta la última gotita... ¡Llena de calma y amor! 💜✨");
-      renderSquirrelUI();
-    }, 2600);
-
-    setTimeout(() => {
-      if (!currentSquirrel.isSleeping) {
-        setSquirrelHeldItem('book');
-        setSquirrelExpression('normal');
-      }
-    }, 4200);
-
-  } else {
-    // ANIMACIÓN ARTICULADA DE MASTICAR (Manitas suben al hocico con dientitos y migajas)
-    if (svg) {
-      svg.classList.remove('is-drinking');
-      svg.classList.add('is-eating');
-    }
-    setSquirrelExpression('eating');
-
-    // Cascada de soniditos crujientes de ardilla
-    playTamaSound('eat');
-    setTimeout(() => playTamaSound('eat'), 200);
-    setTimeout(() => playTamaSound('eat'), 420);
-    setTimeout(() => playTamaSound('eat'), 660);
-    setTimeout(() => playTamaSound('eat'), 900);
-
-    // Lluvia de migajitas crujientes cayendo de las patitas
-    spawnFoodCrumbs(10, snackKey);
-    setTimeout(() => spawnFoodCrumbs(6, snackKey), 350);
-
-    // Ajuste de estadísticas y diálogo personalizado
-    if (snackKey === 'bellota') {
-      s.hunger = Math.min(100, (s.hunger || 0) + 25);
-      showBubbleDialogue("¡Crunch crunch! ¡Qué rica bellota silvestre! ¡Mis dientitos están felices! 🌰✨");
-    } else if (snackKey === 'nuez') {
-      s.hunger = Math.min(100, (s.hunger || 0) + 45);
-      s.affection = Math.min(100, (s.affection || 0) + 15);
-      showBubbleDialogue("¡Una nuez dorada tostada! ¡Crujiente y tostadita, mi favorita! 🥜💖");
-    } else if (snackKey === 'muffin') {
-      s.hunger = Math.min(100, (s.hunger || 0) + 65);
-      s.affection = Math.min(100, (s.affection || 0) + 30);
-      showBubbleDialogue("¡Mmm! ¡Muffin esponjoso de moras silvestres! ¡Una delicia total! 🧁💜");
-    } else if (snackKey === 'galletas') {
-      s.hunger = Math.min(100, (s.hunger || 0) + 75);
-      s.affection = Math.min(100, (s.affection || 0) + 35);
-      showBubbleDialogue("¡Galletitas con miel y lavanda! ¡Crujientes por fuera y suaves por dentro! 🍪🌸");
-    } else if (snackKey === 'macarons') {
-      s.hunger = Math.min(100, (s.hunger || 0) + 85);
-      s.affection = Math.min(100, (s.affection || 0) + 45);
-      showBubbleDialogue("¡Macarons 'Lavender Haze'! ¡Qué elegancia de merienda literaria parisina! 🍬✨");
-    } else if (snackKey === 'banquete') {
-      s.hunger = 100;
-      s.energy = 100;
-      s.affection = Math.min(100, (s.affection || 0) + 60);
-      showBubbleDialogue("🎉 ¡EL GRAN BANQUETE REAL! ¡Esto es una fiesta inolvidable en la cabaña! 🧺🌰🍇");
-    }
-
-    setTimeout(() => {
-      if (svg) {
-        svg.classList.remove('is-eating');
-        svg.classList.add('hop-joy');
-        setTimeout(() => svg.classList.remove('hop-joy'), 500);
-      }
-      setSquirrelExpression('happy');
-      showBubbleDialogue("¡Ñam ñam! ¡Qué merienda tan deliciosa! Mi pancita está súper contenta 🌰💖");
-      renderSquirrelUI();
-    }, 2400);
-
-    setTimeout(() => {
-      if (!currentSquirrel.isSleeping) {
-        setSquirrelHeldItem('book');
-        setSquirrelExpression('normal');
-      }
-    }, 4000);
+  if (svg) {
+    svg.classList.remove('is-eating', 'is-drinking', 'hop-joy');
   }
 
-  saveActiveSquirrel();
-  renderSquirrelUI();
+  const isDrink = (snackKey === 'te' || snackKey === 'cafe');
+
+  // Catálogo de secuencias paso a paso de cada alimento (0: entero -> 1: mordisco -> 2: mitad -> 3: final -> 4: acabado)
+  const snackSequences = {
+    bellota: {
+      sound: 'eat',
+      steps: [
+        { stage: 0, time: 0, text: "¡Una bellota silvestre entera y crujiente! ¡A comer! 🌰✨" },
+        { stage: 1, time: 850, text: "¡CRUNCH! ¡Qué tostadita y crujiente por fuera! 🌰" },
+        { stage: 2, time: 1700, text: "¡Chomp chomp! ¡Mis dientitos están felices mordisqueando! 🌰💖" },
+        { stage: 3, time: 2550, text: "¡Ñam! ¡Último pedacito del sombrerito! 🌰" },
+        { stage: 4, time: 3350, text: "¡Glup! ¡Me la acabé todita! ¡Mi pancita está contenta y llena! 🌰🥰" }
+      ],
+      boost: () => { s.hunger = Math.min(100, (s.hunger || 0) + 25); }
+    },
+    nuez: {
+      sound: 'eat',
+      steps: [
+        { stage: 0, time: 0, text: "¡Una nuez dorada tostada! ¡Miren qué brillo tan apetitoso! 🥜✨" },
+        { stage: 1, time: 850, text: "¡CRRAAACK! ¡Rompí la cáscara dorada, qué ricura! 🥜🤤" },
+        { stage: 2, time: 1700, text: "¡Mmmm! ¡El centro de nuez tostada con miel es lo más rico! 🥜💖" },
+        { stage: 3, time: 2550, text: "¡El último cachito dorado! ¡No dejo ni una sola migajita! 🥜✨" },
+        { stage: 4, time: 3350, text: "¡Ñaaam! ¡Me la comí entera! ¡La mejor nuez dorada del mundo! 🥜🥰💖" }
+      ],
+      boost: () => {
+        s.hunger = Math.min(100, (s.hunger || 0) + 45);
+        s.affection = Math.min(100, (s.affection || 0) + 15);
+      }
+    },
+    te: {
+      sound: 'sip',
+      steps: [
+        { stage: 0, time: 0, text: "Mmm... ¡Qué aroma tan reconfortante a té de lavanda silvestre! 🪻✨" },
+        { stage: 1, time: 900, text: "¡Sluuuurp! ¡Tibio, perfumado y dulce con miel! 💜" },
+        { stage: 2, time: 1800, text: "¡Casi al fondo! Cada sorbito me llena de calma y amor... ✨" },
+        { stage: 3, time: 2700, text: "¡El último sorbo tibio de lavanda! 🫖" },
+        { stage: 4, time: 3400, text: "¡Ahhh! ¡Me lo tomé todito hasta la última gota! ¡Paz infinita! 🪻🥰💖" }
+      ],
+      boost: () => {
+        s.energy = Math.min(100, (s.energy || 0) + 40);
+        s.affection = Math.min(100, (s.affection || 0) + 25);
+      }
+    },
+    cafe: {
+      sound: 'sip',
+      steps: [
+        { stage: 0, time: 0, text: "¡Un café calientito con leche espumosa de El Alpiste! ☕✨" },
+        { stage: 1, time: 900, text: "¡Sluurp! ¡Esa espuma con leche de almendra está deliciosa! ☕" },
+        { stage: 2, time: 1800, text: "¡Moca con canela! ¡Siento la energía fluyendo por mis patitas! 🔥" },
+        { stage: 3, time: 2700, text: "¡Último traguito bien cargado de café! ☕" },
+        { stage: 4, time: 3400, text: "¡Wooo! ¡Taza limpia! ¡Energía al 100% para leer y correr! ☕⚡🎉" }
+      ],
+      boost: () => {
+        s.energy = Math.min(100, (s.energy || 0) + 60);
+        s.affection = Math.min(100, (s.affection || 0) + 15);
+      }
+    },
+    muffin: {
+      sound: 'eat',
+      steps: [
+        { stage: 0, time: 0, text: "¡Muffin esponjoso de moras recién horneado en la cabaña! 🧁💜" },
+        { stage: 1, time: 850, text: "¡ÑAM! ¡La mora de arriba estaba súper dulce y jugosa! 🫐" },
+        { stage: 2, time: 1700, text: "¡Qué esponjosito está por dentro, puro sabor a moras silvestres! 🧁💖" },
+        { stage: 3, time: 2550, text: "¡Casi limpio el papelito del muffin, no dejo nada! 🧁" },
+        { stage: 4, time: 3350, text: "¡Plato limpio! ¡Ese muffin de moras estuvo insuperable! 🧁✨🥰" }
+      ],
+      boost: () => {
+        s.hunger = Math.min(100, (s.hunger || 0) + 65);
+        s.affection = Math.min(100, (s.affection || 0) + 30);
+      }
+    },
+    galletas: {
+      sound: 'eat',
+      steps: [
+        { stage: 0, time: 0, text: "¡Dos galletitas caseras de miel y avena con chispas! 🍪🌸" },
+        { stage: 1, time: 850, text: "¡CRUNCH! ¡Primera galletita partida y devorada! 🍪" },
+        { stage: 2, time: 1700, text: "¡A por la segunda galletita de miel y avena crujiente! 🍪💖" },
+        { stage: 3, time: 2550, text: "¡Última mordidita crujiente a la segunda galleta! 🍪" },
+        { stage: 4, time: 3350, text: "¡Listas las dos galletas! ¡Con energía para leer mucho más! 🍪🥰💖" }
+      ],
+      boost: () => {
+        s.hunger = Math.min(100, (s.hunger || 0) + 75);
+        s.affection = Math.min(100, (s.affection || 0) + 35);
+      }
+    },
+    macarons: {
+      sound: 'eat',
+      steps: [
+        { stage: 0, time: 0, text: "¡Macaron 'Lavender Haze' parisino con estrellita dorada! 🍬✨" },
+        { stage: 1, time: 850, text: "¡Mmmm! ¡La cremita de lavanda es tan suavecita y dulce! 🍬💜" },
+        { stage: 2, time: 1700, text: "¡Ya voy por la mitad, crujiente por fuera y tierno adentro! ✨" },
+        { stage: 3, time: 2550, text: "¡Último bocado parisino de ensueño! 🍬" },
+        { stage: 4, time: 3350, text: "¡Magnifique! ¡Macaron terminado! ¡Puro amor y dulzura! 🍬🌸🥰" }
+      ],
+      boost: () => {
+        s.hunger = Math.min(100, (s.hunger || 0) + 85);
+        s.affection = Math.min(100, (s.affection || 0) + 45);
+      }
+    },
+    banquete: {
+      sound: 'eat',
+      steps: [
+        { stage: 0, time: 0, text: "🎉 ¡EL GRAN BANQUETE REAL! ¡Miren cuántas delicias en la canasta! 🧺✨" },
+        { stage: 1, time: 850, text: "¡Ñam ñam! ¡Las uvas y cerezas del bosque están deliciosas! 🍇" },
+        { stage: 2, time: 1700, text: "¡Devorando el pan de nuez horneado y las manzanas rojas! 🍎🥖" },
+        { stage: 3, time: 2550, text: "¡Solo quedan las migajas en el mantelito de la canasta! 🧺" },
+        { stage: 4, time: 3350, text: "¡FIESTA TOTAL! ¡El banquete fue un éxito rotundo en la cabaña! 🧺👑💖" }
+      ],
+      boost: () => {
+        s.hunger = 100;
+        s.energy = 100;
+        s.affection = Math.min(100, (s.affection || 0) + 60);
+      }
+    }
+  };
+
+  const seq = snackSequences[snackKey] || snackSequences.bellota;
+
+  // Ejecutar cada fase progresiva
+  seq.steps.forEach(st => {
+    const timer = setTimeout(() => {
+      // 1. Mostrar la fase correspondiente del alimento en SVG
+      setSquirrelHeldItem(snackKey, st.stage);
+
+      // 2. Diálogo interactivo
+      showBubbleDialogue(st.text);
+
+      // 3. Efectos visuales y sonoros según la fase
+      if (st.stage < 4) {
+        if (isDrink) {
+          if (svg) svg.classList.add('is-drinking');
+          setSquirrelExpression('love');
+          playTamaSound('sip');
+          spawnLavenderBlossomParticles(3);
+        } else {
+          if (svg) svg.classList.add('is-eating');
+          setSquirrelExpression('eating');
+          playTamaSound('eat');
+          spawnFoodCrumbs(7, snackKey);
+        }
+
+        // Efecto squash en el alimento sostenido
+        const heldObj = document.getElementById(getFoodElementId(snackKey));
+        if (heldObj) {
+          heldObj.classList.remove('bite-crunch');
+          void heldObj.offsetWidth;
+          heldObj.classList.add('bite-crunch');
+        }
+      } else {
+        // ETAPA 4: ¡SE LO ACABÓ TODO!
+        if (svg) {
+          svg.classList.remove('is-eating', 'is-drinking');
+          svg.classList.add('hop-joy');
+        }
+        setSquirrelExpression('lick');
+        playTamaSound('levelUp');
+        spawnLavenderBlossomParticles(6);
+
+        // Aplicar mejoras en estadísticas
+        seq.boost();
+        saveActiveSquirrel();
+
+        // Actualizar barras de estado de inmediato
+        const barHunger = document.getElementById('barHunger');
+        if (barHunger) barHunger.style.width = `${Math.min(100, Math.max(5, s.hunger || 0))}%`;
+        const barAffection = document.getElementById('barAffection');
+        if (barAffection) barAffection.style.width = `${Math.min(100, Math.max(5, s.affection || 0))}%`;
+        const barEnergy = document.getElementById('barEnergy');
+        if (barEnergy) barEnergy.style.width = `${Math.min(100, Math.max(5, s.energy || 0))}%`;
+      }
+    }, st.time);
+
+    eatingStepTimers.push(timer);
+  });
+
+  // Finalizar la secuencia, permitir que retome el libro y descanse
+  const finishTimer = setTimeout(() => {
+    isSquirrelEatingActive = false;
+    if (svg) {
+      svg.classList.remove('hop-joy', 'is-eating', 'is-drinking');
+    }
+    if (!currentSquirrel.isSleeping) {
+      setSquirrelHeldItem('book');
+      setSquirrelExpression('normal');
+    }
+    renderSquirrelUI();
+  }, 4800);
+  eatingStepTimers.push(finishTimer);
 }
 
 // Dormir / Despertar con animación lenta hacia su camita rústica
@@ -3642,6 +3787,15 @@ function handleToggleSleep() {
   if (!currentSquirrel) loadActiveSquirrel();
   const s = currentSquirrel;
   const stage = document.getElementById('tamagotchiStage');
+
+  // Cancelar de forma limpia cualquier animación activa de comida
+  if (isSquirrelEatingActive) {
+    isSquirrelEatingActive = false;
+    eatingStepTimers.forEach(t => clearTimeout(t));
+    eatingStepTimers = [];
+    const svg = document.getElementById('nuezLivingSvg');
+    if (svg) svg.classList.remove('is-eating', 'is-drinking', 'hop-joy');
+  }
 
   isSleepTransitioning = true;
   s.isSleeping = !s.isSleeping;
