@@ -456,76 +456,135 @@
                   <!-- Tapete tejido acogedor en el piso donde se sienta Nuez -->
                   <div class="cozy-room-rug"></div>
 
-                  <!-- Chimenea de piedra cálida estilo Animal Crossing (100% Vectorial pura en SVG, sin emojis) -->
+                  <!-- Chimenea Rústica de Piedra y Ladrillo con Hogar Cálido y Repisa de Roble -->
                   <div class="cozy-room-fireplace">
-                    <svg class="ac-fireplace-svg" viewBox="0 0 80 100" width="80" height="100" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="ac-fireplace-svg" viewBox="0 0 100 120" width="100" height="120" xmlns="http://www.w3.org/2000/svg">
                       <defs>
-                        <radialGradient id="hearthGlowGrad" cx="50%" cy="80%" r="60%">
-                          <stop offset="0%" stop-color="#ffedd5" stop-opacity="0.9" />
-                          <stop offset="40%" stop-color="#fb923c" stop-opacity="0.75" />
-                          <stop offset="70%" stop-color="#b45309" stop-opacity="0.3" />
-                          <stop offset="100%" stop-color="#3b1d0c" stop-opacity="0" />
+                        <radialGradient id="hearthRadiantGlow" cx="50%" cy="85%" r="75%">
+                          <stop offset="0%" stop-color="#fff7ed" stop-opacity="1" />
+                          <stop offset="25%" stop-color="#fb923c" stop-opacity="0.85" />
+                          <stop offset="60%" stop-color="#ea580c" stop-opacity="0.5" />
+                          <stop offset="90%" stop-color="#7c2d12" stop-opacity="0.2" />
+                          <stop offset="100%" stop-color="#2a1205" stop-opacity="0" />
                         </radialGradient>
-                        <linearGradient id="flameOuterGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+                        <linearGradient id="mantelOakGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stop-color="#d97706" />
+                          <stop offset="35%" stop-color="#b45309" />
+                          <stop offset="85%" stop-color="#78350f" />
+                          <stop offset="100%" stop-color="#451a03" />
+                        </linearGradient>
+                        <linearGradient id="flameLayerOuter" x1="0%" y1="100%" x2="0%" y2="0%">
                           <stop offset="0%" stop-color="#ea580c" />
-                          <stop offset="60%" stop-color="#f97316" />
-                          <stop offset="100%" stop-color="#fdba74" />
+                          <stop offset="45%" stop-color="#f97316" />
+                          <stop offset="100%" stop-color="#fbbf24" />
                         </linearGradient>
-                        <linearGradient id="flameInnerGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+                        <linearGradient id="flameLayerInner" x1="0%" y1="100%" x2="0%" y2="0%">
                           <stop offset="0%" stop-color="#f59e0b" />
-                          <stop offset="50%" stop-color="#fde047" />
-                          <stop offset="100%" stop-color="#ffffff" />
+                          <stop offset="40%" stop-color="#fde047" />
+                          <stop offset="90%" stop-color="#ffffff" />
                         </linearGradient>
-                        <linearGradient id="logBarkGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stop-color="#451a03" />
-                          <stop offset="50%" stop-color="#78350f" />
-                          <stop offset="100%" stop-color="#3b1d0c" />
-                        </linearGradient>
-                        <radialGradient id="logCoreGrad" cx="50%" cy="50%" r="50%">
-                          <stop offset="0%" stop-color="#fde68a" />
-                          <stop offset="65%" stop-color="#d97706" />
-                          <stop offset="100%" stop-color="#78350f" />
-                        </radialGradient>
                       </defs>
 
-                      <ellipse cx="40" cy="95" rx="34" ry="5" fill="rgba(20, 10, 5, 0.4)" />
-                      <path d="M 10 20 L 70 20 L 68 94 L 12 94 Z" fill="#6d3b19" stroke="#4a240d" stroke-width="2.5" />
-                      <rect x="16" y="24" width="14" height="6" rx="2" fill="#85461e" />
-                      <rect x="34" y="24" width="18" height="6" rx="2" fill="#85461e" />
-                      <rect x="56" y="24" width="10" height="6" rx="2" fill="#85461e" />
-                      <rect x="13" y="33" width="18" height="6" rx="2" fill="#582a10" />
-                      <rect x="35" y="33" width="15" height="6" rx="2" fill="#85461e" />
-                      <rect x="54" y="33" width="14" height="6" rx="2" fill="#582a10" />
-                      <rect x="6" y="12" width="68" height="9" rx="3" fill="#a16207" stroke="#713f12" stroke-width="2" />
-                      <rect x="8" y="13" width="64" height="3" rx="1.5" fill="#ca8a04" opacity="0.7" />
-                      <path d="M 18 94 L 18 52 C 18 42, 62 42, 62 52 L 62 94 Z" fill="#1c0a02" stroke="#451a03" stroke-width="2" />
-                      <path d="M 18 94 L 18 52 C 18 42, 62 42, 62 52 L 62 94 Z" fill="url(#hearthGlowGrad)" class="ac-hearth-glow" />
+                      <!-- Sombra base en el piso de madera -->
+                      <ellipse cx="50" cy="116" rx="46" ry="4" fill="rgba(25, 10, 4, 0.45)" />
 
-                      <!-- Leños cruzados -->
-                      <g transform="translate(40, 84) rotate(-16) translate(-40, -84)">
-                        <rect x="22" y="80" width="36" height="8" rx="4" fill="url(#logBarkGrad)" />
-                        <ellipse cx="23" cy="84" rx="3.5" ry="4" fill="url(#logCoreGrad)" stroke="#451a03" stroke-width="0.8" />
-                        <circle cx="23" cy="84" r="1.5" fill="none" stroke="#78350f" stroke-width="0.7" />
-                      </g>
-                      <g transform="translate(40, 85) rotate(14) translate(-40, -85)">
-                        <rect x="24" y="81" width="34" height="8" rx="4" fill="url(#logBarkGrad)" />
-                        <ellipse cx="57" cy="85" rx="3.5" ry="4" fill="url(#logCoreGrad)" stroke="#451a03" stroke-width="0.8" />
-                        <circle cx="57" cy="85" r="1.5" fill="none" stroke="#78350f" stroke-width="0.7" />
+                      <!-- Estructura principal de mampostería y ladrillos rústicos cálidos -->
+                      <rect x="10" y="24" width="80" height="92" rx="4" fill="#a14917" stroke="#451a03" stroke-width="2" />
+                      
+                      <!-- Ladrillos y sillares de piedra con relieve y textura -->
+                      <g class="hearth-brickwork" fill="#c25e24" stroke="#782d08" stroke-width="0.9">
+                        <rect x="14" y="28" width="18" height="7" rx="1.5" />
+                        <rect x="36" y="28" width="22" height="7" rx="1.5" />
+                        <rect x="62" y="28" width="22" height="7" rx="1.5" fill="#d97706" opacity="0.8" />
+                        <rect x="14" y="38" width="14" height="7" rx="1.5" />
+                        <rect x="72" y="38" width="14" height="7" rx="1.5" />
+                        <rect x="14" y="48" width="12" height="7" rx="1.5" fill="#d97706" opacity="0.8" />
+                        <rect x="74" y="48" width="12" height="7" rx="1.5" />
+                        <rect x="14" y="58" width="12" height="8" rx="1.5" />
+                        <rect x="74" y="58" width="12" height="8" rx="1.5" fill="#d97706" opacity="0.7" />
+                        <rect x="14" y="69" width="12" height="8" rx="1.5" />
+                        <rect x="74" y="69" width="12" height="8" rx="1.5" />
+                        <rect x="14" y="80" width="12" height="8" rx="1.5" />
+                        <rect x="74" y="80" width="12" height="8" rx="1.5" />
+                        <rect x="14" y="91" width="12" height="8" rx="1.5" />
+                        <rect x="74" y="91" width="12" height="8" rx="1.5" />
+                        <rect x="14" y="102" width="12" height="8" rx="1.5" />
+                        <rect x="74" y="102" width="12" height="8" rx="1.5" />
                       </g>
 
-                      <!-- Llamas animadas vivas -->
+                      <!-- Repisa de roble tallada (Mantelpiece) -->
+                      <g class="hearth-mantel">
+                        <!-- Viga moldurada de roble -->
+                        <rect x="4" y="14" width="92" height="12" rx="3" fill="url(#mantelOakGrad)" stroke="#451a03" stroke-width="1.8" />
+                        <line x1="8" y1="17" x2="92" y2="17" stroke="#fef08a" stroke-width="1.2" opacity="0.5" stroke-linecap="round" />
+                        <rect x="8" y="24" width="84" height="4" rx="1" fill="#78350f" />
+
+                        <!-- Decoración sobre la repisa: Velita encendida y plantita de lavanda en arcilla -->
+                        <!-- Velita -->
+                        <rect x="18" y="7" width="6" height="8" rx="1" fill="#fafaf9" stroke="#e2e8f0" stroke-width="0.8" />
+                        <circle cx="21" cy="4" r="2.2" fill="#fde047" class="candle-flame" />
+                        <circle cx="21" cy="4" r="5" fill="#fde047" opacity="0.35" class="candle-glow" />
+                        <!-- Maceta de arcilla con ramitas de lavanda -->
+                        <polygon points="76,8 84,8 82,14 78,14" fill="#c2410c" stroke="#7c2d12" stroke-width="0.8" />
+                        <circle cx="80" cy="5" r="2.5" fill="#a855f7" />
+                        <circle cx="78" cy="3" r="2" fill="#c084fc" />
+                        <circle cx="82" cy="3" r="2" fill="#d8b4fe" />
+                        <line x1="80" y1="8" x2="80" y2="4" stroke="#16a34a" stroke-width="1" />
+                      </g>
+
+                      <!-- Bóveda / Hogar interior arqueado -->
+                      <!-- Fondo oscuro del hogar -->
+                      <path d="M 28 116 L 28 58 C 28 42, 72 42, 72 58 L 72 116 Z" fill="#1c0a02" stroke="#451a03" stroke-width="2" />
+                      
+                      <!-- Arco de dovelas de piedra decorativo -->
+                      <path d="M 27 58 C 27 40, 73 40, 73 58" fill="none" stroke="#ca8a04" stroke-width="2.5" stroke-linecap="round" />
+
+                      <!-- Resplandor ardiente interior -->
+                      <path d="M 28 116 L 28 58 C 28 42, 72 42, 72 58 L 72 116 Z" fill="url(#hearthRadiantGlow)" class="ac-hearth-glow" />
+
+                      <!-- Brasa de carbón incandescente en el fondo -->
+                      <ellipse cx="50" cy="110" rx="20" ry="5" fill="#dc2626" opacity="0.8" />
+                      <ellipse cx="50" cy="110" rx="14" ry="3" fill="#fb923c" opacity="0.9" />
+
+                      <!-- Leños de abedul rústicos cruzados -->
+                      <g class="hearth-logs">
+                        <!-- Leño izquierdo -->
+                        <g transform="translate(50, 102) rotate(-16) translate(-50, -102)">
+                          <rect x="30" y="98" width="38" height="9" rx="4.5" fill="#78350f" stroke="#451a03" stroke-width="1" />
+                          <rect x="33" y="100" width="30" height="2" fill="#fef3c7" opacity="0.6" />
+                          <ellipse cx="32" cy="102.5" rx="3.5" ry="4.5" fill="#fde68a" stroke="#451a03" stroke-width="0.8" />
+                        </g>
+                        <!-- Leño derecho cruzado -->
+                        <g transform="translate(50, 103) rotate(14) translate(-50, -103)">
+                          <rect x="32" y="99" width="36" height="9" rx="4.5" fill="#582405" stroke="#3b1704" stroke-width="1" />
+                          <rect x="36" y="101" width="28" height="2" fill="#fef3c7" opacity="0.5" />
+                          <ellipse cx="66" cy="103.5" rx="3.5" ry="4.5" fill="#fde68a" stroke="#451a03" stroke-width="0.8" />
+                        </g>
+                        <!-- Rejilla de hierro forjado -->
+                        <line x1="28" y1="112" x2="72" y2="112" stroke="#1c1917" stroke-width="2.5" stroke-linecap="round" />
+                        <line x1="34" y1="112" x2="34" y2="115" stroke="#1c1917" stroke-width="2.5" stroke-linecap="round" />
+                        <line x1="66" y1="112" x2="66" y2="115" stroke="#1c1917" stroke-width="2.5" stroke-linecap="round" />
+                      </g>
+
+                      <!-- Llamas vivas y danzantes en capas -->
                       <g class="ac-fire-group">
-                        <path class="ac-flame-tongue f-left" d="M 31 82 C 26 74, 30 64, 34 58 C 36 65, 39 70, 37 82 Z" fill="url(#flameOuterGrad)" />
-                        <path class="ac-flame-tongue f-right" d="M 43 82 C 41 72, 45 66, 47 60 C 51 66, 54 74, 49 82 Z" fill="url(#flameOuterGrad)" />
-                        <path class="ac-flame-main" d="M 28 85 C 26 72, 33 54, 40 44 C 47 54, 54 72, 52 85 C 47 88, 33 88, 28 85 Z" fill="url(#flameOuterGrad)" />
-                        <path class="ac-flame-core" d="M 33 84 C 32 75, 36 62, 40 54 C 44 62, 48 75, 47 84 C 44 86, 36 86, 33 84 Z" fill="url(#flameInnerGrad)" />
-                        <ellipse cx="40" cy="74" rx="3.5" ry="6" fill="#ffffff" opacity="0.85" />
+                        <!-- Lengua izquierda -->
+                        <path class="ac-flame-tongue f-left" d="M 38 102 C 32 90, 36 78, 42 70 C 44 80, 48 88, 46 102 Z" fill="url(#flameLayerOuter)" />
+                        <!-- Lengua derecha -->
+                        <path class="ac-flame-tongue f-right" d="M 54 102 C 52 88, 58 80, 60 72 C 66 82, 70 92, 64 102 Z" fill="url(#flameLayerOuter)" />
+                        <!-- Llama principal alta -->
+                        <path class="ac-flame-main" d="M 36 104 C 32 86, 42 62, 50 48 C 58 62, 68 86, 64 104 C 58 108, 42 108, 36 104 Z" fill="url(#flameLayerOuter)" />
+                        <!-- Núcleo brillante cálido -->
+                        <path class="ac-flame-core" d="M 42 104 C 40 92, 45 74, 50 62 C 55 74, 60 92, 58 104 C 54 106, 46 106, 42 104 Z" fill="url(#flameLayerInner)" />
+                        <!-- Centro incandescente -->
+                        <ellipse cx="50" cy="94" rx="4.5" ry="9" fill="#ffffff" opacity="0.9" />
                       </g>
 
-                      <!-- Brasitas flotantes -->
-                      <circle cx="36" cy="50" r="1.4" fill="#fde047" class="ac-ember-dot eb1" />
-                      <circle cx="44" cy="46" r="1.2" fill="#fdba74" class="ac-ember-dot eb2" />
-                      <circle cx="39" cy="38" r="1.0" fill="#fef08a" class="ac-ember-dot eb3" />
+                      <!-- Chispitas y brasas flotantes que suben -->
+                      <circle cx="44" cy="56" r="1.6" fill="#fde047" class="ac-ember-dot eb1" />
+                      <circle cx="56" cy="52" r="1.4" fill="#fb923c" class="ac-ember-dot eb2" />
+                      <circle cx="49" cy="42" r="1.2" fill="#ffffff" class="ac-ember-dot eb3" />
+                      <circle cx="53" cy="34" r="1.0" fill="#fde047" class="ac-ember-dot eb4" />
                     </svg>
                   </div>
 
@@ -717,126 +776,6 @@
                             <!-- Mechones suaves de pelaje en el pecho -->
                             <path d="M 112 142 L 120 148 L 128 142" fill="none" stroke="#fde047" stroke-width="1.5" stroke-linecap="round" opacity="0.7" />
                             <path d="M 108 154 L 120 162 L 132 154" fill="none" stroke="#fed7aa" stroke-width="1.8" stroke-linecap="round" opacity="0.6" />
-                          </g>
-
-                          <!-- 4. MANITAS DELANTERAS Y OBJETO ARTICULADOS JUNTOS (Suben a la boca al comer/beber) -->
-                          <g id="nuezArmsAndItem" class="nuez-arms-item-group">
-                            <!-- Objeto sostenido (Mini Libro, Snacks y Bebidas) -->
-                            <g id="nuezHeldItem" class="nuez-held-item-group" transform="translate(100, 138)">
-                              <!-- Mini Libro Morado (Defecto) -->
-                              <g id="itemBook" class="held-object item-book">
-                                <rect x="0" y="0" width="40" height="26" rx="4" fill="#7e22ce" stroke="#581c87" stroke-width="1.5" filter="url(#nuezSoftShadow)" />
-                                <rect x="4" y="2" width="32" height="22" rx="2" fill="#faf5ff" />
-                                <rect x="18" y="0" width="4" height="26" fill="#581c87" />
-                                <path d="M 19 24 L 21 32 L 23 24 Z" fill="#eab308" />
-                                <text x="8" y="17" font-size="10" fill="#a855f7">📖</text>
-                              </g>
-                              <!-- Bellota Silvestre Realista -->
-                              <g id="itemAcorn" class="held-object item-acorn" style="display: none;">
-                                <!-- Cúpula rugosa con textura de escamas -->
-                                <path d="M 8 7 C 8 -1, 32 -1, 32 7 L 34 11 L 6 11 Z" fill="#542308" stroke="#3b1704" stroke-width="1.4" />
-                                <line x1="12" y1="5" x2="28" y2="5" stroke="#78350f" stroke-width="1.2" stroke-linecap="round" />
-                                <circle cx="20" cy="-2" r="1.8" fill="#3b1704" />
-                                <!-- Cuerpo de la bellota tostada -->
-                                <path d="M 7 11 C 7 26, 33 26, 33 11 Z" fill="#b45309" stroke="#78350f" stroke-width="1.4" />
-                                <path d="M 11 13 Q 13 22 20 23" fill="none" stroke="#fde68a" stroke-width="2" stroke-linecap="round" opacity="0.75" />
-                                <circle cx="14" cy="15" r="2.2" fill="#ffffff" opacity="0.8" />
-                              </g>
-                              <!-- Nuez Dorada Brillante -->
-                              <g id="itemGoldNut" class="held-object item-goldnut" style="display: none;">
-                                <ellipse cx="20" cy="14" rx="14" ry="13" fill="#eab308" stroke="#ca8a04" stroke-width="1.8" />
-                                <path d="M 14 6 Q 20 1 26 6 Q 20 11 14 6 Z" fill="#fde047" opacity="0.6" />
-                                <path d="M 20 3 L 20 25" stroke="#ca8a04" stroke-width="1.2" stroke-linecap="round" opacity="0.5" />
-                                <circle cx="15" cy="10" r="2.8" fill="#ffffff" opacity="0.9" />
-                                <text x="24" y="8" font-size="9" fill="#fde047">✨</text>
-                              </g>
-                              <!-- Té de Lavanda Silvestre Calientito (Taza de Porcelana con Flores de Lavanda) -->
-                              <g id="itemTea" class="held-object item-tea" style="display: none;">
-                                <!-- Platito de porcelana -->
-                                <ellipse cx="20" cy="22" rx="16" ry="4.5" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2" />
-                                <!-- Taza de té -->
-                                <path d="M 7 6 L 33 6 C 33 16, 27 21, 20 21 C 13 21, 7 16, 7 6 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.4" />
-                                <!-- Asa de la taza -->
-                                <path d="M 32 9 C 37 9, 37 16, 32 17" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round" />
-                                <!-- Infusión de lavanda caliente en el interior -->
-                                <ellipse cx="20" cy="8" rx="11" ry="3.5" fill="#9333ea" />
-                                <ellipse cx="20" cy="8" rx="8" ry="2" fill="#c084fc" opacity="0.8" />
-                                <!-- Ramillete de lavanda pintado en la porcelana -->
-                                <circle cx="16" cy="14" r="2" fill="#c084fc" />
-                                <circle cx="20" cy="13" r="2.2" fill="#a855f7" />
-                                <circle cx="24" cy="14" r="2" fill="#c084fc" />
-                                <path d="M 18 16 L 22 16" stroke="#22c55e" stroke-width="1" stroke-linecap="round" />
-                                <!-- Hilillos de vapor aromático -->
-                                <path d="M 16 3 Q 13 -3 17 -8 Q 20 -12 17 -16" fill="none" stroke="rgba(216,180,254,0.95)" stroke-width="1.8" stroke-linecap="round" class="ac-steam-wisp w1" />
-                                <path d="M 23 2 Q 26 -4 22 -9 Q 19 -13 23 -17" fill="none" stroke="rgba(216,180,254,0.9)" stroke-width="1.8" stroke-linecap="round" class="ac-steam-wisp w2" />
-                              </g>
-                              <!-- Café con Leche de El Alpiste (Brewster) -->
-                              <g id="itemCoffee" class="held-object item-coffee" style="display: none;">
-                                <rect x="8" y="7" width="24" height="19" rx="4" fill="#047857" stroke="#065f46" stroke-width="1.6" />
-                                <ellipse cx="20" cy="7" rx="12" ry="3.8" fill="#451a03" />
-                                <ellipse cx="20" cy="7" rx="9" ry="2.5" fill="#fde68a" opacity="0.75" />
-                                <!-- Asa -->
-                                <path d="M 32 11 C 36 11, 36 18, 32 19" fill="none" stroke="#065f46" stroke-width="2.2" stroke-linecap="round" />
-                                <!-- Logo de Brewster -->
-                                <circle cx="20" cy="16" r="3.8" fill="#ffffff" />
-                                <path d="M 18 16 Q 20 14 22 16" stroke="#047857" stroke-width="1.2" fill="none" />
-                                <!-- Vapor -->
-                                <path d="M 20 3 Q 17 -2 20 -7" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.6" stroke-linecap="round" class="ac-steam-wisp" />
-                              </g>
-                              <!-- Muffin de Moras del Bosque -->
-                              <g id="itemBlackberryCake" class="held-object item-cake" style="display: none;">
-                                <path d="M 10 14 L 14 24 L 26 24 L 30 14 Z" fill="#fed7aa" stroke="#f97316" stroke-width="1.2" />
-                                <ellipse cx="20" cy="13" rx="13" ry="8" fill="#9333ea" />
-                                <ellipse cx="20" cy="10" rx="9" ry="5" fill="#c084fc" />
-                                <circle cx="20" cy="6" r="3.5" fill="#3b0764" />
-                                <circle cx="16" cy="12" r="1.5" fill="#581c87" />
-                                <circle cx="24" cy="11" r="1.5" fill="#581c87" />
-                              </g>
-                              <!-- Galletitas de Miel y Avena -->
-                              <g id="itemCookies" class="held-object item-cookies" style="display: none;">
-                                <circle cx="16" cy="15" r="9" fill="#fde68a" stroke="#d97706" stroke-width="1.4" />
-                                <circle cx="26" cy="17" r="8" fill="#f59e0b" stroke="#b45309" stroke-width="1.4" />
-                                <circle cx="14" cy="13" r="1.8" fill="#78350f" />
-                                <circle cx="18" cy="17" r="1.6" fill="#78350f" />
-                                <circle cx="25" cy="15" r="1.6" fill="#451a03" />
-                                <circle cx="27" cy="19" r="1.5" fill="#451a03" />
-                              </g>
-                              <!-- Macarons 'Lavender Haze' -->
-                              <g id="itemMacarons" class="held-object item-macarons" style="display: none;">
-                                <ellipse cx="20" cy="21" rx="13" ry="5.5" fill="#e9d5ff" stroke="#a855f7" stroke-width="1.2" />
-                                <rect x="9" y="18" width="22" height="3" fill="#ffffff" />
-                                <ellipse cx="20" cy="14" rx="13" ry="5.5" fill="#d8b4fe" stroke="#a855f7" stroke-width="1.2" />
-                                <text x="25" y="11" font-size="8" fill="#fde047">★</text>
-                              </g>
-                              <!-- Gran Banquete Real del Bosque -->
-                              <g id="itemFeast" class="held-object item-feast" style="display: none;">
-                                <rect x="6" y="12" width="28" height="15" rx="3" fill="#b45309" stroke="#78350f" stroke-width="1.4" />
-                                <path d="M 8 12 Q 20 6 32 12" fill="none" stroke="#ca8a04" stroke-width="1.5" />
-                                <ellipse cx="14" cy="11" r="4" fill="#ef4444" />
-                                <ellipse cx="21" cy="9" r="4.5" fill="#8b5cf6" />
-                                <ellipse cx="27" cy="11" r="3.5" fill="#f59e0b" />
-                              </g>
-                            </g>
-
-                            <!-- Manitas Delanteras con Deditos que Abrazan y Sostienen -->
-                            <g id="nuezPaws" class="nuez-paws-part">
-                              <!-- Patita Izquierda -->
-                              <g id="pawL" class="nuez-paw paw-left">
-                                <ellipse cx="94" cy="152" rx="11" ry="8.5" fill="#c76f25" stroke="#7c2d12" stroke-width="1.4" />
-                                <!-- Deditos tiernos -->
-                                <circle cx="101" cy="149" r="2.8" fill="#ea580c" />
-                                <circle cx="102" cy="153" r="2.8" fill="#ea580c" />
-                                <circle cx="99" cy="157" r="2.8" fill="#ea580c" />
-                              </g>
-                              <!-- Patita Derecha -->
-                              <g id="pawR" class="nuez-paw paw-right">
-                                <ellipse cx="146" cy="152" rx="11" ry="8.5" fill="#c76f25" stroke="#7c2d12" stroke-width="1.4" />
-                                <!-- Deditos tiernos -->
-                                <circle cx="139" cy="149" r="2.8" fill="#ea580c" />
-                                <circle cx="138" cy="153" r="2.8" fill="#ea580c" />
-                                <circle cx="141" cy="157" r="2.8" fill="#ea580c" />
-                              </g>
-                            </g>
                           </g>
 
                           <!-- 5. CABEZA ARTICULADA CON MEJILLAS ESPONJOSAS DE ARDILLA REAL -->
@@ -1169,6 +1108,115 @@
                             <polygon points="112,138 120,148 128,138" fill="#ffffff" />
                             <rect x="118" y="146" width="4" height="12" rx="1" fill="#dc2626" />
                           </g>
+
+                          <!-- ============ 8. MANITAS Y ALIMENTO (Capa Superior en Frente del Rostro y Pecho) ============ -->
+                          <g id="nuezArmsAndItem" class="nuez-arms-item-group">
+                            <!-- Objeto sostenido (Mini Libro, Snacks y Bebidas) -->
+                            <g id="nuezHeldItem" class="nuez-held-item-group" transform="translate(100, 134)">
+                              <!-- Mini Libro Morado (Defecto) -->
+                              <g id="itemBook" class="held-object item-book">
+                                <rect x="0" y="0" width="40" height="26" rx="4" fill="#7e22ce" stroke="#581c87" stroke-width="1.5" filter="url(#nuezSoftShadow)" />
+                                <rect x="4" y="2" width="32" height="22" rx="2" fill="#faf5ff" />
+                                <rect x="18" y="0" width="4" height="26" fill="#581c87" />
+                                <path d="M 19 24 L 21 32 L 23 24 Z" fill="#eab308" />
+                                <text x="8" y="17" font-size="10" fill="#a855f7">📖</text>
+                              </g>
+                              <!-- Bellota Silvestre Realista -->
+                              <g id="itemAcorn" class="held-object item-acorn" style="display: none;">
+                                <path d="M 7 7 C 7 -2, 33 -2, 33 7 L 35 11 L 5 11 Z" fill="#542308" stroke="#3b1704" stroke-width="1.4" />
+                                <line x1="11" y1="5" x2="29" y2="5" stroke="#78350f" stroke-width="1.2" stroke-linecap="round" />
+                                <circle cx="20" cy="-2" r="1.8" fill="#3b1704" />
+                                <path d="M 6 11 C 6 26, 34 26, 34 11 Z" fill="#b45309" stroke="#78350f" stroke-width="1.4" />
+                                <path d="M 10 13 Q 12 22 20 23" fill="none" stroke="#fde68a" stroke-width="2" stroke-linecap="round" opacity="0.8" />
+                                <circle cx="13" cy="15" r="2.2" fill="#ffffff" opacity="0.85" />
+                              </g>
+                              <!-- Nuez Dorada Brillante -->
+                              <g id="itemGoldNut" class="held-object item-goldnut" style="display: none;">
+                                <ellipse cx="20" cy="14" rx="13" ry="11" fill="rgba(69, 26, 3, 0.3)" />
+                                <ellipse cx="20" cy="12" rx="14" ry="12" fill="#f59e0b" stroke="#92400e" stroke-width="1.8" />
+                                <path d="M 13 4 Q 20 1 27 4 Q 20 10 13 4 Z" fill="#fde047" opacity="0.8" />
+                                <path d="M 20 1 L 20 23" stroke="#92400e" stroke-width="1.5" stroke-linecap="round" opacity="0.6" />
+                                <path d="M 14 12 Q 20 15 26 12" stroke="#92400e" stroke-width="1.2" stroke-linecap="round" opacity="0.5" />
+                                <circle cx="15" cy="8" r="2.5" fill="#ffffff" opacity="0.9" />
+                                <text x="24" y="6" font-size="9" fill="#fef08a">✨</text>
+                              </g>
+                              <!-- Té de Lavanda Silvestre Calientito -->
+                              <g id="itemTea" class="held-object item-tea" style="display: none;">
+                                <ellipse cx="20" cy="22" rx="16" ry="4.5" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2" />
+                                <path d="M 7 6 L 33 6 C 33 16, 27 21, 20 21 C 13 21, 7 16, 7 6 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.4" />
+                                <path d="M 32 9 C 37 9, 37 16, 32 17" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round" />
+                                <ellipse cx="20" cy="8" rx="11" ry="3.5" fill="#9333ea" />
+                                <ellipse cx="20" cy="8" rx="8" ry="2" fill="#c084fc" opacity="0.8" />
+                                <circle cx="16" cy="14" r="2" fill="#c084fc" />
+                                <circle cx="20" cy="13" r="2.2" fill="#a855f7" />
+                                <circle cx="24" cy="14" r="2" fill="#c084fc" />
+                                <path d="M 18 16 L 22 16" stroke="#22c55e" stroke-width="1" stroke-linecap="round" />
+                                <path d="M 16 3 Q 13 -3 17 -8 Q 20 -12 17 -16" fill="none" stroke="rgba(216,180,254,0.95)" stroke-width="1.8" stroke-linecap="round" class="ac-steam-wisp w1" />
+                                <path d="M 23 2 Q 26 -4 22 -9 Q 19 -13 23 -17" fill="none" stroke="rgba(216,180,254,0.9)" stroke-width="1.8" stroke-linecap="round" class="ac-steam-wisp w2" />
+                              </g>
+                              <!-- Café con Leche de El Alpiste (Brewster) -->
+                              <g id="itemCoffee" class="held-object item-coffee" style="display: none;">
+                                <rect x="8" y="7" width="24" height="19" rx="4" fill="#047857" stroke="#065f46" stroke-width="1.6" />
+                                <ellipse cx="20" cy="7" rx="12" ry="3.8" fill="#451a03" />
+                                <ellipse cx="20" cy="7" rx="9" ry="2.5" fill="#fde68a" opacity="0.75" />
+                                <path d="M 32 11 C 36 11, 36 18, 32 19" fill="none" stroke="#065f46" stroke-width="2.2" stroke-linecap="round" />
+                                <circle cx="20" cy="16" r="3.8" fill="#ffffff" />
+                                <path d="M 18 16 Q 20 14 22 16" stroke="#047857" stroke-width="1.2" fill="none" />
+                                <path d="M 20 3 Q 17 -2 20 -7" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.6" stroke-linecap="round" class="ac-steam-wisp" />
+                              </g>
+                              <!-- Muffin de Moras del Bosque -->
+                              <g id="itemBlackberryCake" class="held-object item-cake" style="display: none;">
+                                <path d="M 10 14 L 14 24 L 26 24 L 30 14 Z" fill="#fed7aa" stroke="#f97316" stroke-width="1.2" />
+                                <ellipse cx="20" cy="13" rx="13" ry="8" fill="#9333ea" />
+                                <ellipse cx="20" cy="10" rx="9" ry="5" fill="#c084fc" />
+                                <circle cx="20" cy="6" r="3.5" fill="#3b0764" />
+                                <circle cx="16" cy="12" r="1.5" fill="#581c87" />
+                                <circle cx="24" cy="11" r="1.5" fill="#581c87" />
+                              </g>
+                              <!-- Galletitas de Miel y Avena -->
+                              <g id="itemCookies" class="held-object item-cookies" style="display: none;">
+                                <circle cx="16" cy="15" r="9" fill="#fde68a" stroke="#d97706" stroke-width="1.4" />
+                                <circle cx="26" cy="17" r="8" fill="#f59e0b" stroke="#b45309" stroke-width="1.4" />
+                                <circle cx="14" cy="13" r="1.8" fill="#78350f" />
+                                <circle cx="18" cy="17" r="1.6" fill="#78350f" />
+                                <circle cx="25" cy="15" r="1.6" fill="#451a03" />
+                                <circle cx="27" cy="19" r="1.5" fill="#451a03" />
+                              </g>
+                              <!-- Macarons 'Lavender Haze' -->
+                              <g id="itemMacarons" class="held-object item-macarons" style="display: none;">
+                                <ellipse cx="20" cy="21" rx="13" ry="5.5" fill="#e9d5ff" stroke="#a855f7" stroke-width="1.2" />
+                                <rect x="9" y="18" width="22" height="3" fill="#ffffff" />
+                                <ellipse cx="20" cy="14" rx="13" ry="5.5" fill="#d8b4fe" stroke="#a855f7" stroke-width="1.2" />
+                                <text x="25" y="11" font-size="8" fill="#fde047">★</text>
+                              </g>
+                              <!-- Gran Banquete Real del Bosque -->
+                              <g id="itemFeast" class="held-object item-feast" style="display: none;">
+                                <rect x="6" y="12" width="28" height="15" rx="3" fill="#b45309" stroke="#78350f" stroke-width="1.4" />
+                                <path d="M 8 12 Q 20 6 32 12" fill="none" stroke="#ca8a04" stroke-width="1.5" />
+                                <ellipse cx="14" cy="11" r="4" fill="#ef4444" />
+                                <ellipse cx="21" cy="9" r="4.5" fill="#8b5cf6" />
+                                <ellipse cx="27" cy="11" r="3.5" fill="#f59e0b" />
+                              </g>
+                            </g>
+
+                            <!-- Manitas Delanteras con Deditos que Abrazan y Sostienen (Frente a la comida) -->
+                            <g id="nuezPaws" class="nuez-paws-part">
+                              <!-- Patita Izquierda -->
+                              <g id="pawL" class="nuez-paw paw-left">
+                                <ellipse cx="94" cy="148" rx="11" ry="8.5" fill="#c76f25" stroke="#7c2d12" stroke-width="1.4" />
+                                <circle cx="101" cy="145" r="2.8" fill="#ea580c" />
+                                <circle cx="102" cy="149" r="2.8" fill="#ea580c" />
+                                <circle cx="99" cy="153" r="2.8" fill="#ea580c" />
+                              </g>
+                              <!-- Patita Derecha -->
+                              <g id="pawR" class="nuez-paw paw-right">
+                                <ellipse cx="146" cy="148" rx="11" ry="8.5" fill="#c76f25" stroke="#7c2d12" stroke-width="1.4" />
+                                <circle cx="139" cy="145" r="2.8" fill="#ea580c" />
+                                <circle cx="138" cy="149" r="2.8" fill="#ea580c" />
+                                <circle cx="141" cy="153" r="2.8" fill="#ea580c" />
+                              </g>
+                            </g>
+                          </g>
                         </g>
                       </svg>
 
@@ -1263,6 +1311,9 @@
                 <div class="minigame-screen" id="minigameScreen" style="display: none;">
                   <div class="minigame-header">
                     <div class="minigame-score">Bellotas: <span id="minigameScoreText">0</span> 🌰</div>
+                    <div class="minigame-lives" id="minigameLivesBadge" title="Vidas restantes">
+                      <span id="minigameLivesText">❤️❤️❤️</span>
+                    </div>
                     <div class="minigame-combo-badge" id="minigameComboBadge">Combo x1 🔥</div>
                     <div class="minigame-timer">Tiempo: <span id="minigameTimerText">30s</span></div>
                     <button type="button" class="btn-close-minigame" onclick="quitMiniGame()">✕ Salir</button>
@@ -1275,8 +1326,8 @@
                       <span class="catcher-mascot">🐿️</span>
                     </div>
                   </div>
-                  <div class="minigame-controls-hint">
-                    Atrapa Bellotas 🌰, Nueces Doradas 🥜 y Lavanda 🪻 (+5s). ¡Esquiva las ramas secas 🍂!
+                  <div class="minigame-controls-hint" id="minigameHintText">
+                    Atrapa 🌰 (+1) y 🥜 (+2). ¡CUIDADO con ramas espinosas 🪵 y erizos 🦔 (-1 ❤️)! ¡Con 0 vidas pierdes!
                   </div>
 
                   <!-- Modal Animado de Victoria del Minijuego (Estilo Animal Crossing) -->

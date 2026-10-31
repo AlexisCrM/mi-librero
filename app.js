@@ -3901,13 +3901,24 @@ function equipWardrobeItem(category, itemId) {
   }
 }
 
-// Minijuego Arcade: Lluvia de Bellotas
+// Minijuego Arcade: Lluvia de Bellotas Desafiante con Sistema de Vidas (3 ❤️)
 miniGameScore = 0;
 let miniGameAcornsWon = 0;
 let miniGameCombo = 1;
 let miniGameStreak = 0;
 let miniGameMaxStreak = 0;
+let miniGameLives = 3;
 let isLavenderFrenzy = false;
+
+function updateMinigameLivesUI() {
+  const el = document.getElementById('minigameLivesText');
+  if (!el) return;
+  let hearts = '';
+  for (let i = 0; i < 3; i++) {
+    hearts += (i < miniGameLives) ? '❤️' : '🖤';
+  }
+  el.textContent = hearts;
+}
 
 function startAcornMiniGame() {
   const screen = document.getElementById('minigameScreen');
@@ -3921,9 +3932,11 @@ function startAcornMiniGame() {
   miniGameCombo = 1;
   miniGameStreak = 0;
   miniGameMaxStreak = 0;
+  miniGameLives = 3;
   miniGameTimeLeft = 30;
   isLavenderFrenzy = false;
 
+  screen.classList.remove('hit-shake');
   screen.style.display = 'flex';
   playTamaSound('chirp');
 
@@ -3933,12 +3946,13 @@ function startAcornMiniGame() {
   if (scoreEl) scoreEl.textContent = '0';
   if (timerEl) timerEl.textContent = '30s';
   if (comboEl) comboEl.textContent = 'Combo x1 🔥';
+  updateMinigameLivesUI();
 
   const canvas = document.getElementById('minigameCanvasArea');
   const catcher = document.getElementById('minigameCatcher');
   if (!canvas || !catcher) return;
 
-  // Limpiar objetos anteriores
+  // Limpiar cualquier residuo de items anteriores
   canvas.querySelectorAll('.minigame-falling-item, .minigame-floating-score').forEach(el => el.remove());
 
   // Movimiento receptivo con cursor / touch y teclado
@@ -3963,13 +3977,13 @@ function startAcornMiniGame() {
   window.onkeydown = (e) => {
     if (screen.style.display !== 'flex') return;
     if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
-      updateCatcherPos(catcherX - 25);
+      updateCatcherPos(catcherX - 28);
     } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
-      updateCatcherPos(catcherX + 25);
+      updateCatcherPos(catcherX + 28);
     }
   };
 
-  // Caída de items
+  // Caída dinámica de items (Bellotas, Nueces, Lavanda y Obstáculos Peligrosos)
   miniGameInterval = setInterval(() => {
     const rect = canvas.getBoundingClientRect();
     if (rect.width <= 0) return;
@@ -3982,53 +3996,68 @@ function startAcornMiniGame() {
     let icon = '🌰';
 
     if (isLavenderFrenzy) {
-      if (rand < 0.45) { type = 'gold_nut'; icon = '🥜'; }
+      if (rand < 0.6) { type = 'gold_nut'; icon = '🥜'; }
       else { type = 'acorn'; icon = '🌰'; }
     } else {
-      if (rand < 0.58) { type = 'acorn'; icon = '🌰'; }
-      else if (rand < 0.76) { type = 'gold_nut'; icon = '🥜'; }
-      else if (rand < 0.88) { type = 'lavender'; icon = '🪻'; }
-      else { type = 'leaf'; icon = '🍂'; }
+      // 28% probabilidad de obstáculos peligrosos (Erizos o ramas espinosas)
+      if (rand < 0.44) { type = 'acorn'; icon = '🌰'; }
+      else if (rand < 0.62) { type = 'gold_nut'; icon = '🥜'; }
+      else if (rand < 0.72) { type = 'lavender'; icon = '🪻'; }
+      else if (rand < 0.86) { type = 'obstacle'; icon = '🦔'; }
+      else { type = 'obstacle'; icon = '🪵'; }
     }
 
     item.textContent = icon;
     item.dataset.type = type;
 
-    const spawnX = Math.random() * (rect.width - 40) + 15;
+    const spawnX = Math.random() * (rect.width - 45) + 15;
     item.style.left = `${spawnX}px`;
 
-    // Velocidad progresiva a medida que avanza el reloj
-    const speedRatio = Math.max(0.7, miniGameTimeLeft / 30);
-    const fallDuration = (Math.random() * 0.4 + 1.2) * speedRatio;
+    // Velocidad progresiva y más retadora
+    const speedRatio = Math.max(0.65, miniGameTimeLeft / 30);
+    const fallDuration = (Math.random() * 0.35 + 0.95) * speedRatio;
     item.style.animationDuration = `${fallDuration.toFixed(2)}s`;
     canvas.appendChild(item);
 
-    // Detección de colisión
+    // Auto-limpieza en fin de animación para que NUNCA queden emojis en el piso
+    item.addEventListener('animationend', () => {
+      item.remove();
+    });
+
+    // Detección precisa de colisión
     const checkCollision = setInterval(() => {
+      if (!item.parentNode) {
+        clearInterval(checkCollision);
+        return;
+      }
+
       const cRect = catcher.getBoundingClientRect();
       const iRect = item.getBoundingClientRect();
 
+      // Atrapada en la canasta
       if (
-        iRect.bottom >= cRect.top + 8 &&
-        iRect.top <= cRect.bottom &&
-        iRect.right >= cRect.left &&
-        iRect.left <= cRect.right
+        iRect.bottom >= cRect.top + 10 &&
+        iRect.top <= cRect.bottom - 4 &&
+        iRect.right >= cRect.left + 6 &&
+        iRect.left <= cRect.right - 6
       ) {
         clearInterval(checkCollision);
         handleItemCatch(type, item, canvas);
         item.remove();
-      } else if (iRect.top > rect.bottom) {
+      } 
+      // Si el item cae por debajo de la canasta, DESAPARECE INMEDIATAMENTE
+      else if (iRect.top >= cRect.bottom + 8 || iRect.top >= rect.bottom - 12) {
         clearInterval(checkCollision);
         item.remove();
       }
-    }, 35);
+    }, 30);
 
     setTimeout(() => {
       clearInterval(checkCollision);
       if (item.parentNode) item.remove();
-    }, 2800);
+    }, 2400);
 
-  }, 520);
+  }, 440);
 
   // Cuenta regresiva
   miniGameTimer = setInterval(() => {
@@ -4036,7 +4065,7 @@ function startAcornMiniGame() {
     if (timerEl) timerEl.textContent = `${miniGameTimeLeft}s`;
 
     if (miniGameTimeLeft <= 0) {
-      endMiniGame();
+      endMiniGame(false);
     }
   }, 1000);
 }
@@ -4045,17 +4074,24 @@ function handleItemCatch(type, itemEl, canvas) {
   const scoreEl = document.getElementById('minigameScoreText');
   const comboEl = document.getElementById('minigameComboBadge');
   const timerEl = document.getElementById('minigameTimerText');
+  const catcher = document.getElementById('minigameCatcher');
 
   let floatText = '';
   let floatColor = '#facc15';
+
+  // Efecto squash en la canasta
+  if (catcher) {
+    catcher.classList.remove('is-catching');
+    void catcher.offsetWidth; // Force reflow
+    catcher.classList.add('is-catching');
+  }
 
   if (type === 'acorn') {
     miniGameStreak++;
     miniGameMaxStreak = Math.max(miniGameMaxStreak, miniGameStreak);
     updateMinigameCombo();
 
-    const pts = 10 * miniGameCombo;
-    miniGameScore += pts;
+    miniGameScore += 10 * miniGameCombo;
     miniGameAcornsWon += 1;
     floatText = `+1 🌰`;
     floatColor = '#facc15';
@@ -4066,37 +4102,62 @@ function handleItemCatch(type, itemEl, canvas) {
     miniGameMaxStreak = Math.max(miniGameMaxStreak, miniGameStreak);
     updateMinigameCombo();
 
-    const pts = 35 * miniGameCombo;
-    miniGameScore += pts;
-    miniGameAcornsWon += 3;
-    floatText = `+3 🥜✨`;
+    miniGameScore += 25 * miniGameCombo;
+    miniGameAcornsWon += 2;
+    floatText = `+2 🥜✨`;
     floatColor = '#f59e0b';
     playTamaSound('coin');
 
   } else if (type === 'lavender') {
-    miniGameStreak += 3;
+    miniGameStreak += 2;
     miniGameMaxStreak = Math.max(miniGameMaxStreak, miniGameStreak);
     updateMinigameCombo();
 
-    miniGameScore += 50 * miniGameCombo;
-    miniGameTimeLeft = Math.min(45, miniGameTimeLeft + 5);
+    miniGameScore += 30;
+    miniGameTimeLeft = Math.min(45, miniGameTimeLeft + 3);
     if (timerEl) timerEl.textContent = `${miniGameTimeLeft}s`;
 
-    floatText = `+5s 🪻 FIEBRE!`;
+    // Si había perdido vida, la lavanda silvestre la cura
+    if (miniGameLives < 3) {
+      miniGameLives++;
+      updateMinigameLivesUI();
+      floatText = `+1 ❤️ +3s 🪻`;
+    } else {
+      floatText = `+3s 🪻 FIEBRE!`;
+    }
     floatColor = '#c084fc';
     playTamaSound('levelUp');
 
     isLavenderFrenzy = true;
-    setTimeout(() => { isLavenderFrenzy = false; }, 4000);
+    setTimeout(() => { isLavenderFrenzy = false; }, 3200);
 
-  } else if (type === 'leaf') {
+  } else if (type === 'obstacle') {
+    // ¡CHOCÓ CON UN OBSTÁCULO! (Erizo o Rama espinosa)
+    miniGameLives--;
     miniGameStreak = 0;
     miniGameCombo = 1;
     if (comboEl) comboEl.textContent = 'Combo x1 🔥';
-    if (miniGameAcornsWon > 0) miniGameAcornsWon -= 1;
-    floatText = `-1 🍂`;
+    updateMinigameLivesUI();
+
+    // Sacudida de pantalla
+    const screen = document.getElementById('minigameScreen');
+    if (screen) {
+      screen.classList.remove('hit-shake');
+      void screen.offsetWidth;
+      screen.classList.add('hit-shake');
+    }
+
+    floatText = `-1 ❤️ ¡AUCH!`;
     floatColor = '#ef4444';
     playTamaSound('thud');
+
+    // ¿SE QUEDÓ SIN VIDAS? ¡GAME OVER RÁPIDO!
+    if (miniGameLives <= 0) {
+      setTimeout(() => {
+        endMiniGame(true /* isGameOver */);
+      }, 250);
+      return;
+    }
   }
 
   if (scoreEl) scoreEl.textContent = miniGameAcornsWon;
@@ -4105,7 +4166,7 @@ function handleItemCatch(type, itemEl, canvas) {
   const itemLeft = itemEl.offsetLeft;
   const f = document.createElement('div');
   f.className = 'minigame-floating-score';
-  f.style.cssText = `position: absolute; left: ${itemLeft}px; bottom: 42px; font-weight: 900; font-size: 0.9rem; color: ${floatColor}; text-shadow: 0 2px 4px rgba(0,0,0,0.8); pointer-events: none; animation: floatScore 0.8s ease-out forwards;`;
+  f.style.cssText = `position: absolute; left: ${itemLeft}px; bottom: 44px; font-weight: 900; font-size: 0.95rem; color: ${floatColor}; text-shadow: 0 2px 4px rgba(0,0,0,0.9); pointer-events: none; animation: floatScore 0.8s ease-out forwards; z-index: 50;`;
   f.textContent = floatText;
   canvas.appendChild(f);
   setTimeout(() => f.remove(), 800);
@@ -4113,11 +4174,11 @@ function handleItemCatch(type, itemEl, canvas) {
 
 function updateMinigameCombo() {
   const comboEl = document.getElementById('minigameComboBadge');
-  if (miniGameStreak >= 10) {
+  if (miniGameStreak >= 8) {
     if (miniGameCombo !== 4) playTamaSound('combo');
     miniGameCombo = 4;
     if (comboEl) comboEl.textContent = 'Combo x4 ⚡ SUPER!';
-  } else if (miniGameStreak >= 6) {
+  } else if (miniGameStreak >= 5) {
     if (miniGameCombo !== 3) playTamaSound('combo');
     miniGameCombo = 3;
     if (comboEl) comboEl.textContent = 'Combo x3 🔥';
@@ -4131,32 +4192,48 @@ function updateMinigameCombo() {
   }
 }
 
-function endMiniGame() {
+function endMiniGame(isGameOver = false) {
   clearInterval(miniGameInterval);
   clearInterval(miniGameTimer);
   miniGameInterval = null;
   miniGameTimer = null;
 
-  playTamaSound('levelUp');
+  const canvas = document.getElementById('minigameCanvasArea');
+  if (canvas) {
+    canvas.querySelectorAll('.minigame-falling-item').forEach(el => el.remove());
+  }
+
   if (!currentSquirrel) loadActiveSquirrel();
 
-  const earned = Math.max(1, miniGameAcornsWon);
+  const earned = Math.max(0, miniGameAcornsWon);
   currentSquirrel.acorns = (currentSquirrel.acorns || 0) + earned;
-  currentSquirrel.affection = Math.min(100, (currentSquirrel.affection || 0) + Math.min(35, earned * 2));
+  currentSquirrel.affection = Math.min(100, (currentSquirrel.affection || 0) + Math.min(25, earned * 2));
   saveActiveSquirrel();
   renderSquirrelUI();
 
-  // Alerta moderna, animada y colorida estilo Animal Crossing (Sin alert() plano)
+  // Modal de fin de juego estilo Animal Crossing
   const modal = document.getElementById('minigameVictoryModal');
   const earnedEl = document.getElementById('victoryAcornsEarned');
   const starsEl = document.getElementById('victoryStars');
   const scoreEl = document.getElementById('victoryScoreNum');
   const streakEl = document.getElementById('victoryStreakNum');
+  const titleEl = modal ? modal.querySelector('.victory-title') : null;
+  const subtitleEl = modal ? modal.querySelector('.victory-subtitle') : null;
 
-  if (starsEl) {
-    if (earned >= 22) starsEl.textContent = '⭐⭐⭐';
-    else if (earned >= 12) starsEl.textContent = '⭐⭐';
-    else starsEl.textContent = '⭐';
+  if (isGameOver) {
+    playTamaSound('thud');
+    if (titleEl) titleEl.textContent = '¡Fin del Juego! 💔';
+    if (subtitleEl) subtitleEl.textContent = '¡Las ramas y erizos te hicieron caer! Pero salvaste tus bellotas.';
+    if (starsEl) starsEl.textContent = '💔';
+  } else {
+    playTamaSound('levelUp');
+    if (titleEl) titleEl.textContent = '¡Gran Cosecha! 🎉';
+    if (subtitleEl) subtitleEl.textContent = '¡Sobreviviste al bosque y llenaste tu alcancía!';
+    if (starsEl) {
+      if (earned >= 18) starsEl.textContent = '⭐⭐⭐';
+      else if (earned >= 10) starsEl.textContent = '⭐⭐';
+      else starsEl.textContent = '⭐';
+    }
   }
 
   if (scoreEl) scoreEl.textContent = miniGameScore;
@@ -4179,8 +4256,15 @@ function quitMiniGame() {
   clearInterval(miniGameTimer);
   miniGameInterval = null;
   miniGameTimer = null;
+  const canvas = document.getElementById('minigameCanvasArea');
+  if (canvas) {
+    canvas.querySelectorAll('.minigame-falling-item, .minigame-floating-score').forEach(el => el.remove());
+  }
   const screen = document.getElementById('minigameScreen');
-  if (screen) screen.style.display = 'none';
+  if (screen) {
+    screen.classList.remove('hit-shake');
+    screen.style.display = 'none';
+  }
   closeVictoryModal(false);
   setNookModalState(false);
 }

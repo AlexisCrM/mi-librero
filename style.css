@@ -3420,16 +3420,16 @@ body.ac-theme {
   pointer-events: none;
 }
 
-/* Chimenea rústica de piedra estilo Animal Crossing (100% Vectorial pura en SVG, sin emojis) */
+/* Chimenea Rústica de Piedra y Ladrillo con Hogar Cálido y Repisa de Roble */
 .cozy-room-fireplace {
   position: absolute;
-  right: 14px;
-  bottom: 22px;
-  width: 76px;
-  height: 95px;
+  right: 10px;
+  bottom: 18px;
+  width: 96px;
+  height: 115px;
   z-index: 3;
   pointer-events: none;
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
+  filter: drop-shadow(0 4px 14px rgba(25, 10, 4, 0.55));
 }
 
 .ac-fireplace-svg {
@@ -3440,63 +3440,84 @@ body.ac-theme {
 
 /* Animaciones vivas de la chimenea */
 .ac-fireplace-svg .ac-flame-main {
-  transform-origin: 40px 85px;
-  animation: acFireFlickerMain 0.7s infinite alternate ease-in-out;
+  transform-origin: 50px 104px;
+  animation: acFireFlickerMain 0.65s infinite alternate ease-in-out;
 }
 
 .ac-fireplace-svg .ac-flame-core {
-  transform-origin: 40px 84px;
-  animation: acFireFlickerCore 0.45s infinite alternate ease-in-out;
+  transform-origin: 50px 104px;
+  animation: acFireFlickerCore 0.42s infinite alternate ease-in-out;
 }
 
 .ac-fireplace-svg .ac-flame-tongue.f-left {
-  transform-origin: 34px 82px;
-  animation: acFlameTongueL 0.6s infinite alternate ease-in-out;
+  transform-origin: 42px 102px;
+  animation: acFlameTongueL 0.55s infinite alternate ease-in-out;
 }
 
 .ac-fireplace-svg .ac-flame-tongue.f-right {
-  transform-origin: 45px 82px;
-  animation: acFlameTongueR 0.55s infinite alternate ease-in-out;
+  transform-origin: 60px 102px;
+  animation: acFlameTongueR 0.5s infinite alternate ease-in-out;
 }
 
 .ac-hearth-glow {
-  animation: acHearthGlowPulse 1.6s infinite alternate ease-in-out;
+  animation: acHearthGlowPulse 1.8s infinite alternate ease-in-out;
 }
 
-.ac-ember-dot.eb1 { animation: acEmberRise 1.8s infinite ease-out; }
-.ac-ember-dot.eb2 { animation: acEmberRise 2.2s infinite ease-out 0.6s; }
-.ac-ember-dot.eb3 { animation: acEmberRise 1.5s infinite ease-out 1.1s; }
+.candle-flame {
+  transform-origin: 21px 4px;
+  animation: candleFlicker 0.4s infinite alternate ease-in-out;
+}
+
+.candle-glow {
+  transform-origin: 21px 4px;
+  animation: candleGlowPulse 1.2s infinite alternate ease-in-out;
+}
+
+@keyframes candleFlicker {
+  0% { transform: scale(0.9, 0.95) rotate(-3deg); }
+  100% { transform: scale(1.1, 1.05) rotate(3deg); }
+}
+
+@keyframes candleGlowPulse {
+  0% { opacity: 0.2; transform: scale(0.85); }
+  100% { opacity: 0.45; transform: scale(1.15); }
+}
+
+.ac-ember-dot.eb1 { animation: acEmberRise 1.6s infinite ease-out; }
+.ac-ember-dot.eb2 { animation: acEmberRise 2.1s infinite ease-out 0.4s; }
+.ac-ember-dot.eb3 { animation: acEmberRise 1.8s infinite ease-out 0.9s; }
+.ac-ember-dot.eb4 { animation: acEmberRise 2.4s infinite ease-out 1.3s; }
 
 @keyframes acFireFlickerMain {
-  0% { transform: scale(0.96, 0.94) rotate(-2deg); }
-  50% { transform: scale(1.04, 1.06) rotate(1deg); }
+  0% { transform: scale(0.95, 0.93) rotate(-2deg); }
+  50% { transform: scale(1.05, 1.07) rotate(1deg); }
   100% { transform: scale(0.98, 1.02) rotate(-1deg); }
 }
 
 @keyframes acFireFlickerCore {
-  0% { transform: scale(0.92, 0.95); opacity: 0.9; }
-  100% { transform: scale(1.08, 1.05); opacity: 1; }
+  0% { transform: scale(0.9, 0.94); opacity: 0.9; }
+  100% { transform: scale(1.1, 1.06); opacity: 1; }
 }
 
 @keyframes acFlameTongueL {
-  0% { transform: scale(0.85, 0.9) rotate(-4deg); opacity: 0.8; }
-  100% { transform: scale(1.1, 1.12) rotate(3deg); opacity: 1; }
+  0% { transform: scale(0.85, 0.9) rotate(-5deg); opacity: 0.8; }
+  100% { transform: scale(1.12, 1.15) rotate(4deg); opacity: 1; }
 }
 
 @keyframes acFlameTongueR {
-  0% { transform: scale(1.08, 1.1) rotate(2deg); opacity: 1; }
-  100% { transform: scale(0.88, 0.92) rotate(-3deg); opacity: 0.85; }
+  0% { transform: scale(1.1, 1.12) rotate(3deg); opacity: 1; }
+  100% { transform: scale(0.86, 0.9) rotate(-4deg); opacity: 0.85; }
 }
 
 @keyframes acHearthGlowPulse {
-  0% { opacity: 0.75; transform: scale(0.96); }
+  0% { opacity: 0.72; transform: scale(0.96); }
   100% { opacity: 1; transform: scale(1.04); }
 }
 
 @keyframes acEmberRise {
   0% { transform: translateY(0) scale(0.8); opacity: 0; }
   25% { opacity: 1; }
-  100% { transform: translateY(-26px) translateX(6px) scale(0.3); opacity: 0; }
+  100% { transform: translateY(-38px) translateX(8px) scale(0.2); opacity: 0; }
 }
 
 /* Mesita auxiliar con lámpara, té y libros estilo Animal Crossing (Al lado de la camita, sin estorbar) */
@@ -4698,11 +4719,45 @@ body.ac-theme {
   cursor: crosshair;
 }
 
+.minigame-canvas-area {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  overflow: hidden;
+  background: 
+    radial-gradient(ellipse at 50% 15%, rgba(45, 85, 125, 0.5) 0%, rgba(15, 23, 42, 0.92) 80%),
+    linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  border-radius: 8px;
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.7);
+  cursor: crosshair;
+}
+
 .minigame-sunbeams {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 10%, rgba(253, 224, 71, 0.15) 0%, transparent 70%);
+  background: radial-gradient(circle at 50% 10%, rgba(253, 224, 71, 0.18) 0%, transparent 70%);
   pointer-events: none;
+}
+
+.minigame-screen.hit-shake {
+  animation: screenHitShake 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes screenHitShake {
+  10%, 90% { transform: translate3d(-4px, 0, 0); }
+  20%, 80% { transform: translate3d(5px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-5px, 0, 0); }
+  40%, 60% { transform: translate3d(5px, 0, 0); }
+}
+
+.minigame-lives {
+  background: rgba(225, 29, 72, 0.25);
+  border: 1px solid rgba(244, 63, 94, 0.5);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  filter: drop-shadow(0 0 6px rgba(244, 63, 94, 0.45));
 }
 
 .minigame-catcher {
@@ -4717,19 +4772,32 @@ body.ac-theme {
   transition: transform 0.05s ease-out;
 }
 
+.minigame-catcher.is-catching {
+  animation: catcherSquash 0.2s ease-out;
+}
+
+@keyframes catcherSquash {
+  0% { transform: translateX(-50%) scale(1, 1); }
+  40% { transform: translateX(-50%) scale(1.22, 0.82); }
+  100% { transform: translateX(-50%) scale(1, 1); }
+}
+
 .catcher-basket { font-size: 1.6rem; }
 .catcher-mascot { font-size: 1.4rem; }
 
 .minigame-falling-item {
   position: absolute;
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   pointer-events: none;
-  animation: itemFall linear forwards;
+  animation: itemFall linear;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+  will-change: transform, opacity;
 }
 
 @keyframes itemFall {
-  0% { transform: translateY(-30px); opacity: 1; }
-  100% { transform: translateY(220px); opacity: 1; }
+  0% { transform: translateY(-40px) scale(0.9) rotate(0deg); opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translateY(320px) scale(0.6) rotate(15deg); opacity: 0; }
 }
 
 .minigame-controls-hint {
