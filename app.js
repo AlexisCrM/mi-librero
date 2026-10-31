@@ -2920,6 +2920,75 @@ function playTamaSound(type) {
       gain.connect(ctx.destination);
       osc.start(now);
       osc.stop(now + 0.25);
+    } else if (type === 'sad') {
+      // Quejido melancólico descendente de ardillita
+      [392, 329.63, 261.63].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + i * 0.12);
+        gain.gain.setValueAtTime(0.12, now + i * 0.12);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.12 + 0.25);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + i * 0.12);
+        osc.stop(now + i * 0.12 + 0.28);
+      });
+    } else if (type === 'angry') {
+      // Gruñidito tierno y enfadado
+      [220, 185, 146].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(freq, now + i * 0.08);
+        gain.gain.setValueAtTime(0.14, now + i * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.18);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + i * 0.08);
+        osc.stop(now + i * 0.08 + 0.2);
+      });
+    } else if (type === 'curious') {
+      // Arpegio ascendente de pregunta inquisitiva
+      [440, 554.37, 659.25, 880].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, now + i * 0.07);
+        gain.gain.setValueAtTime(0.15, now + i * 0.07);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.2);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + i * 0.07);
+        osc.stop(now + i * 0.07 + 0.22);
+      });
+    } else if (type === 'giggle') {
+      // Risita alegre y saltarina
+      [659.25, 783.99, 659.25, 880].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + i * 0.06);
+        gain.gain.setValueAtTime(0.14, now + i * 0.06);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.12);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + i * 0.06);
+        osc.stop(now + i * 0.06 + 0.14);
+      });
+    } else if (type === 'gasp') {
+      // Sobresalto rápido
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(320, now);
+      osc.frequency.exponentialRampToValueAtTime(920, now + 0.15);
+      gain.gain.setValueAtTime(0.18, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.22);
     }
   } catch (err) {
     // Audio Context no desbloqueado aún
@@ -3111,43 +3180,258 @@ function getFoodElementId(snackKey) {
   return map[snackKey] || 'itemAcorn';
 }
 
-// Controlador de Expresiones Faciales de Nuez
+// Estado y memoria de la emoción activa
+let currentSquirrelEmotion = 'normal';
+
+// Catálogo Oficial de Expresiones y Reacciones de Nuez (Estilo Animal Crossing)
+const EMOTIONS_CATALOG = [
+  {
+    id: 'happy',
+    name: 'Feliz',
+    icon: '😊',
+    desc: 'Sonrisa radiante con destellos de alegría',
+    sound: 'chirp',
+    quote: '¡Qué lindo día para leer y soñar juntos! ¡Mi colita no para de moverse de alegría! 🌸✨'
+  },
+  {
+    id: 'sad',
+    name: 'Triste',
+    icon: '🥺',
+    desc: 'Puchero melancólico con lagrimita de cristal',
+    sound: 'sad',
+    quote: 'Uff... me entró una basurita al ojo o esta historia me conmovió muchísimo... 🥺💧'
+  },
+  {
+    id: 'angry',
+    name: 'Enojo',
+    icon: '💢',
+    desc: 'Berrinche tierno con dientitos y cachetes inflados',
+    sound: 'angry',
+    quote: '¡Hmpf! ¡No me despeines mis bigotitos ni toques mi escondite secreto de nueces! 💢🐿️'
+  },
+  {
+    id: 'curious',
+    name: 'Curiosa',
+    icon: '🧐',
+    desc: 'Cabeza inclinada, orejita levantada y mirada atenta',
+    sound: 'curious',
+    quote: 'Oooooh... ¿qué pasará en el siguiente capítulo? ¡Tengo tanta curiosidad! ❓📖✨'
+  },
+  {
+    id: 'sleepy',
+    name: 'Con Sueño',
+    icon: '🥱',
+    desc: 'Bostezo acogedor con párpados pesados de perecita',
+    sound: 'snore',
+    quote: 'Yaaawn... 🥱 Entre página y página me dan unas ganas de acurrucarme...'
+  },
+  {
+    id: 'playful',
+    name: 'Pícara',
+    icon: '😜',
+    desc: 'Guiño travieso sacando la lengüita de lado',
+    sound: 'giggle',
+    quote: '¡Jejeje! ¿Sabías que escondí tres bellotas detrás de los libros de fantasía? 😜🐾'
+  },
+  {
+    id: 'love',
+    name: 'Enamorada',
+    icon: '💖',
+    desc: 'Ojitos de corazón y amor incondicional por la lectura',
+    sound: 'pet',
+    quote: '¡Amo tanto nuestra cabaña de lectura! ¡Eres mi persona favorita en el mundo! 💖🌸'
+  },
+  {
+    id: 'shock',
+    name: 'Asustada',
+    icon: '😱',
+    desc: 'Sobresalto cómico con pupilas chicas y rayitas de shock',
+    sound: 'gasp',
+    quote: '¡SANTA BELLOTA! 😱 ¡Qué giro de trama tan inesperado en este libro!'
+  },
+  {
+    id: 'normal',
+    name: 'Serena',
+    icon: '📖',
+    desc: 'Expresión tranquila y lectora por defecto',
+    sound: 'chirp',
+    quote: 'Paz, tranquilidad y una rica taza de té de lavanda para leer... 🫖✨'
+  }
+];
+
+// Controlador Completo de Expresiones Faciales y Emociones de Nuez
 function setSquirrelExpression(expr) {
+  currentSquirrelEmotion = expr;
   const svg = document.getElementById('nuezLivingSvg');
   if (!svg) return;
 
   // 1. Ojos
-  const eyesNormal = document.getElementById('eyesNormal');
-  const eyesHappy = document.getElementById('eyesHappy');
-  const eyesLove = document.getElementById('eyesLove');
-  const eyesEating = document.getElementById('eyesEating');
-  const eyesSleeping = document.getElementById('eyesSleeping');
+  const eyeMap = {
+    normal: document.getElementById('eyesNormal'),
+    happy: document.getElementById('eyesHappy'),
+    sad: document.getElementById('eyesSad'),
+    angry: document.getElementById('eyesAngry'),
+    curious: document.getElementById('eyesCurious'),
+    sleepy: document.getElementById('eyesSleepy'),
+    playful: document.getElementById('eyesPlayful'),
+    shock: document.getElementById('eyesShock'),
+    love: document.getElementById('eyesLove'),
+    eating: document.getElementById('eyesEating'),
+    sleeping: document.getElementById('eyesSleeping')
+  };
 
-  if (eyesNormal) eyesNormal.style.display = (expr === 'normal') ? 'inline' : 'none';
-  if (eyesHappy) eyesHappy.style.display = (expr === 'happy' || expr === 'lick') ? 'inline' : 'none';
-  if (eyesLove) eyesLove.style.display = (expr === 'love') ? 'inline' : 'none';
-  if (eyesEating) eyesEating.style.display = (expr === 'eating') ? 'inline' : 'none';
-  if (eyesSleeping) eyesSleeping.style.display = (expr === 'sleeping' || expr === 'yawn') ? 'inline' : 'none';
+  let activeEyes = 'normal';
+  if (expr === 'happy' || expr === 'lick') activeEyes = 'happy';
+  else if (expr === 'sad') activeEyes = 'sad';
+  else if (expr === 'angry') activeEyes = 'angry';
+  else if (expr === 'curious') activeEyes = 'curious';
+  else if (expr === 'sleepy' || expr === 'yawn') activeEyes = 'sleepy';
+  else if (expr === 'playful') activeEyes = 'playful';
+  else if (expr === 'shock') activeEyes = 'shock';
+  else if (expr === 'love') activeEyes = 'love';
+  else if (expr === 'eating') activeEyes = 'eating';
+  else if (expr === 'sleeping') activeEyes = 'sleeping';
 
-  // 2. Bocas
-  const mouthDefault = document.getElementById('mouthDefault');
-  const mouthSmile = document.getElementById('mouthSmile');
-  const mouthChew = document.getElementById('mouthChew');
-  const mouthYawn = document.getElementById('mouthYawn');
-  const mouthLick = document.getElementById('mouthLick');
+  Object.entries(eyeMap).forEach(([k, el]) => {
+    if (el) el.style.display = (k === activeEyes) ? 'inline' : 'none';
+  });
 
-  if (mouthDefault) mouthDefault.style.display = (expr === 'normal' || expr === 'sleeping') ? 'inline' : 'none';
-  if (mouthSmile) mouthSmile.style.display = (expr === 'happy' || expr === 'love') ? 'inline' : 'none';
-  if (mouthChew) mouthChew.style.display = (expr === 'eating') ? 'inline' : 'none';
-  if (mouthYawn) mouthYawn.style.display = (expr === 'yawn') ? 'inline' : 'none';
-  if (mouthLick) mouthLick.style.display = (expr === 'lick') ? 'inline' : 'none';
+  // 2. Cejas Expresivas
+  const browMap = {
+    normal: document.getElementById('browsNormal'),
+    happy: document.getElementById('browsHappy'),
+    sad: document.getElementById('browsSad'),
+    angry: document.getElementById('browsAngry'),
+    curious: document.getElementById('browsCurious'),
+    sleepy: document.getElementById('browsSleepy'),
+    shock: document.getElementById('browsShock')
+  };
 
-  // 3. Clases de estado en el SVG
-  svg.classList.remove('happy', 'love', 'eating', 'sleeping', 'petting');
-  if (expr !== 'normal' && expr !== 'lick') {
+  let activeBrows = 'normal';
+  if (expr === 'happy' || expr === 'love' || expr === 'lick') activeBrows = 'happy';
+  else if (expr === 'sad') activeBrows = 'sad';
+  else if (expr === 'angry') activeBrows = 'angry';
+  else if (expr === 'curious') activeBrows = 'curious';
+  else if (expr === 'sleepy' || expr === 'yawn' || expr === 'sleeping') activeBrows = 'sleepy';
+  else if (expr === 'shock') activeBrows = 'shock';
+
+  Object.entries(browMap).forEach(([k, el]) => {
+    if (el) el.style.display = (k === activeBrows) ? 'inline' : 'none';
+  });
+
+  // 3. Bocas Expresivas
+  const mouthMap = {
+    normal: document.getElementById('mouthDefault'),
+    happy: document.getElementById('mouthSmile'),
+    sad: document.getElementById('mouthSad'),
+    angry: document.getElementById('mouthAngry'),
+    curious: document.getElementById('mouthCurious'),
+    sleepy: document.getElementById('mouthYawn'),
+    playful: document.getElementById('mouthPlayful'),
+    shock: document.getElementById('mouthShock'),
+    chew: document.getElementById('mouthChew'),
+    lick: document.getElementById('mouthLick')
+  };
+
+  let activeMouth = 'normal';
+  if (expr === 'happy' || expr === 'love') activeMouth = 'happy';
+  else if (expr === 'sad') activeMouth = 'sad';
+  else if (expr === 'angry') activeMouth = 'angry';
+  else if (expr === 'curious') activeMouth = 'curious';
+  else if (expr === 'sleepy' || expr === 'yawn') activeMouth = 'sleepy';
+  else if (expr === 'playful') activeMouth = 'playful';
+  else if (expr === 'shock') activeMouth = 'shock';
+  else if (expr === 'eating') activeMouth = 'chew';
+  else if (expr === 'lick') activeMouth = 'lick';
+  else if (expr === 'sleeping') activeMouth = 'normal';
+
+  Object.entries(mouthMap).forEach(([k, el]) => {
+    if (el) el.style.display = (k === activeMouth) ? 'inline' : 'none';
+  });
+
+  // 4. Clases emocionales dinámicas en el SVG para animar orejas, cola y cuerpo
+  svg.classList.remove(
+    'happy', 'love', 'eating', 'sleeping', 'petting',
+    'sad', 'angry', 'curious', 'sleepy', 'playful', 'shock'
+  );
+  if (expr !== 'normal') {
     svg.classList.add(expr);
   }
 }
+
+// Renderizado de la Rueda/Grid de Emociones
+function renderEmotionsGrid() {
+  const container = document.getElementById('emotionsGridContainer');
+  if (!container) return;
+
+  container.innerHTML = EMOTIONS_CATALOG.map(em => {
+    const isActive = (currentSquirrelEmotion === em.id);
+    return `
+      <div class="emotion-card-btn ${isActive ? 'active' : ''}" onclick="playSquirrelEmotion('${em.id}')">
+        <span class="emotion-card-icon">${em.icon}</span>
+        <span class="emotion-card-name">${em.name}</span>
+        <span class="emotion-card-desc">${em.desc}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+// Activar una Emoción de Nuez
+function playSquirrelEmotion(emotionId) {
+  if (isSquirrelEatingActive) {
+    showBubbleDialogue("¡Espera un momentito, todavía estoy saboreando mi comidita! 😋");
+    return;
+  }
+
+  const em = EMOTIONS_CATALOG.find(e => e.id === emotionId);
+  if (!em) return;
+
+  setSquirrelExpression(emotionId);
+  playTamaSound(em.sound || 'chirp');
+  showBubbleDialogue(em.quote);
+
+  const svg = document.getElementById('nuezLivingSvg');
+  if (emotionId === 'happy' || emotionId === 'playful') {
+    if (svg) {
+      svg.classList.remove('hop-joy');
+      void svg.offsetWidth;
+      svg.classList.add('hop-joy');
+      setTimeout(() => svg.classList.remove('hop-joy'), 500);
+    }
+  } else if (emotionId === 'love') {
+    spawnLavenderBlossomParticles(6);
+  } else if (emotionId === 'angry') {
+    // Si se enoja, vibra un poquito la pantalla
+    const stage = document.getElementById('tamagotchiStage');
+    if (stage) {
+      stage.classList.remove('hit-shake');
+      void stage.offsetWidth;
+      stage.classList.add('hit-shake');
+      setTimeout(() => stage.classList.remove('hit-shake'), 400);
+    }
+  }
+
+  closeEmotionsMenu();
+}
+window.playSquirrelEmotion = playSquirrelEmotion;
+
+// Apertura y Cierre del Menú de Emociones
+function openEmotionsMenu() {
+  const menu = document.getElementById('emotionsMenu');
+  if (!menu) return;
+  renderEmotionsGrid();
+  menu.style.display = 'block';
+  setNookModalState(true);
+  playTamaSound('chirp');
+}
+
+function closeEmotionsMenu() {
+  const menu = document.getElementById('emotionsMenu');
+  if (menu) menu.style.display = 'none';
+  setNookModalState(false);
+}
+window.openEmotionsMenu = openEmotionsMenu;
+window.closeEmotionsMenu = closeEmotionsMenu;
 
 // Controlador de visibilidad de modales en el marco de la ventana
 function setNookModalState(isOpen) {
@@ -3417,10 +3701,28 @@ function renderSquirrelUI() {
   }
 }
 
+let rapidPokeCounter = 0;
+let lastPokeTimestamp = 0;
+
 // Acariciar a Nuez con reacciones expresivas y partículas
 function handlePetSquirrel(e) {
   if (!currentSquirrel) loadActiveSquirrel();
   const s = currentSquirrel;
+  const now = Date.now();
+
+  // Detección de toques rápidos repetitivos (4 toques rápidos = berrinche tierno de ardilla)
+  if (now - lastPokeTimestamp < 600) {
+    rapidPokeCounter++;
+  } else {
+    rapidPokeCounter = 1;
+  }
+  lastPokeTimestamp = now;
+
+  if (rapidPokeCounter >= 4) {
+    rapidPokeCounter = 0;
+    playSquirrelEmotion('angry');
+    return;
+  }
 
   if (s.isSleeping) {
     // Despertar con un bostezo tierno
@@ -3429,7 +3731,7 @@ function handlePetSquirrel(e) {
     if (stage) stage.classList.remove('is-sleeping');
     setSquirrelExpression('yawn');
     playTamaSound('chirp');
-    showBubbleDialogue("Mmm... ¡Bostecito! ¡Qué lindo despertar con tus caricias!");
+    showBubbleDialogue("Mmm... ¡Bostecito! 🥱 ¡Qué rico despertar con tus caricias!");
     saveActiveSquirrel();
 
     setTimeout(() => {
@@ -3442,14 +3744,23 @@ function handlePetSquirrel(e) {
 
   s.affection = Math.min(100, (s.affection || 0) + 6);
   s.acorns = (s.acorns || 0) + 1; // +1 bellota por mimarla
-  playTamaSound('pet');
+
+  // Variar entre caricias enamoradas, felices o juguetonas
+  const petExpressions = ['love', 'happy', 'playful'];
+  const chosenExpr = petExpressions[Math.floor(Math.random() * petExpressions.length)];
+
+  if (chosenExpr === 'playful') {
+    playTamaSound('giggle');
+  } else {
+    playTamaSound('pet');
+  }
 
   // Frase de Nuez
   const phrase = NUEZ_PET_PHRASES[Math.floor(Math.random() * NUEZ_PET_PHRASES.length)];
   showBubbleDialogue(phrase);
 
-  // Expresión de amor y alegría (ojitos corazones / cerrados felices y sonrisa)
-  setSquirrelExpression('love');
+  // Expresión de amor o alegría
+  setSquirrelExpression(chosenExpr);
 
   // Animación de saltito alegre en el SVG
   const svg = document.getElementById('nuezLivingSvg');
@@ -3482,12 +3793,12 @@ function handlePetSquirrel(e) {
   saveActiveSquirrel();
   renderSquirrelUI();
 
-  // Volver a la expresión normal relajada después de un momento
+  // Volver a la expresión normal después de un momento
   setTimeout(() => {
-    if (!currentSquirrel.isSleeping) {
+    if (!currentSquirrel.isSleeping && !isSquirrelEatingActive && currentSquirrelEmotion === chosenExpr) {
       setSquirrelExpression('normal');
     }
-  }, 2400);
+  }, 2600);
 }
 
 // Mostrar diálogo en el bocadillo de Nuez con voz balbuceada de Animal Crossing
@@ -3878,11 +4189,19 @@ function handleBenchPlay() {
   startAcornMiniGame();
 }
 
+function handleBenchEmotions() {
+  if (currentNookMode !== 'tamagotchi') {
+    switchNookMode('tamagotchi');
+  }
+  openEmotionsMenu();
+}
+
 window.handleBenchFeed = handleBenchFeed;
 window.handleBenchPet = handleBenchPet;
 window.handleBenchToggleSleep = handleBenchToggleSleep;
 window.handleBenchWardrobe = handleBenchWardrobe;
 window.handleBenchPlay = handleBenchPlay;
+window.handleBenchEmotions = handleBenchEmotions;
 
 // Selector de Ambientes
 function toggleRoomSelectorModal(force) {
