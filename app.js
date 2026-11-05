@@ -2040,6 +2040,7 @@ function renderFurniturePreviews() {
     shelfBooks.forEach((book, index) => {
       const miniSpine = document.createElement('div');
       miniSpine.className = 'mini-book-spine real-book';
+      miniSpine.style.setProperty('--book-color', book.spineColor || '#9575cd');
       miniSpine.style.backgroundColor = book.spineColor || '#9575cd';
 
       const randomHeight = 52 + ((book.title.length * 7) % 18);
@@ -2049,7 +2050,7 @@ function renderFurniturePreviews() {
       miniSpine.style.width = `${spineWidth}px`;
 
       const pct = Math.round(((book.currentPage || 0) / (book.totalPages || 1)) * 100);
-      miniSpine.title = `📖 ${book.title} - ${book.author} (${pct}%)`;
+      miniSpine.title = `📖 ${book.title} (${pct}%)`;
 
       miniSpine.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -2448,13 +2449,42 @@ function renderSectionStage(shelfId) {
     const pct = Math.round((curP / totalP) * 100);
     const isCompleted = pct >= 100;
 
-    const height = Math.min(270, Math.max(185, 190 + ((book.totalPages || 200) % 70)));
-    const width = Math.min(75, Math.max(50, Math.round((book.totalPages || 200) / 6)));
+    const titleText = (book.title || 'Sin Título').trim();
+    const titleLength = titleText.length;
+
+    // Altura y ancho realistas de libro encuadernado
+    // Aseguramos altura suficiente para que el título COMPLETO quepa siempre con soltura
+    const minHeightForTitle = Math.max(225, Math.min(275, 190 + titleLength * 2.5));
+    const height = Math.max(minHeightForTitle, Math.min(275, 215 + ((book.totalPages || 200) % 55)));
+    const width = Math.min(80, Math.max(54, Math.round((book.totalPages || 200) / 5.5)));
+
+    // Tamaño de fuente y espaciado proporcional para mostrar el NOMBRE DEL LIBRO COMPLETO sin truncar
+    let fontSize = '0.92rem';
+    let letterSpacing = '0.02em';
+    if (titleLength <= 14) {
+      fontSize = '0.98rem';
+      letterSpacing = '0.035em';
+    } else if (titleLength <= 24) {
+      fontSize = '0.88rem';
+      letterSpacing = '0.02em';
+    } else if (titleLength <= 34) {
+      fontSize = '0.78rem';
+      letterSpacing = '0.01em';
+    } else if (titleLength <= 46) {
+      fontSize = '0.71rem';
+      letterSpacing = '0';
+    } else {
+      fontSize = '0.65rem';
+      letterSpacing = '-0.01em';
+    }
+
+    const spineColor = book.spineColor || '#9575cd';
 
     const bookElem = document.createElement('div');
     bookElem.className = 'book-3d-item ac-book-entrance';
     bookElem.style.animationDelay = `${index * 85 + 60}ms`;
-    bookElem.style.backgroundColor = book.spineColor || '#9575cd';
+    bookElem.style.setProperty('--book-color', spineColor);
+    bookElem.style.backgroundColor = spineColor;
     bookElem.style.height = `${height}px`;
     bookElem.style.width = `${width}px`;
 
@@ -2462,12 +2492,41 @@ function renderSectionStage(shelfId) {
     const readerEmoji = book.reader === appState.readers[0] ? '🌸' : (book.reader === appState.readers[1] ? '☕' : '👤');
 
     bookElem.innerHTML = `
-      <div class="${ribbonClass}">${pct}%</div>
+      <!-- Corte superior de páginas en marfil con textura de papel -->
+      <div class="book-top-pages"></div>
+
+      <!-- Remate superior de encuadernación (Headcap) -->
+      <div class="book-headcap"></div>
+
+      <!-- Hendidura / bisagra de la tapa dura (Joint crease) -->
+      <div class="book-spine-crease"></div>
+
+      <!-- Nervios tradicionales en relieve 3D -->
+      <div class="book-spine-rib rib-top"></div>
+      <div class="book-spine-rib rib-mid-top"></div>
+      <div class="book-spine-rib rib-mid-bottom"></div>
+      <div class="book-spine-rib rib-bottom"></div>
+
+      <!-- Fajillas doradas estampadas (Gilded rules) -->
+      <div class="book-gold-filigree top"></div>
+      <div class="book-gold-filigree bottom"></div>
+
+      <!-- Contenido del lomo: ÚNICAMENTE EL NOMBRE DEL LIBRO COMPLETO -->
       <div class="book-spine-content">
-        <div class="book-spine-title">${escapeHTML(book.title)}</div>
-        <div class="book-spine-author">${escapeHTML(book.author || 'Autor')}</div>
+        <span class="book-spine-title" style="font-size: ${fontSize}; letter-spacing: ${letterSpacing};" title="${escapeHTML(titleText)}">${escapeHTML(titleText)}</span>
       </div>
-      <div class="book-reader-dot" title="Lector(a): ${escapeHTML(book.reader)}">${readerEmoji}</div>
+
+      <!-- Cinta marcapáginas de satén con corte en V colgando hacia la repisa -->
+      <div class="book-satin-ribbon ${isCompleted ? 'ribbon-gold' : ''}"></div>
+
+      <!-- Etiqueta elegante de marcapáginas con porcentaje y lector -->
+      <div class="${ribbonClass}" title="${escapeHTML(titleText)} • Lector: ${escapeHTML(book.reader || 'General')} • ${curP}/${totalP} págs (${pct}%)">
+        <span>${readerEmoji}</span>
+        <span>${pct}%</span>
+      </div>
+
+      <!-- Remate inferior de encuadernación (Tailcap) -->
+      <div class="book-tailcap"></div>
     `;
 
     bookElem.addEventListener('click', () => {

@@ -1311,19 +1311,27 @@ body.ac-theme {
   min-width: 11px;
   max-width: 22px;
   height: 56px;
-  border-radius: 3px 3px 0 0;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.35), inset 1px 0 2px rgba(255,255,255,0.4);
+  border-radius: 3px 4px 0 0;
   position: relative;
   transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s;
   flex-shrink: 0;
   cursor: pointer;
-  border-top: 1px solid rgba(255,255,255,0.6);
-  border-right: 1px solid rgba(0,0,0,0.15);
+  border-top: 2px solid #faf6ea;
+  background-image: linear-gradient(90deg, 
+    rgba(255,255,255,0.35) 0%, 
+    rgba(255,255,255,0.08) 22%, 
+    rgba(0,0,0,0) 50%, 
+    rgba(0,0,0,0.18) 80%, 
+    rgba(0,0,0,0.45) 100%);
+  box-shadow: 
+    1.5px 3px 6px rgba(0,0,0,0.38),
+    inset 1px 0 2px rgba(255,255,255,0.4),
+    inset -1.5px 0 3px rgba(0,0,0,0.45);
 }
 
 .mini-book-spine:hover {
-  transform: translateY(-5px) scale(1.06);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.35);
+  transform: translateY(-7px) scale(1.08);
+  box-shadow: 0 8px 14px rgba(0,0,0,0.45);
   z-index: 10;
 }
 
@@ -2216,25 +2224,43 @@ body.ac-theme {
   display: flex;
   align-items: flex-end;
   gap: 16px;
-  min-height: 280px;
-  padding-bottom: 6px;
+  min-height: 295px;
+  padding: 16px 20px 14px 20px;
   perspective: 900px;
 }
 
-/* Libro 3D con lomos realistas y cinta marcapáginas */
+/* ===================================================================
+   LIBRO 3D REALISTA CON RELIEVE Y LOMO CLÁSICO DE ENCUADERNACIÓN
+   =================================================================== */
 .book-3d-item {
   width: 58px;
-  height: 220px;
+  height: 235px;
   border-radius: 4px 6px 0 0;
   position: relative;
   cursor: pointer;
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease;
   transform-style: preserve-3d;
   flex-shrink: 0;
+  background-color: var(--book-color, #9575cd);
+  /* Sombreado cilíndrico realista de lomo convexo */
+  background-image: 
+    linear-gradient(90deg, 
+      rgba(255, 255, 255, 0.38) 0%, 
+      rgba(255, 255, 255, 0.12) 15%, 
+      rgba(255, 255, 255, 0) 38%, 
+      rgba(0, 0, 0, 0) 65%, 
+      rgba(0, 0, 0, 0.18) 84%, 
+      rgba(0, 0, 0, 0.45) 96%,
+      rgba(0, 0, 0, 0.58) 100%),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.02) 1px, transparent 1px, transparent 4px);
+  /* Sombra de contacto profunda contra la madera y ranuras internas */
   box-shadow: 
-    3px 4px 12px rgba(0,0,0,0.32),
-    inset -3px 0 6px rgba(0,0,0,0.35),
-    inset 2px 0 4px rgba(255,255,255,0.45);
+    0 12px 18px -3px rgba(0, 0, 0, 0.48),
+    4px 6px 14px rgba(0, 0, 0, 0.28),
+    inset 2px 0 4px rgba(255, 255, 255, 0.42),
+    inset -4px 0 8px rgba(0, 0, 0, 0.5),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.35);
+  transform: perspective(700px) rotateY(-2deg);
 }
 
 /* Animación de aterrizaje elástico de cada libro tipo Animal Crossing */
@@ -2265,13 +2291,126 @@ body.ac-theme {
 }
 
 .book-3d-item:hover {
-  transform: translateY(-18px) rotateY(-8deg) scale(1.06) !important;
+  transform: perspective(700px) translateY(-18px) rotateY(-8deg) scale(1.05) translateZ(10px) !important;
   box-shadow: 
-    10px 20px 30px rgba(0,0,0,0.42),
-    inset -3px 0 6px rgba(0,0,0,0.35) !important;
-  z-index: 15 !important;
+    14px 26px 36px rgba(0, 0, 0, 0.5),
+    0 4px 10px rgba(0, 0, 0, 0.25),
+    inset 2px 0 4px rgba(255, 255, 255, 0.48),
+    inset -4px 0 8px rgba(0, 0, 0, 0.52) !important;
+  z-index: 25 !important;
 }
 
+/* Corte superior de páginas en tono marfil con textura de hojas */
+.book-top-pages {
+  position: absolute;
+  top: -6px;
+  left: 3px;
+  right: 3px;
+  height: 6px;
+  background: #fbf8ed;
+  background-image: repeating-linear-gradient(90deg, #fbf8ed 0px, #fbf8ed 1.5px, #ded7c2 2px);
+  border-radius: 2px 2px 0 0;
+  border-top: 1px solid #dcd5be;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.15);
+  transform: perspective(100px) rotateX(25deg);
+  transform-origin: bottom;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Remates curvos de encuadernación (Headcap & Tailcap) */
+.book-headcap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 100%);
+  border-radius: 4px 6px 0 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.book-tailcap {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Hendidura / bisagra de la tapa dura (Joint crease) */
+.book-spine-crease {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 5px;
+  width: 2px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.45) 0%, rgba(255, 255, 255, 0.18) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Nervios horizontales en relieve (Raised spine bands) */
+.book-spine-rib {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(180deg, 
+    rgba(255, 255, 255, 0.5) 0%, 
+    rgba(255, 255, 255, 0.15) 35%, 
+    rgba(0, 0, 0, 0.22) 65%, 
+    rgba(0, 0, 0, 0.55) 100%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  z-index: 2;
+}
+.book-spine-rib.rib-top { top: 22px; }
+.book-spine-rib.rib-mid-top { top: 35%; }
+.book-spine-rib.rib-mid-bottom { bottom: 35%; }
+.book-spine-rib.rib-bottom { bottom: 22px; }
+
+/* Fajillas doradas elegantes (Gold rules) */
+.book-gold-filigree {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #fef08a 18%, #facc15 50%, #ca8a04 82%, transparent 100%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  z-index: 2;
+}
+.book-gold-filigree.top { top: 31px; }
+.book-gold-filigree.bottom { bottom: 31px; }
+
+/* Cinta marcapáginas de satén realista colgando sobre la repisa */
+.book-satin-ribbon {
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 20px;
+  background: linear-gradient(180deg, #ec4899 0%, #db2777 60%, #be185d 100%);
+  box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.38);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+  pointer-events: none;
+  z-index: 5;
+  transition: transform 0.25s ease;
+}
+.book-3d-item:hover .book-satin-ribbon {
+  transform: translateX(-50%) rotate(5deg) translateY(3px);
+}
+.book-satin-ribbon.ribbon-gold {
+  background: linear-gradient(180deg, #fde047 0%, #eab308 60%, #ca8a04 100%);
+}
+
+/* Contenido del lomo: ÚNICAMENTE EL NOMBRE DEL LIBRO COMPLETO */
 .book-spine-content {
   writing-mode: vertical-rl;
   text-orientation: mixed;
@@ -2280,61 +2419,60 @@ body.ac-theme {
   height: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 14px 6px;
-  color: #ffffff;
+  justify-content: center;
+  padding: 38px 4px 40px 4px;
+  color: #fffdf5;
   overflow: hidden;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+  box-sizing: border-box;
+  z-index: 3;
 }
 
 .book-spine-title {
-  font-family: 'Quicksand', 'Playfair Display', sans-serif;
-  font-size: 0.95rem;
+  font-family: 'Playfair Display', 'Quicksand', 'Georgia', serif;
   font-weight: 700;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  letter-spacing: 0.02em;
+  text-align: center;
+  white-space: normal;
+  word-break: break-word;
+  max-height: 100%;
+  overflow: visible;
+  text-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.85),
+    0 0 1px rgba(0, 0, 0, 0.95);
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.45));
+  line-height: 1.15;
+  display: block;
+  user-select: none;
 }
 
-.book-spine-author {
-  font-size: 0.68rem;
-  opacity: 0.88;
-  white-space: nowrap;
-  font-weight: 600;
-}
-
+/* Etiqueta elegante de marcapáginas en la parte superior */
 .book-ribbon-tag {
   position: absolute;
-  top: -8px;
-  right: 8px;
-  background: var(--amber-ac);
-  color: #fff;
-  font-size: 0.65rem;
+  top: -11px;
+  right: 7px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #ffffff;
+  font-size: 0.68rem;
   font-weight: 800;
-  padding: 2px 6px;
+  padding: 2.5px 7px;
   border-radius: 4px 4px 0 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.32);
+  letter-spacing: 0.02em;
+  z-index: 6;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-bottom: none;
+  display: flex;
+  align-items: center;
+  gap: 3px;
 }
 
 .book-ribbon-tag.completed {
-  background: #10b981;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-color: #a7f3d0;
+  box-shadow: 0 3px 8px rgba(16, 185, 129, 0.4);
 }
 
 .book-reader-dot {
-  position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 22px;
-  height: 22px;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 50%;
-  font-size: 0.72rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  display: none;
 }
 
 .empty-shelf-banner {
