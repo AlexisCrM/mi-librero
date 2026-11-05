@@ -61,6 +61,13 @@
 
     <!-- Acciones principales -->
     <div class="header-actions">
+      <!-- Indicador de Sincronización Universal en la Nube -->
+      <button type="button" id="cloudSyncBadge" class="cloud-sync-badge" title="Librería Universal: Sincronizada en tiempo real entre todos tus dispositivos">
+        <span class="cloud-sync-dot online" id="cloudSyncDot"></span>
+        <span class="cloud-sync-icon">☁️</span>
+        <span class="cloud-sync-label" id="cloudSyncLabel">Universal</span>
+      </button>
+
       <button id="quickAddBookBtn" class="btn btn-ac-primary">
         <span>📖 +</span> Añadir Libro
       </button>
@@ -2421,6 +2428,38 @@
       </div>
 
       <div class="window-settings-body">
+        <!-- 0. Sincronización Universal en Tiempo Real (Multi-dispositivo) -->
+        <div class="settings-group cloud-sync-group">
+          <div class="cloud-sync-header-banner">
+            <div class="cloud-sync-title-row">
+              <span class="cloud-sync-big-icon">☁️</span>
+              <div>
+                <h4 class="cloud-sync-title">Librería Universal Compartida</h4>
+                <p class="settings-hint">Esta librería es única y universal. Cualquier libro nuevo, cambio de repisas o avance de lectura se sincroniza al instante en todos tus teléfonos, computadoras y tablets.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="cloud-sync-status-box">
+            <div class="cloud-sync-info-row">
+              <div class="cloud-status-pill online" id="cloudStatusPill">
+                <span class="cloud-pulse-circle"></span>
+                <span id="cloudStatusText">🟢 Conectado en tiempo real</span>
+              </div>
+              <span class="cloud-last-sync" id="cloudLastSyncDetail">Sincronizado: recién actualizado</span>
+            </div>
+
+            <div class="cloud-sync-buttons-row">
+              <button type="button" class="btn btn-ac-secondary" id="btnSyncNow">
+                🔄 Sincronizar Ahora
+              </button>
+              <button type="button" class="btn btn-ac-secondary" id="btnUploadLocalToCloud">
+                ☁️ Subir Cambios Locales a la Nube
+              </button>
+            </div>
+          </div>
+        </div>
+
         <!-- 1. Momento del día y atmósfera -->
         <div class="settings-group">
           <label class="settings-label">🌅 Momento del Día / Luz de la Ventana:</label>
@@ -2504,12 +2543,21 @@
     </div>
   </div>
 
+  <!-- Toast Flotante de Sincronización Universal -->
+  <div id="cloudSyncToast" class="cloud-sync-toast" aria-live="polite">
+    <span class="cloud-toast-icon">✨</span>
+    <span class="cloud-toast-message" id="cloudToastMsg">Librería sincronizada en tiempo real</span>
+  </div>
+
   <!-- Audio de Taylor Swift en bucle continuo para el botón de música -->
   <audio id="bgMusicTrack" preload="none">
     <source src="music/Taylor_part1.mp3" type="audio/mpeg">
     <source src="music/Taylor.mp3" type="audio/mpeg">
   </audio>
 
+  <!-- Firebase SDK para Sincronización Universal en Tiempo Real -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

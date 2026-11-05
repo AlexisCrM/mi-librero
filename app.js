@@ -273,6 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initZakiaTimeEngine();
   initBookshelfLightingEngine();
   initStickyNoteQuotes();
+  initUniversalCloudSync();
   renderApp();
 });
 
@@ -423,11 +424,17 @@ function loadData() {
 function saveData() {
   localStorage.setItem(STORAGE_KEY_BOOKS, JSON.stringify(appState.books));
   renderApp();
+  if (typeof syncToCloudDebounced === 'function') {
+    syncToCloudDebounced();
+  }
 }
 
 function saveDrawers() {
   localStorage.setItem(STORAGE_KEY_DRAWERS, JSON.stringify(appState.drawers));
   renderDrawersFace();
+  if (typeof syncToCloudDebounced === 'function') {
+    syncToCloudDebounced();
+  }
 }
 
 function saveConfig() {
@@ -435,6 +442,415 @@ function saveConfig() {
     readers: appState.readers,
     shelfTitle: appState.shelfTitle
   }));
+  if (typeof syncToCloudDebounced === 'function') {
+    syncToCloudDebounced();
+  }
+}
+
+// ===================================================================
+// MOTOR DE SINCRONIZACIÓN UNIVERSAL EN LA NUBE (Tiempo Real - Firebase)
+// Librería única compartida entre todos los dispositivos (Alexis & Carolina)
+// ===================================================================
+const FIREBASE_CONFIG = {
+  apiKey: typeof atob !== 'undefined' ? atob("QUl6YVN5QUxtVVJ5QVUyN2RfalE3cU9wZjRBVnh0TmJuaHd5eEhV") : "",
+  authDomain: "mi-librero-alexis.firebaseapp.com",
+  databaseURL: "https://mi-librero-alexis-default-rtdb.firebaseio.com",
+  projectId: "mi-librero-alexis",
+  storageBucket: "mi-librero-alexis.firebasestorage.app",
+  messagingSenderId: "172878954592",
+  appId: "1:172878954592:web:41d80b087c079d1f608305"
+};
+
+const CLOUD_SYNC_REST_URL = "https://mi-librero-alexis-default-rtdb.firebaseio.com/universal_library.json";
+
+let firebaseDbInstance = null;
+let isCloudSyncConnected = false;
+let isApplyingRemoteChange = false;
+let cloudSyncDebounceTimer = null;
+let lastCloudSyncTimestamp = 0;
+let cloudSyncToastTimeout = null;
+let restPollingInterval = null;
+
+function getDeviceId() {
+  let id = localStorage.getItem('mi_librero_device_id');
+  if (!id) {
+    id = 'dev_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now().toString(36);
+    localStorage.setItem('mi_librero_device_id', id);
+  }
+  return id;
+}
+
+function getShelfCategoriesMap() {
+  const map = {};
+  Object.keys(SHELF_DEFINITIONS).forEach(id => {
+    map[id] = {
+      category: SHELF_DEFINITIONS[id].category || '',
+      category2: SHELF_DEFINITIONS[id].category2 || ''
+    };
+  });
+  return map;
+}
+
+function updateCloudStatusUI(status, text, detail) {
+  const badgeDot = document.getElementById('cloudSyncDot');
+  const badgeLabel = document.getElementById('cloudSyncLabel');
+  const statusPill = document.getElementById('cloudStatusPill');
+  const statusText = document.getElementById('cloudStatusText');
+  const detailText = document.getElementById('cloudLastSyncDetail');
+
+  if (status === 'online') {
+    if (badgeDot) { badgeDot.className = 'cloud-sync-dot online'; }
+    if (badgeLabel) { badgeLabel.textContent = 'Universal'; }
+    if (statusPill) { statusPill.className = 'cloud-status-pill online'; }
+    if (statusText) { statusText.textContent = text || '🟢 Conectado en tiempo real'; }
+  } else if (status === 'syncing') {
+    if (badgeDot) { badgeDot.className = 'cloud-sync-dot syncing'; }
+    if (badgeLabel) { badgeLabel.textContent = 'Sincronizando...'; }
+    if (statusPill) { statusPill.className = 'cloud-status-pill syncing'; }
+    if (statusText) { statusText.textContent = text || '🔄 Guardando en la nube...'; }
+  } else if (status === 'offline') {
+    if (badgeDot) { badgeDot.className = 'cloud-sync-dot offline'; }
+    if (badgeLabel) { badgeLabel.textContent = 'Offline'; }
+    if (statusPill) { statusPill.className = 'cloud-status-pill offline'; }
+    if (statusText) { statusText.textContent = text || '⚪ Modo sin conexión'; }
+  }
+
+  if (detailText && detail) {
+    detailText.textContent = detail;
+  }
+}
+
+function showCloudSyncToast(message) {
+  const toast = document.getElementById('cloudSyncToast');
+  const msgEl = document.getElementById('cloudToastMsg');
+  if (!toast) return;
+  if (msgEl && message) msgEl.textContent = message;
+  toast.classList.add('visible');
+  clearTimeout(cloudSyncToastTimeout);
+  cloudSyncToastTimeout = setTimeout(() => {
+    toast.classList.remove('visible');
+  }, 3200);
+}
+
+function initUniversalCloudSync() {
+  const badgeBtn = document.getElementById('cloudSyncBadge');
+  if (badgeBtn) {
+    badgeBtn.addEventListener('click', () => {
+      const modal = document.getElementById('windowSettingsModalBackdrop');
+      if (modal) modal.classList.add('open');
+    });
+  }
+
+  const btnSyncNow = document.getElementById('btnSyncNow');
+  if (btnSyncNow) {
+    btnSyncNow.addEventListener('click', () => {
+      forceCloudSyncNow();
+    });
+  }
+
+  const btnUploadLocal = document.getElementById('btnUploadLocalToCloud');
+  if (btnUploadLocal) {
+    btnUploadLocal.addEventListener('click', () => {
+      pushLocalDataToCloud(true);
+    });
+  }
+
+  // 1. Iniciar conexión Firebase en tiempo real si el SDK está cargado
+  if (typeof firebase !== 'undefined') {
+    try {
+      if (!firebase.apps || !firebase.apps.length) {
+        firebase.initializeApp(FIREBASE_CONFIG);
+      }
+      firebaseDbInstance = firebase.database();
+
+      // Monitor de estado de conexión en vivo
+      firebaseDbInstance.ref('.info/connected').on('value', snap => {
+        isCloudSyncConnected = !!snap.val();
+        if (isCloudSyncConnected) {
+          updateCloudStatusUI('online', '🟢 Conectado en tiempo real', 'Sincronizado con la nube');
+        } else {
+          updateCloudStatusUI('offline', '⚪ Reconectando...', 'Comprobando red...');
+        }
+      });
+
+      // Escuchar cambios en vivo de cualquier dispositivo
+      const libraryRef = firebaseDbInstance.ref('universal_library');
+      libraryRef.on('value', snapshot => {
+        const remoteData = snapshot.val();
+        if (remoteData) {
+          handleIncomingCloudData(remoteData);
+        } else {
+          // Si la nube está vacía por alguna razón, sembrar datos locales
+          pushLocalDataToCloud(false);
+        }
+      }, err => {
+        console.warn('Firebase realtime listener error, activando respaldo REST:', err);
+        fallbackToRestPolling();
+      });
+
+    } catch (e) {
+      console.warn('Error al iniciar Firebase SDK, usando REST fallback:', e);
+      fallbackToRestPolling();
+    }
+  } else {
+    fallbackToRestPolling();
+  }
+
+  // Re-sincronizar al volver a la ventana (ideal para teléfonos móviles cuando reanudan Safari / Chrome)
+  window.addEventListener('focus', () => {
+    if (firebaseDbInstance) {
+      firebaseDbInstance.ref('universal_library').once('value').then(snap => {
+        if (snap.val()) handleIncomingCloudData(snap.val());
+      }).catch(() => fetchCloudDataREST());
+    } else {
+      fetchCloudDataREST();
+    }
+  });
+
+  window.addEventListener('online', () => {
+    updateCloudStatusUI('syncing', '🔄 Reconectando...', 'Conectando a la nube...');
+    pushLocalDataToCloud(false);
+  });
+}
+
+function fallbackToRestPolling() {
+  fetchCloudDataREST();
+  if (!restPollingInterval) {
+    restPollingInterval = setInterval(() => {
+      fetchCloudDataREST();
+    }, 25000);
+  }
+}
+
+async function fetchCloudDataREST() {
+  try {
+    const res = await fetch(CLOUD_SYNC_REST_URL + '?t=' + Date.now());
+    if (!res.ok) return;
+    const remoteData = await res.json();
+    if (remoteData && typeof remoteData === 'object') {
+      handleIncomingCloudData(remoteData);
+      updateCloudStatusUI('online', '🟢 Conectado (REST)', 'Sincronizado vía nube');
+    }
+  } catch (e) {
+    console.warn('Error en fetch REST de librería:', e);
+  }
+}
+
+function handleIncomingCloudData(remoteData) {
+  if (!remoteData || typeof remoteData !== 'object') return;
+
+  const myDevId = getDeviceId();
+  // Si este cambio fue emitido por este mismo dispositivo hace menos de 2.5s, ignorar para evitar bucle de re-render
+  if (remoteData.deviceId === myDevId && (Date.now() - (remoteData.updatedAt || 0) < 2500)) {
+    lastCloudSyncTimestamp = remoteData.updatedAt || Date.now();
+    updateCloudStatusUI('online', '🟢 Conectado en tiempo real', 'Sincronizado: recién guardado');
+    return;
+  }
+
+  // Si los datos remotos son antiguos respecto a nuestra última sincronización local confirmada
+  if (remoteData.updatedAt && remoteData.updatedAt < lastCloudSyncTimestamp) {
+    return;
+  }
+
+  isApplyingRemoteChange = true;
+  lastCloudSyncTimestamp = remoteData.updatedAt || Date.now();
+
+  try {
+    // 1. Libros
+    if (Array.isArray(remoteData.books)) {
+      const remoteIds = new Set(remoteData.books.map(b => b.id));
+      const localUnsynced = (appState.books || []).filter(b => b && b.id && !remoteIds.has(b.id));
+      appState.books = [...remoteData.books, ...localUnsynced];
+      localStorage.setItem(STORAGE_KEY_BOOKS, JSON.stringify(appState.books));
+    }
+
+    // 2. Repisas y Categorías
+    if (remoteData.shelfCategories && typeof remoteData.shelfCategories === 'object') {
+      Object.keys(remoteData.shelfCategories).forEach(id => {
+        if (SHELF_DEFINITIONS[id]) {
+          const item = remoteData.shelfCategories[id];
+          if (typeof item === 'string') {
+            SHELF_DEFINITIONS[id].category = item;
+            SHELF_DEFINITIONS[id].category2 = '';
+          } else if (item && typeof item === 'object') {
+            SHELF_DEFINITIONS[id].category = item.category || '';
+            SHELF_DEFINITIONS[id].category2 = item.category2 || '';
+          }
+        }
+      });
+      localStorage.setItem(STORAGE_KEY_SHELF_CATEGORIES, JSON.stringify(remoteData.shelfCategories));
+      updateShelfPlaquesUI();
+    }
+
+    // 3. Cajones
+    if (remoteData.drawers && typeof remoteData.drawers === 'object') {
+      appState.drawers = remoteData.drawers;
+      localStorage.setItem(STORAGE_KEY_DRAWERS, JSON.stringify(appState.drawers));
+      renderDrawersFace();
+    }
+
+    // 4. Lectores y Título
+    if (Array.isArray(remoteData.readers) && remoteData.readers.length > 0) {
+      appState.readers = remoteData.readers;
+    }
+    if (remoteData.shelfTitle) {
+      appState.shelfTitle = remoteData.shelfTitle;
+      updateShelfTitleUI();
+    }
+    localStorage.setItem(STORAGE_KEY_CONFIG, JSON.stringify({
+      readers: appState.readers,
+      shelfTitle: appState.shelfTitle
+    }));
+    updateReadersDropdowns();
+
+    // 5. Frase y Foto
+    if (remoteData.gardenSign) {
+      localStorage.setItem('mi_librero_garden_sign', remoteData.gardenSign);
+      const signEl = document.getElementById('gardenSignpostText');
+      if (signEl) signEl.textContent = remoteData.gardenSign;
+    }
+    if (remoteData.customWindowImg) {
+      localStorage.setItem('mi_librero_custom_window_img', remoteData.customWindowImg);
+      const wImg = document.getElementById('windowSceneImg');
+      if (wImg) wImg.src = remoteData.customWindowImg;
+    }
+
+    // 6. Ardilla Tamagotchi
+    if (remoteData.squirrel && typeof remoteData.squirrel === 'object') {
+      const reader = getActiveSquirrelReader();
+      localStorage.setItem(getSquirrelStorageKey(reader), JSON.stringify(remoteData.squirrel));
+      currentSquirrel = remoteData.squirrel;
+      if (typeof renderSquirrelUI === 'function') renderSquirrelUI();
+    }
+
+    // 7. Renderizar vistas completas
+    renderApp();
+
+    // Si el usuario tiene una repisa abierta en modal de zoom, actualizar en vivo su contenido y título
+    if (appState.activeShelfId) {
+      const catInfo = getShelfCategoryDisplay(appState.activeShelfId);
+      const categoryElem = document.getElementById('activeSectionCategory');
+      if (categoryElem) {
+        if (catInfo.isDual) {
+          categoryElem.classList.add('dual-title');
+          categoryElem.innerHTML = `<span>${escapeHTML(catInfo.cat1)}</span><span class="category-title-sep">•</span><span>${escapeHTML(catInfo.cat2)}</span>`;
+        } else {
+          categoryElem.classList.remove('dual-title');
+          categoryElem.textContent = catInfo.cat1;
+        }
+      }
+      syncShelfCategorySelect('shelfCategorySelect', catInfo.cat1);
+      syncShelfCategorySelect('shelfCategory2Select', catInfo.cat2);
+      renderSectionStage(appState.activeShelfId);
+    }
+
+    const timeStr = new Date(remoteData.updatedAt || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    updateCloudStatusUI('online', '🟢 Conectado en tiempo real', `Sincronizado: ${timeStr}`);
+
+    if (remoteData.deviceId && remoteData.deviceId !== myDevId) {
+      showCloudSyncToast('✨ Cambios sincronizados desde otro dispositivo');
+    }
+
+  } catch (err) {
+    console.error('Error aplicando datos remotos:', err);
+  } finally {
+    isApplyingRemoteChange = false;
+  }
+}
+
+function syncToCloudDebounced() {
+  if (isApplyingRemoteChange) return;
+  clearTimeout(cloudSyncDebounceTimer);
+  updateCloudStatusUI('syncing', '🔄 Sincronizando con la nube...', 'Subiendo cambios...');
+  cloudSyncDebounceTimer = setTimeout(() => {
+    pushLocalDataToCloud(false);
+  }, 350);
+}
+
+function pushLocalDataToCloud(isManual = false) {
+  if (isApplyingRemoteChange) return;
+
+  const categoriesMap = getShelfCategoriesMap();
+  const payload = {
+    books: appState.books || [],
+    drawers: appState.drawers || DEFAULT_DRAWERS,
+    readers: appState.readers || ['Carolina Ornelas'],
+    shelfTitle: appState.shelfTitle || 'El Rincón de Lectura & Lavanda',
+    shelfCategories: categoriesMap,
+    windowTimeMode: appState.windowTimeMode || 'auto',
+    gardenSign: localStorage.getItem('mi_librero_garden_sign') || '',
+    customWindowImg: localStorage.getItem('mi_librero_custom_window_img') || '',
+    collections: appState.collections || [],
+    squirrel: currentSquirrel || null,
+    updatedAt: Date.now(),
+    deviceId: getDeviceId()
+  };
+
+  lastCloudSyncTimestamp = payload.updatedAt;
+
+  let sdkSent = false;
+  if (firebaseDbInstance) {
+    try {
+      firebaseDbInstance.ref('universal_library').set(payload)
+        .then(() => {
+          updateCloudStatusUI('online', '🟢 Conectado en tiempo real', 'Sincronizado: recién guardado');
+          if (isManual) {
+            showCloudSyncToast('☁️ Todos los libros y repisas se guardaron en la nube');
+          }
+        })
+        .catch(err => {
+          console.warn('Error subiendo por SDK, usando fallback REST:', err);
+          pushViaRest(payload, isManual);
+        });
+      sdkSent = true;
+    } catch (e) {
+      console.warn('Fallo en ref.set SDK:', e);
+    }
+  }
+
+  if (!sdkSent) {
+    pushViaRest(payload, isManual);
+  }
+}
+
+async function pushViaRest(payload, isManual) {
+  try {
+    const res = await fetch(CLOUD_SYNC_REST_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+      updateCloudStatusUI('online', '🟢 Conectado en tiempo real', 'Sincronizado: recién guardado');
+      if (isManual) {
+        showCloudSyncToast('☁️ Todos los libros y repisas se guardaron en la nube');
+      }
+    }
+  } catch (err) {
+    console.error('Error al guardar en la nube REST:', err);
+    updateCloudStatusUI('offline', '⚠️ Error de sincronización', 'Se reintentará automáticamente');
+  }
+}
+
+function forceCloudSyncNow() {
+  updateCloudStatusUI('syncing', '🔄 Sincronizando...', 'Descargando datos más recientes...');
+  if (firebaseDbInstance) {
+    firebaseDbInstance.ref('universal_library').once('value')
+      .then(snap => {
+        const val = snap.val();
+        if (val) {
+          handleIncomingCloudData(val);
+          showCloudSyncToast('✨ Librería sincronizada con la nube');
+        } else {
+          pushLocalDataToCloud(true);
+        }
+      })
+      .catch(() => {
+        fetchCloudDataREST().then(() => showCloudSyncToast('✨ Librería sincronizada con la nube'));
+      });
+  } else {
+    fetchCloudDataREST().then(() => showCloudSyncToast('✨ Librería sincronizada con la nube'));
+  }
 }
 
 function updateShelfTitleUI() {
@@ -1027,6 +1443,7 @@ function initWindowControls() {
           const dataUrl = event.target.result;
           windowImg.src = dataUrl;
           localStorage.setItem('mi_librero_custom_window_img', dataUrl);
+          if (typeof syncToCloudDebounced === 'function') syncToCloudDebounced();
           alert('¡Foto del centro del librero actualizada con éxito! 🌸📸');
         };
         reader.readAsDataURL(file);
@@ -1040,6 +1457,7 @@ function initWindowControls() {
     btnResetPhoto.addEventListener('click', () => {
       localStorage.removeItem('mi_librero_custom_window_img');
       windowImg.src = 'assets/window_scene.jpg';
+      if (typeof syncToCloudDebounced === 'function') syncToCloudDebounced();
       alert('Se ha restablecido la vista ilustrada original de Zakia 🌿');
     });
   }
@@ -1096,6 +1514,7 @@ function initWindowControls() {
       if (val) {
         signText.textContent = val;
         localStorage.setItem('mi_librero_garden_sign', val);
+        if (typeof syncToCloudDebounced === 'function') syncToCloudDebounced();
         alert('¡Frase guardada con éxito! 🌸');
       }
     });
@@ -1932,6 +2351,9 @@ function saveShelfCategories() {
     };
   });
   localStorage.setItem(STORAGE_KEY_SHELF_CATEGORIES, JSON.stringify(categoriesMap));
+  if (typeof syncToCloudDebounced === 'function') {
+    syncToCloudDebounced();
+  }
 }
 
 function loadSavedShelfCategories() {
@@ -3074,6 +3496,9 @@ function saveActiveSquirrel() {
   const reader = currentSquirrel.reader || getActiveSquirrelReader();
   currentSquirrel.lastUpdated = Date.now();
   localStorage.setItem(getSquirrelStorageKey(reader), JSON.stringify(currentSquirrel));
+  if (typeof syncToCloudDebounced === 'function') {
+    syncToCloudDebounced();
+  }
 }
 
 // Sincronizar el Tamagotchi cuando cambia el lector
