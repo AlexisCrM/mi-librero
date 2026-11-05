@@ -21,7 +21,7 @@ const SHELF_DEFINITIONS = {
   'col-der-1': { name: 'Repisa 1 (Superior)', category: 'Misterio', category2: '' },
   'col-der-2': { name: 'Repisa 2 (Colección)', category: 'Crecimiento', category2: '' },
   'col-der-3': { name: 'Repisa 3', category: 'Recetas', category2: '' },
-  'col-der-4': { name: 'Repisa 4', category: 'Poesía & Arte', category2: '' },
+  'col-der-4': { name: 'Repisa 4', category: 'Colorear', category2: 'Recetas' },
   'col-der-5': { name: 'Repisa 5', category: 'Libros en Inglés', category2: '' },
   'col-der-6': { name: 'Repisa 6 (Inferior)', category: 'Por leer', category2: '' }
 };
@@ -259,6 +259,7 @@ const STORAGE_KEY_BOOKS = 'mi_librero_books_v2';
 const STORAGE_KEY_DRAWERS = 'mi_librero_drawers_v2';
 const STORAGE_KEY_CONFIG = 'mi_librero_config_v2';
 const STORAGE_KEY_COLLECTIONS = 'mi_librero_collections_v2';
+const STORAGE_KEY_SHELF_CATEGORIES = 'mi_librero_shelf_categories_v1';
 const STORAGE_KEY_BLIND = 'mi_librero_blind_v2';
 const STORAGE_KEY_TIME_MODE = 'mi_librero_time_mode_v2';
 
@@ -465,6 +466,7 @@ const CLOUD_SYNC_REST_URL = "https://mi-librero-alexis-default-rtdb.firebaseio.c
 
 let firebaseDbInstance = null;
 let isCloudSyncConnected = false;
+let hasReceivedInitialCloudSync = false;
 let isApplyingRemoteChange = false;
 let cloudSyncDebounceTimer = null;
 let lastCloudSyncTimestamp = 0;
@@ -638,6 +640,7 @@ async function fetchCloudDataREST() {
 
 function handleIncomingCloudData(remoteData) {
   if (!remoteData || typeof remoteData !== 'object') return;
+  hasReceivedInitialCloudSync = true;
 
   const myDevId = getDeviceId();
   // Si este cambio fue emitido por este mismo dispositivo hace menos de 2.5s, ignorar para evitar bucle de re-render
@@ -769,6 +772,7 @@ function syncToCloudDebounced() {
 
 function pushLocalDataToCloud(isManual = false) {
   if (isApplyingRemoteChange) return;
+  if (!hasReceivedInitialCloudSync && !isManual) return;
 
   const categoriesMap = getShelfCategoriesMap();
   const payload = {
@@ -973,6 +977,37 @@ function setupEventListeners() {
       setShelfCategories(shelfId, cat1, cat2);
     });
   });
+
+  // Renombrar repisa de forma directa tocando el título o el botón de lápiz
+  const handleEditShelfName = () => {
+    if (!appState.activeShelfId) return;
+    const shelfId = appState.activeShelfId;
+    const catInfo = getShelfCategoryDisplay(shelfId);
+    const input = prompt(
+      '🌸 Personalizar nombre de esta repisa:\n(Escribe una o dos categorías separadas por " • ")',
+      catInfo.text
+    );
+    if (input === null) return;
+    const trimmed = input.trim();
+    if (!trimmed) return;
+
+    let c1 = trimmed;
+    let c2 = '';
+    if (trimmed.includes('•')) {
+      const parts = trimmed.split('•');
+      c1 = parts[0].trim();
+      c2 = parts.slice(1).join('•').trim();
+    } else if (trimmed.includes(' - ')) {
+      const parts = trimmed.split(' - ');
+      c1 = parts[0].trim();
+      c2 = parts.slice(1).join(' - ').trim();
+    }
+
+    setShelfCategories(shelfId, c1, c2);
+  };
+
+  document.getElementById('editShelfNameBtn')?.addEventListener('click', handleEditShelfName);
+  document.getElementById('activeSectionCategory')?.addEventListener('click', handleEditShelfName);
 
   // Botón "Agregar Libro Aquí" dentro de la repisa
   document.getElementById('addBookInThisShelfBtn').addEventListener('click', () => {
@@ -1644,6 +1679,7 @@ function getFilteredBooks() {
 function renderApp() {
   updateRealStats();
   renderFurniturePreviews();
+  updateShelfPlaquesUI();
   updateMascotDialogue();
   updateStickyQuote();
 
@@ -2210,7 +2246,6 @@ function triggerShelfZoom(shelfElem, shelfId) {
 // ===================================================================
 // MODAL DE ZOOM / ENTRAR A UNA REPISA DE LIBROS
 // ===================================================================
-const STORAGE_KEY_SHELF_CATEGORIES = 'mi_librero_shelf_categories_v1';
 
 function getShelfCategoryDisplay(shelfId) {
   const info = SHELF_DEFINITIONS[shelfId];
@@ -2332,9 +2367,13 @@ function setShelfCategories(shelfId, newCat1, newCat2 = '') {
     catTitleEl.classList.add('category-pop-anim');
   }
 
+  // Sincronizar selectores desplegables
+  syncShelfCategorySelect('shelfCategorySelect', catInfo.cat1);
+  syncShelfCategorySelect('shelfCategory2Select', catInfo.cat2);
+
   // Actualizar placas del mueble y guardar
   updateShelfPlaquesUI();
-  saveShelfCategories();
+  saveShelfCategories(shelfId);
 }
 
 function setShelfCategory(shelfId, newCategory) {
@@ -2343,17 +2382,54 @@ function setShelfCategory(shelfId, newCategory) {
   setShelfCategories(shelfId, newCategory, currentCat2);
 }
 
-function saveShelfCategories() {
-  const categoriesMap = {};
-  Object.keys(SHELF_DEFINITIONS).forEach(id => {
-    categoriesMap[id] = {
-      category: SHELF_DEFINITIONS[id].category || '',
-      category2: SHELF_DEFINITIONS[id].category2 || ''
-    };
-  });
+function saveShelfCategories(updatedShelfId = null) {
+  const categoriesMap = getShelfCategoriesMap();
   localStorage.setItem(STORAGE_KEY_SHELF_CATEGORIES, JSON.stringify(categoriesMap));
-  if (typeof syncToCloudDebounced === 'function') {
-    syncToCloudDebounced();
+
+  const now = Date.now();
+  lastCloudSyncTimestamp = now;
+
+  // 1. Guardar de inmediato en Firebase Realtime Database para sincronización universal instantánea
+  if (firebaseDbInstance) {
+    try {
+      firebaseDbInstance.ref('universal_library/shelfCategories').set(categoriesMap)
+        .then(() => {
+          updateCloudStatusUI('online', '🟢 Conectado en tiempo real', 'Repisas sincronizadas');
+        })
+        .catch(err => {
+          console.warn('Error en RTDB SDK set de repisas, respaldando vía REST:', err);
+          pushShelfCategoriesViaRest(categoriesMap, now);
+        });
+      firebaseDbInstance.ref('universal_library/updatedAt').set(now);
+      firebaseDbInstance.ref('universal_library/deviceId').set(getDeviceId());
+    } catch (e) {
+      console.warn('Excepción en RTDB SDK, intentando REST:', e);
+      pushShelfCategoriesViaRest(categoriesMap, now);
+    }
+  } else {
+    pushShelfCategoriesViaRest(categoriesMap, now);
+  }
+
+  const shelfName = updatedShelfId ? getShelfCategoryDisplay(updatedShelfId).text : 'Repisas';
+  showCloudSyncToast(`🏷️ ${shelfName} • Guardado y sincronizado universalmente ☁️`);
+}
+
+async function pushShelfCategoriesViaRest(categoriesMap, timestamp) {
+  try {
+    const timeVal = timestamp || Date.now();
+    await fetch('https://mi-librero-alexis-default-rtdb.firebaseio.com/universal_library/shelfCategories.json', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(categoriesMap)
+    });
+    await fetch('https://mi-librero-alexis-default-rtdb.firebaseio.com/universal_library/updatedAt.json', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(timeVal)
+    });
+    updateCloudStatusUI('online', '🟢 Conectado en tiempo real', 'Repisas sincronizadas');
+  } catch (err) {
+    console.warn('Error en push REST de shelfCategories:', err);
   }
 }
 
